@@ -1,0 +1,16 @@
+s3_bucket:
+  wafer_train_data: wafer-train-data
+  input_files: input_files
+
+data_dir:
+  good_data_train: good/train
+
+db_train_log: wafer_training_logs
+
+train_db_log:
+  data_transform: train_data_transform_log
+  train_main: training_main_log
+
+base:
+  target_col: Output
+  replace_col: Good/Bad
