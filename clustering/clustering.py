@@ -1,5 +1,6 @@
 from kneed import KneeLocator
 from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
+from pandas import DataFrame
 from sklearn.cluster import KMeans
 
 from s3_operations import S3_Operation
@@ -24,7 +25,7 @@ class KMeans_Clustering:
 
         self.random_state = self.config["base"]["random_state"]
 
-        self.trained_model_dir = self.config["trained_model_dir"]
+        self.model_dir = self.config["model_dir"]
 
         self.kmeans_params = self.config["KMeans"]
 
@@ -34,7 +35,7 @@ class KMeans_Clustering:
 
         self.max_clusters = self.config["max_clusters"]
 
-        self.elbow_plot = self.config["elbow_plot_fig"]
+        self.files = self.config["files"]
 
         self.s3 = S3_Operation()
 
@@ -75,13 +76,13 @@ class KMeans_Clustering:
 
             ylabel("WCSS")
 
-            savefig(self.elbow_plot)
+            savefig(self.files["elbow_plot"])
 
             self.log_writer.log("Saved elbow plot with local copy", self.log_file)
 
             self.s3.upload_file(
-                self.elbow_plot,
-                self.elbow_plot,
+                self.files["elbow_plot"],
+                self.files["elbow_plot"],
                 self.bucket["input_files"],
                 self.log_file,
             )
@@ -103,7 +104,7 @@ class KMeans_Clustering:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def create_clusters(self, data, num_clusters: int):
+    def create_clusters(self, data: DataFrame, num_clusters: int):
         """
         Method Name :   create_clusters
         Description :   Create a new dataframe consisting of the cluster information.
@@ -125,7 +126,7 @@ class KMeans_Clustering:
 
             self.s3.save_model(
                 self.kmeans,
-                self.trained_model_dir,
+                self.model_dir["trained"],
                 self.bucket["model"],
                 self.model_save_format,
                 self.log_file,

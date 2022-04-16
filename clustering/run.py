@@ -9,9 +9,7 @@ class Run:
     def __init__(self):
         self.config = read_params()
 
-        self.wafer_features = self.config["features_file"]
-
-        self.wafer_targets = self.config["targets_file"]
+        self.files = self.config["files"]
 
         self.bucket = self.config["s3_bucket"]
 
@@ -36,7 +34,7 @@ class Run:
 
         try:
             X = self.s3.read_csv(
-                self.wafer_features, self.bucket["input_files"], self.clustering_log
+                self.files["features"], self.bucket["input_files"], self.clustering_log
             )
 
             self.log_writer.log(
@@ -45,7 +43,7 @@ class Run:
             )
 
             Y = self.s3.read_csv(
-                self.wafer_targets, self.bucket["input_files"], self.clustering_log
+                self.files["targets"], self.bucket["input_files"], self.clustering_log
             )
 
             self.log_writer.log(
@@ -73,11 +71,11 @@ class Run:
                 cluster_label = cluster_data["Labels"]
 
                 cluster_feats_fname = self.utils.get_cluster_fname(
-                    self.wafer_features, i
+                    self.files["features"], i
                 )
 
                 cluster_label_fname = self.utils.get_cluster_fname(
-                    self.wafer_targets, i
+                    self.files["labels"], i
                 )
 
                 self.s3.upload_df_as_csv(

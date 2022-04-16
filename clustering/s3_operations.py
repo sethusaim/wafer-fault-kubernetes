@@ -1,4 +1,3 @@
-import pickle
 from io import StringIO
 from os import remove
 from pickle import dump
@@ -185,7 +184,7 @@ class S3_Operation:
 
     def save_model(
         self,
-        model: pickle,
+        model,
         model_dir: str,
         model_bucket: str,
         format: str,
