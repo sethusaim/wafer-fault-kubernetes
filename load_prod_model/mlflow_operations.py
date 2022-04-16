@@ -1,4 +1,3 @@
-from cmath import exp
 from os import environ
 
 from mlflow import get_experiment_by_name, search_runs, set_tracking_uri
