@@ -1,0 +1,72 @@
+base:
+  random_state: 42
+  target_col: Output
+  test_size: 0.33
+
+s3_bucket:
+  input_files: input-files-for-train-and-pred
+  wafer_model: wafer-model
+
+mlflow_config:
+  exp_name: wafer-ops-test
+  run_name: mlops
+  serialization_format: cloudpickle
+
+model_dir:
+  train: trained/
+
+files:
+  features: wafer-cluster_features.csv
+  labels: wafer-cluster_labels.csv
+
+log:
+  model_train_log: model_training_log.log
+
+log_dir: logs
+
+model_utils:
+  verbose: 3
+  cv: 5
+  n_jobs: -1
+  save_format: .sav
+
+model_params:
+  RandomForestClassifier:
+    n_estimators:
+      - 10
+      - 50
+      - 100
+      - 130
+
+    criterion:
+      - gini
+      - entropy
+
+    max_features:
+      - auto
+      - log2
+
+    max_depth:
+      - 2
+      - 3
+      - 4
+      - 5
+
+  XGBClassifier:
+    learning_rate:
+      - 0.5
+      - 0.1
+      - 0.01
+      - 0.001
+
+    max_depth:
+      - 3
+      - 5
+      - 10
+      - 20
+
+    n_estimators:
+      - 10
+      - 50
+      - 100
+      - 200
