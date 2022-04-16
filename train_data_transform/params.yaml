@@ -11,6 +11,6 @@ train_db_log:
   data_transform: train_data_transform_log
   train_main: training_main_log
 
-base:
-  target_col: Output
-  replace_col: Good/Bad
+col:
+  target: Output
+  replace: Good/Bad

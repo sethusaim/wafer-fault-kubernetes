@@ -27,9 +27,7 @@ class Data_Transform_Train:
 
         self.train_data_transform_log = self.config["log"]["data_transform"]
 
-        self.replace_col = self.config["base"]["replace_col"]
-
-        self.target_col = self.config["base"]["target_col"]
+        self.col = self.config["col"]
 
     def rename_target_column(self):
         """
@@ -49,12 +47,6 @@ class Data_Transform_Train:
 
         try:
             lst = self.s3.read_csv_from_dir(
-                self.good_train_data_dir,
-                self.train_data_bucket,
-                self.train_data_transform_log,
-            )
-
-            lst = self.s3.read_csv_from_dir(
                 self.data_dir["train_good"],
                 self.bucket["train_data"],
                 self.train_data_transform_log,
@@ -68,7 +60,7 @@ class Data_Transform_Train:
                 abs_f = f[idx][2]
 
                 if file.endswith(".csv"):
-                    df.rename(columsn={self.replace_col, self.target_col}, inplace=True)
+                    df.rename(columns={self.col["replace"],self.col["target"]},inplace=True)
 
                     self.log_writer.log(
                         f"Renamed the output columns for the file {file}",
