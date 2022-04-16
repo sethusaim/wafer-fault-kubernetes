@@ -26,7 +26,7 @@ class Load_Prod_Model:
 
         self.model_dir = self.config["models_dir"]
 
-        self.exp_name = self.config["mlflow_experiment_name"]
+        self.mlflow_config = self.config["mlflow_config"]
 
         self.s3 = S3_Operation()
 
@@ -84,7 +84,9 @@ class Load_Prod_Model:
 
             self.mlflow_op.set_mlflow_tracking_uri()
 
-            exp = self.mlflow_op.get_experiment_from_mlflow(self.exp_name)
+            exp = self.mlflow_op.get_experiment_from_mlflow(
+                self.mlflow_config["exp_name"]
+            )
 
             runs = self.mlflow_op.get_runs_from_mlflow(exp.experiment_id)
 
@@ -229,7 +231,7 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
 if __name__ == "__main__":
     run = Load_Prod_Model()
 
-    log = Main_Utils()
+    utils = Main_Utils()
 
     try:
         run.load_production_model()
@@ -238,4 +240,4 @@ if __name__ == "__main__":
         raise e
 
     finally:
-        log.upload_logs()
+        utils.upload_logs()

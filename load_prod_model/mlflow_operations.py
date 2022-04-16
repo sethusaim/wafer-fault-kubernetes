@@ -1,3 +1,4 @@
+from cmath import exp
 from os import environ
 
 from mlflow import get_experiment_by_name, search_runs, set_tracking_uri
@@ -83,7 +84,7 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            exp = get_experiment_by_name(name=exp_name)
+            exp = get_experiment_by_name(exp_name)
 
             self.log_writer.log(f"Got {exp_name} experiment from mlflow", self.log_file)
 
@@ -114,7 +115,7 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            runs = search_runs(experiment_ids=exp_id)
+            runs = search_runs(exp_id)
 
             self.log_writer.log(
                 f"Completed searching for runs in mlflow with experiment ids as {exp_id}",

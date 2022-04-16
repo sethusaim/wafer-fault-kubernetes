@@ -5,10 +5,12 @@ models_dir:
 
 model_save_format: .sav
 
-mlflow_experiment_name: wafer-test
-
+mlflow_config:
+  exp_name : wafer-test
+  
 s3_bucket:
   input_files: wafer-io-files
+  model: wafer_model
 
 log:
   upload: upload_log.log
@@ -16,4 +18,4 @@ log:
 
 log_dir: logs
 
-wafer_model_bucket: wafer_model
+
