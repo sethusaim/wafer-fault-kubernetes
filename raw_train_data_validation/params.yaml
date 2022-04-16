@@ -1,5 +1,5 @@
 s3_bucket:
-  input_files: wafer-io-files
+  io_files: wafer-io-files
   logs: wafer-logs
   raw_train_data: wafer-raw-train-data
   train_data: wafer-train-data

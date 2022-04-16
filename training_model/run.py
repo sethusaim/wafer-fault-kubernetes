@@ -46,7 +46,7 @@ class Run:
             )
 
             feat_fnames = self.s3.get_files_from_folder(
-                self.files["features"], self.bucket["input_files"], self.model_train_log
+                self.files["features"], self.bucket["io_files"], self.model_train_log
             )
 
             lst_clusters = len(feat_fnames)
@@ -71,15 +71,15 @@ class Run:
                 )
 
                 cluster_feat = self.s3.read_csv(
-                    feat_name, self.bucket["input_files"], self.model_train_log
+                    feat_name, self.bucket["io_files"], self.model_train_log
                 )
 
                 cluster_label = self.s3.read_csv(
-                    label_name, self.bucket["input_files"], self.model_train_log
+                    label_name, self.bucket["io_files"], self.model_train_log
                 )
 
                 self.log_writer.log(
-                    f"Got cluster features and cluster labels dataframe from {self.bucket['input_files']} bucket",
+                    f"Got cluster features and cluster labels dataframe from {self.bucket['io_files']} bucket",
                     self.model_train_log,
                 )
 

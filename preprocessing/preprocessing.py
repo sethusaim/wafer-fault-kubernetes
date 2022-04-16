@@ -132,7 +132,7 @@ class Preprocessor:
                     null_df,
                     self.csv_file["null_values"],
                     self.csv_file["null_values"],
-                    self.bucket["input_files"],
+                    self.bucket["io_files"],
                     self.log_file,
                 )
 

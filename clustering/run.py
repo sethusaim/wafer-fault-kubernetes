@@ -34,20 +34,20 @@ class Run:
 
         try:
             X = self.s3.read_csv(
-                self.files["features"], self.bucket["input_files"], self.clustering_log
+                self.files["features"], self.bucket["io_files"], self.clustering_log
             )
 
             self.log_writer.log(
-                f"Read the features file for training from {self.bucket['input_files']} bucket",
+                f"Read the features file for training from {self.bucket['io_files']} bucket",
                 self.clustering_log,
             )
 
             Y = self.s3.read_csv(
-                self.files["targets"], self.bucket["input_files"], self.clustering_log
+                self.files["targets"], self.bucket["io_files"], self.clustering_log
             )
 
             self.log_writer.log(
-                f"Read the labels for training from {self.bucket['input_files']} bucket",
+                f"Read the labels for training from {self.bucket['io_files']} bucket",
                 self.clustering_log,
             )
 
@@ -82,7 +82,7 @@ class Run:
                     cluster_features,
                     cluster_feats_fname,
                     cluster_feats_fname,
-                    self.bucket["input_files"],
+                    self.bucket["io_files"],
                     self.clustering_log,
                 )
 
@@ -90,7 +90,7 @@ class Run:
                     cluster_label,
                     cluster_label_fname,
                     cluster_label_fname,
-                    self.bucket["input_files"],
+                    self.bucket["io_files"],
                     self.clustering_log,
                 )
 

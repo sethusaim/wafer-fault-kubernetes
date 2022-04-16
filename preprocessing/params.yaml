@@ -1,5 +1,5 @@
 s3_bucket:
-  input_files: wafer-io-files
+  io_files: wafer-io-files
   
 csv_files:
   wafer_features: wafer_features.csv

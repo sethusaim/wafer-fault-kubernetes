@@ -59,7 +59,7 @@ class Raw_Train_Data_Validation:
 
             dic = self.s3.read_json(
                 self.files["train_schema"],
-                self.bucket["input_files"],
+                self.bucket["io_files"],
                 self.train_log["values_from_schema"],
             )
 
@@ -121,7 +121,7 @@ class Raw_Train_Data_Validation:
 
             regex = self.s3.read_text(
                 self.files["regex"],
-                self.bucket["input_files"],
+                self.bucket["io_files"],
                 self.train_log["general"],
             )
 

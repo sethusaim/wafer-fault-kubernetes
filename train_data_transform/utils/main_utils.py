@@ -46,11 +46,11 @@ class Main_Utils:
                 dest_f = self.log_dir + "/" + f
 
                 self.s3.upload_file(
-                    local_f, dest_f, self.bucket["input_files"], self.log_file
+                    local_f, dest_f, self.bucket["io_files"], self.log_file
                 )
 
             self.log_writer.log(
-                f"Uploaded logs to {self.bucket['input_files']}", self.log_file
+                f"Uploaded logs to {self.bucket['io_files']}", self.log_file
             )
 
             self.log_writer.start_log(

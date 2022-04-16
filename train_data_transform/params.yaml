@@ -1,6 +1,6 @@
 s3_bucket:
   wafer_train_data: wafer-train-data
-  input_files: input_files
+  io_files: io_files
 
 data_dir:
   good_data_train: good/train

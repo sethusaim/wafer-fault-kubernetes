@@ -4,7 +4,7 @@ base:
   test_size: 0.33
 
 s3_bucket:
-  input_files: input-files-for-train-and-pred
+  io_files: input-files-for-train-and-pred
   wafer_model: wafer-model
 
 mlflow_config:

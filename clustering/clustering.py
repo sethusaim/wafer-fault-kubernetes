@@ -83,7 +83,7 @@ class KMeans_Clustering:
             self.s3.upload_file(
                 self.files["elbow_plot"],
                 self.files["elbow_plot"],
-                self.bucket["input_files"],
+                self.bucket["io_files"],
                 self.log_file,
             )
 
