@@ -1,0 +1,30 @@
+s3_bucket:
+  input_files: wafer-io-files
+  model: wafer_model
+
+features_file: wafer_features.csv
+
+targets_file: wafer_targets.csv
+
+logs:
+  clustering: clustering_log.log
+
+log_dir: logs
+
+base:
+  random_state: 42
+
+trained_model_dir: trained
+
+KMeans:
+  init: k-means++
+
+max_clusters: 11
+
+model_save_format: .sav
+
+knee:
+  curve: convex
+  direction: decreasing
+
+elbow_plot_fig: K-Means_Elbow.png
