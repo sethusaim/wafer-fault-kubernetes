@@ -14,5 +14,5 @@ log:
   train_main: training_main_log.log
 
 mongodb:
-  wafer_data_db_name: wafer-data
-  wafer_train_data_collection: wafer-train-data
+  db_name: wafer-data
+  collection_name: wafer-train-data

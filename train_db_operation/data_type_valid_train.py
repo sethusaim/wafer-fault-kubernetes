@@ -23,9 +23,7 @@ class DB_Operation_Train:
 
         self.data_dir = self.config["data_dir"]
 
-        self.train_db_insert_log = self.config["log"]["db_insert"]
-
-        self.train_export_csv_log = self.config["log"]["export_csv"]
+        self.train_log = self.config["log"]
 
         self.s3 = S3_Operation()
 
@@ -49,14 +47,14 @@ class DB_Operation_Train:
         method_name = self.insert_good_data_as_record.__name__
 
         self.log_writer.start_log(
-            "start", self.class_name, method_name, self.train_db_insert_log,
+            "start", self.class_name, method_name, self.train_log["db_insert"]
         )
 
         try:
             lst = self.s3.read_csv_from_folder(
                 self.data_dir["train_good"],
                 self.bucket["train_data"],
-                self.train_db_insert_log,
+                self.train_log["db_insert"],
             )
 
             for idx, f in enumerate(lst):
@@ -69,7 +67,7 @@ class DB_Operation_Train:
                         df,
                         good_data_db_name,
                         good_data_collection_name,
-                        self.train_db_insert_log,
+                        self.train_log["db_insert"],
                     )
 
                 else:
@@ -77,16 +75,16 @@ class DB_Operation_Train:
 
                 self.log_writer.log(
                     "Inserted dataframe as collection record in mongodb",
-                    self.train_db_insert_log,
+                    self.train_log["db_insert"],
                 )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.train_db_insert_log,
+                "exit", self.class_name, method_name, self.train_log["db_insert"],
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.train_db_insert_log,
+                e, self.class_name, method_name, self.train_log["db_insert"],
             )
 
     def export_collection_to_csv(
@@ -105,12 +103,14 @@ class DB_Operation_Train:
         method_name = self.export_collection_to_csv.__name__
 
         self.log_writer.start_log(
-            "start", self.class_name, method_name, self.train_export_csv_log,
+            "start", self.class_name, method_name, self.train_log["export_csv"]
         )
 
         try:
             df = self.mongo.get_collection_as_dataframe(
-                good_data_db_name, good_data_collection_name, self.train_export_csv_log
+                good_data_db_name,
+                good_data_collection_name,
+                self.train_log["export_csv"],
             )
 
             self.s3.upload_df_as_csv(
@@ -118,18 +118,18 @@ class DB_Operation_Train:
                 self.files["train_export"],
                 self.files["train_export"],
                 self.bucket["io_files"],
-                self.train_export_csv_log,
+                self.train_log["export_csv"],
             )
 
             self.log_writer.log(
-                "Exported dataframe to csv file", self.train_export_csv_log
+                "Exported dataframe to csv file", self.train_log["export_csv"]
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.train_export_csv_log,
+                "exit", self.class_name, method_name, self.train_log["export_csv"],
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.train_export_csv_log,
+                e, self.class_name, method_name, self.train_log["export_csv"],
             )

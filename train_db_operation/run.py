@@ -12,11 +12,7 @@ class Run:
 
         self.train_main_log = self.config["log"]["train_main"]
 
-        self.good_data_db_name = self.config["mongodb"]["wafer_data_db_name"]
-
-        self.good_data_collection_name = self.config["mongodb"][
-            "wafer_train_data_collection"
-        ]
+        self.mongo_config = self.config["mongodb"]
 
         self.log_writer = App_Logger()
 
@@ -35,11 +31,11 @@ class Run:
             )
 
             self.db_operation.insert_good_data_as_record(
-                self.good_data_db_name, self.good_data_collection_name
+                self.mongo_config["db_name"], self.mongo_config["collection_name"]
             )
 
             self.db_operation.export_collection_to_csv(
-                self.good_data_db_name, self.good_data_collection_name
+                self.mongo_config["db_name"], self.mongo_config["collection_name"]
             )
 
             self.log_writer.log(

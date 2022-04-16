@@ -2,7 +2,7 @@ from json import loads
 from os import environ
 
 from pandas import DataFrame
-from pymongo import MongoClient, database
+from pymongo import MongoClient, collection, database
 
 from utils.logger import App_Logger
 from utils.read_params import read_params
@@ -28,7 +28,7 @@ class MongoDB_Operation:
 
         self.log_writer = App_Logger()
 
-    def get_database(self, db_name: str, log_file: str):
+    def get_database(self, db_name: database, log_file: str):
         """
         Method Name :   get_database
         Description :   This method gets database from MongoDB from the db_name
@@ -61,7 +61,9 @@ class MongoDB_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def get_collection(self, database: database, collection_name: str, log_file: str):
+    def get_collection(
+        self, database: database, collection_name: collection, log_file: str
+    ):
         """
         Method Name :   get_collection
         Description :   This method gets collection from the particular database and collection name
@@ -97,7 +99,7 @@ class MongoDB_Operation:
             )
 
     def get_collection_as_dataframe(
-        self, db_name: str, collection_name: str, log_file: str
+        self, db_name: database, collection_name: collection, log_file: str
     ):
         """
         Method Name :   get_collection_as_dataframe
@@ -142,7 +144,11 @@ class MongoDB_Operation:
             )
 
     def insert_dataframe_as_record(
-        self, data_frame: DataFrame, db_name: str, collection_name: str, log_file: str
+        self,
+        data_frame: DataFrame,
+        db_name: database,
+        collection_name: collection,
+        log_file: str,
     ):
         """
         Method Name :   insert_dataframe_as_record
