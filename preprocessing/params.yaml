@@ -1,0 +1,20 @@
+s3_bucket:
+  input_files: wafer-io-files
+  
+csv_files:
+  wafer_features: wafer_features.csv
+  wafer_targets: wafer_targets.csv
+  train_export: train_input_file.csv
+  null_values: null_values.csv
+
+target_col: Output
+
+log:
+  preprocess: preprocess_log.log
+  upload: upload_log.log
+
+knn_imputer:
+  n_neighbors: 3
+  weights: uniform
+
+log_dir: logs
