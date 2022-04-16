@@ -120,9 +120,7 @@ class Raw_Train_Data_Validation:
             )
 
             regex = self.s3.read_text(
-                self.files["regex"],
-                self.bucket["io_files"],
-                self.train_log["general"],
+                self.files["regex"], self.bucket["io_files"], self.train_log["general"],
             )
 
             self.log_writer.log(f"Got {regex} pattern", self.train_log["general"])

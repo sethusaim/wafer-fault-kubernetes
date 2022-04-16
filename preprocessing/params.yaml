@@ -1,7 +1,7 @@
 s3_bucket:
   io_files: wafer-io-files
   
-csv_files:
+files:
   wafer_features: wafer_features.csv
   wafer_targets: wafer_targets.csv
   train_export: train_input_file.csv

@@ -14,7 +14,7 @@ class Run:
 
         self.preprocess_log = self.config["log"]["preprocess_log"]
 
-        self.csv_file = self.config["csv_files"]
+        self.csv_file = self.config["files"]
 
         self.bucket = self.config["s3_bucket"]
 

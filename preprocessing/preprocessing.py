@@ -24,7 +24,7 @@ class Preprocessor:
 
         self.bucket = self.config["s3_bucket"]
 
-        self.csv_file = self.config["csv_files"]
+        self.csv_file = self.config["files"]
 
         self.imputer_params = self.config["knn_imputer"]
 
