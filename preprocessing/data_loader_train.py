@@ -16,7 +16,7 @@ class Data_Getter_Train:
 
         self.log_file = log_file
 
-        self.csv_file = self.config["files"]
+        self.files = self.config["files"]
 
         self.bucket = self.config["s3_bucket"]
 
@@ -43,11 +43,11 @@ class Data_Getter_Train:
 
         try:
             df = self.s3.read_csv(
-                self.csv_file["train_export"], self.bucket["io_files"], self.log_file
+                self.files["train_export"], self.bucket["io_files"], self.log_file
             )
 
             self.log_writer.log(
-                f"Training data loaded from {self.csv_file['train_export']} file and {self.bucket['io_files']} bucket"
+                f"Training data loaded from {self.files['train_export']} file and {self.bucket['io_files']} bucket"
             )
 
             self.log_writer.start_log(

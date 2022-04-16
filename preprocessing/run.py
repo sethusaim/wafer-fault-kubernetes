@@ -14,7 +14,7 @@ class Run:
 
         self.preprocess_log = self.config["log"]["preprocess_log"]
 
-        self.csv_file = self.config["files"]
+        self.files = self.config["files"]
 
         self.bucket = self.config["s3_bucket"]
 
@@ -53,16 +53,16 @@ class Run:
 
             self.s3.upload_df_as_csv(
                 X,
-                self.csv_file["wafer_features"],
-                self.csv_file["wafer_features"],
+                self.files["wafer_features"],
+                self.files["wafer_features"],
                 self.bucket["io_files"],
                 self.preprocess_log,
             )
 
             self.s3.upload_df_as_csv(
                 Y,
-                self.csv_file["wafer_targets"],
-                self.csv_file["wafer_targets"],
+                self.files["wafer_targets"],
+                self.files["wafer_targets"],
                 self.bucket["io_files"],
                 self.preprocess_log,
             )
