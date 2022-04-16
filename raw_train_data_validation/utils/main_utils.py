@@ -1,4 +1,3 @@
-from cmath import log
 from os import listdir
 from os.path import join
 from shutil import rmtree
