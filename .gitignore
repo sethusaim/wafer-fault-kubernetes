@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+demotest.py
+
+git-push.sh
+
 # Distribution / packaging
 .Python
 build/
