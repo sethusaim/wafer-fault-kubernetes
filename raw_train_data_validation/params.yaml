@@ -1,0 +1,25 @@
+s3_bucket:
+  input_files: wafer-io-files
+  logs: wafer-logs
+  raw_train_data: wafer-raw-train-data
+  train_data: wafer-train-data
+
+data_dir:
+  raw_train_batch: raw_train
+  train_good: good/train
+  train_bad: bad/train
+
+files:
+  train_schema: wafer_schema_training.json
+  regex: wafer_regex.txt
+
+log_dir: logs
+
+log:
+  upload: upload_log.log
+  train_main|: train_main_log.log
+  values_from_schema: train-values_from_schema_log.log
+  general: train_general_log.log
+  name_validation: train_name_validation_log.log
+  col_validation: train_col_validation_log.log
+  missing_values_in_col: train_missing_values_in_column.log
