@@ -20,7 +20,7 @@ class Pipeline:
 
         self.log_writer = App_Logger()
 
-    def compile_pipeline(self, func: function, pkg_file: str):
+    def compile_pipeline(self, func, pkg_file: str):
         method_name = self.compile_pipeline.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)

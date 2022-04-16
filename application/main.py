@@ -14,7 +14,7 @@ config = read_params()
 
 templates = Jinja2Templates(directory=config["templates"]["dir"])
 
-pipeline_path = config["pipeine_path"]
+pipeline_path = config["pipeline_path"]
 
 origins = ["*"]
 
