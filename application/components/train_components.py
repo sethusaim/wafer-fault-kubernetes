@@ -8,7 +8,7 @@ class Train_Component:
     def __init__(self):
         self.config = read_params()
 
-        self.bucket = self.config["input_files"]
+        self.bucket = self.config["s3_bucket"]
 
         self.comp_log = self.config["log"]["train_comp"]
 
@@ -18,7 +18,7 @@ class Train_Component:
 
         self.log_writer = App_Logger()
 
-        self.comp = Component(self.comp_log)
+        self.kfp_comp = Component(self.comp_log)
 
     @component
     def clustering_component(self):
@@ -27,8 +27,8 @@ class Train_Component:
         self.log_writer.start_log("start", self.class_name, method_name, self.comp_log)
 
         try:
-            comp = self.comp.load_kfp_component(
-                self.train_comp["clustering"], self.bucket["input_files"]
+            comp = self.kfp_comp.load_kfp_component(
+                self.train_comp["clustering"], self.bucket["io_files"]
             )
 
             self.log_writer.log("Got clustering component", self.comp_log)
@@ -51,8 +51,8 @@ class Train_Component:
         self.log_writer.start_log("start", self.class_name, method_name, self.comp_log)
 
         try:
-            comp = self.comp.load_kfp_component(
-                self.train_comp["load_prod_model"], self.bucket["input_files"]
+            comp = self.kfp_comp.load_kfp_component(
+                self.train_comp["prod_model"], self.bucket["io_files"]
             )
 
             self.log_writer.log("Got load production model component", self.comp_log)
@@ -75,8 +75,8 @@ class Train_Component:
         self.log_writer.start_log("start", self.class_name, method_name, self.comp_log)
 
         try:
-            comp = self.comp.load_kfp_component(
-                self.train_comp["preprocess"], self.bucket["input_files"]
+            comp = self.kfp_comp.load_kfp_component(
+                self.train_comp["preprocess"], self.bucket["io_files"]
             )
 
             self.log_writer.log("Got preprocessing component", self.comp_log)
@@ -97,8 +97,8 @@ class Train_Component:
         self.log_writer.start_log("start", self.class_name, method_name, self.comp_log)
 
         try:
-            comp = self.comp.load_kfp_component(
-                self.train_comp["raw_train_data_val"], self.bucket["component"]
+            comp = self.kfp_comp.load_kfp_component(
+                self.train_comp["raw_train_data_val"], self.bucket["io_files"]
             )
 
             self.log_writer.log(
@@ -123,8 +123,8 @@ class Train_Component:
         self.log_writer.start_log("start", self.class_name, method_name, self.comp_log)
 
         try:
-            comp = self.comp.load_kfp_component(
-                self.train_comp["train_data_trans"], self.bucket["input_files"]
+            comp = self.kfp_comp.load_kfp_component(
+                self.train_comp["train_data_trans"], self.bucket["io_files"]
             )
 
             self.log_writer.log("Got train data transform component", self.comp_log)
@@ -147,8 +147,8 @@ class Train_Component:
         self.log_writer.start_log("start", self.class_name, method_name, self.comp_log)
 
         try:
-            comp = self.comp.load_kfp_component(
-                self.train_comp["train_db_op"], self.bucket["input_files"]
+            comp = self.kfp_comp.load_kfp_component(
+                self.train_comp["train_db_op"], self.bucket["io_files"]
             )
 
             self.log_writer.log("Got train db operation component", self.comp_log)
@@ -171,8 +171,8 @@ class Train_Component:
         self.log_writer.start_log("start", self.class_name, method_name, self.comp_log)
 
         try:
-            comp = self.comp.load_kfp_component(
-                self.train_comp["train_model"], self.bucket["input_files"]
+            comp = self.kfp_comp.load_kfp_component(
+                self.train_comp["train_model"], self.bucket["io_files"]
             )
 
             self.log_writer.log("Got training model component", self.comp_log)

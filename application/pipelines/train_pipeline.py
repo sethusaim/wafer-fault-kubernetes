@@ -19,7 +19,7 @@ class Train_Pipeline:
 
         self.log_writer = App_Logger()
 
-    @pipeline(name="Train Pipeline")
+    @pipeline("Train Pipeline")
     def train_pipeline(self):
         method_name = self.train_pipeline.__name__
 

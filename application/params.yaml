@@ -13,12 +13,13 @@ pipeline_path:
   pred: wafer-pred.zip
 
 s3_bucket:
-  inputs_files: wafer-io-files
+  io_files: wafer-io-files
   logs: logs
+  components: wafer-components
    
 train_components:
   clustering: wafer-clustering.yaml
-  load_prod_model : wafer-prod.yaml
+  prod_model : wafer-prod.yaml
   preprocessing: wafer-preprocess.yaml
   raw_train_data_val : wafer-raw-data-val.yaml
   train_data_trans : wafer-train-data-transform.yaml

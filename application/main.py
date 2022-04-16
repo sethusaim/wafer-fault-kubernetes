@@ -14,6 +14,8 @@ config = read_params()
 
 templates = Jinja2Templates(directory=config["templates"]["dir"])
 
+pipeline_path = config["pipeine_path"]
+
 origins = ["*"]
 
 app.add_middleware(
@@ -37,7 +39,7 @@ async def trainRouteClient():
     try:
         pipeline = Train_Pipeline()
 
-        pipeline.run_train_pipeline(config["pipeline_path"]["train"])
+        pipeline.run_train_pipeline(pipeline_path["train"])
 
         return Response("Training successfull!!")
 
@@ -48,7 +50,6 @@ async def trainRouteClient():
 @app.get("/predict")
 async def predictRouteClient():
     try:
-
         return Response("Prediction Successfull")
 
     except Exception as e:
