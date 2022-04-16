@@ -1,0 +1,19 @@
+models_dir:
+  trained: trained
+  stag: staging
+  prod: production
+
+model_save_format: .sav
+
+mlflow_experiment_name: wafer-test
+
+s3_bucket:
+  input_files: wafer-io-files
+
+log:
+  upload: upload_log.log
+  load_prod_model: load_prod_model.log
+
+log_dir: logs
+
+wafer_model_bucket: wafer_model
