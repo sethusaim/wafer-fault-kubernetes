@@ -49,9 +49,13 @@ class Main_Utils:
                 f"Uploaded logs to {self.bucket['input_files']}", self.log_file
             )
 
-            self.log_writer.start_log("exit", self.class_name, method_name, self.log_file)
+            self.log_writer.start_log(
+                "exit", self.class_name, method_name, self.log_file
+            )
 
-            rmtree("train_logs")
+            rmtree(self.log_dir)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, self.log_file)
+            self.log_writer.exception_log(
+                e, self.class_name, method_name, self.log_file
+            )
