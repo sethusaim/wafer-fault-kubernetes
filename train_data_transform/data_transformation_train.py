@@ -60,7 +60,9 @@ class Data_Transform_Train:
                 abs_f = f[idx][2]
 
                 if file.endswith(".csv"):
-                    df.rename(columns={self.col["replace"],self.col["target"]},inplace=True)
+                    df.rename(
+                        columns={self.col["replace"], self.col["target"]}, inplace=True
+                    )
 
                     self.log_writer.log(
                         f"Renamed the output columns for the file {file}",
