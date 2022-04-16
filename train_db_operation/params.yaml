@@ -1,0 +1,18 @@
+s3_bucket:
+  train_data: wafer-train-data
+  input_files: input-files-for-train-and-pred
+
+files:
+  train_export: train_input_file.csv
+
+data_dir:
+  train_good: good/train
+
+log:
+  db_insert: train_db_insert_log.log
+  export_csv: train_export_to_csv_log.log
+  train_main: training_main_log.log
+
+mongodb:
+  wafer_data_db_name: wafer-data
+  wafer_train_data_collection: wafer-train-data
