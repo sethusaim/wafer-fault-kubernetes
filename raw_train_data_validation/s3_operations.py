@@ -28,11 +28,7 @@ class S3_Operation:
         self.s3_resource = resource("s3")
 
     def read_object(
-        self,
-        object: object,
-        log_file: str,
-        decode: bool = True,
-        make_readable: bool = False,
+        self, object, log_file: str, decode: bool = True, make_readable: bool = False,
     ):
         """
         Method Name :   read_object
@@ -146,7 +142,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def get_df_from_object(self, object: object, log_file: str):
+    def get_df_from_object(self, object, log_file: str):
         """
         Method Name :   get_df_from_object
         Description :   This method gets dataframe from object 
@@ -256,7 +252,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def load_object(self, object: object, bucket: str, log_file: str):
+    def load_object(self, object, bucket: str, log_file: str):
         """
         Method Name :   load_object
         Description :   This method loads the object from s3 bucket

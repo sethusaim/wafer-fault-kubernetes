@@ -27,7 +27,7 @@ class S3_Operation:
 
         self.s3_resource = resource("s3")
 
-    def load_object(self, object: object, bucket: str, log_file: str):
+    def load_object(self, object, bucket: str, log_file: str):
         """
         Method Name :   load_object
         Description :   This method loads the object from s3 bucket

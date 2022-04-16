@@ -182,11 +182,7 @@ class S3_Operation:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def read_object(
-        self,
-        object: object,
-        log_file: str,
-        decode: bool = True,
-        make_readable: bool = False,
+        self, object, log_file: str, decode: bool = True, make_readable: bool = False,
     ):
         """
         Method Name :   read_object
@@ -222,7 +218,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def get_df_from_object(self, object: object, log_file: str):
+    def get_df_from_object(self, object, log_file: str):
         """
         Method Name :   get_df_from_object
         Description :   This method gets dataframe from object 
