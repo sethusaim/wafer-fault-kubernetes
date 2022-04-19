@@ -1,4 +1,4 @@
-from pulumi_aws.ec2 import get_ami, GetAmiFilterArgs, Instance, SecurityGroup
+from pulumi_aws.ec2 import GetAmiFilterArgs, Instance, SecurityGroup, get_ami
 from utils.read_params import read_params
 
 
@@ -29,15 +29,17 @@ class AWS_EC2:
 
     def get_ec2_ingress_rule(self):
         try:
-            rule_lst = list(self.config["ec2_instance"]["security_group"]["ingress"].values())
-            
+            rule_lst = list(
+                self.config["ec2_instance"]["security_group"]["ingress"].values()
+            )
+
             return rule_lst
 
         except Exception as e:
             raise e
 
     def get_ec2_security_group(self, group_name):
-        try:                        
+        try:
             rule_lst = self.get_ec2_ingress_rule()
 
             group = SecurityGroup(group_name, ingress=rule_lst)
@@ -65,7 +67,7 @@ class AWS_EC2:
     def launch_ec2_instance(self, instance_name, instance_type, sg_name):
         try:
             ec2_ami = self.get_ubuntu_ami()
-            
+
             ec2_security_group = self.get_ec2_security_group(sg_name)
 
             self.get_ec2_instance(

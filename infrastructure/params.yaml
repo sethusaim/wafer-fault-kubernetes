@@ -1,5 +1,5 @@
 base:
-  account_id: 347460842118
+  account_id: 
 
 s3_bucket:
   input_files: input-files-for-train-and-pred

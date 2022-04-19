@@ -1,10 +1,9 @@
-from pulumi_aws.s3 import Bucket
 from pulumi_aws.iam import (
-    get_policy_document_output,
     GetPolicyDocumentStatementArgs,
     GetPolicyDocumentStatementPrincipalArgs,
+    get_policy_document_output,
 )
-from pulumi_aws.s3 import BucketPolicy
+from pulumi_aws.s3 import Bucket, BucketPolicy
 
 
 class AWS_S3:
