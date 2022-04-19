@@ -1,0 +1,6 @@
+name: wafer-infrastructure
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Wafer Infra

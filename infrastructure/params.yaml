@@ -1,0 +1,36 @@
+base:
+  account_id: 347460842118
+
+s3_bucket:
+  input_files: input-files-for-train-and-pred
+  wafer_model: wafer-model
+  wafer-mlflow: wafer-mlflow
+  wafer_pred_data: wafer-pred-data
+  wafer_train_data: wafer-train-data
+  wafer_raw_data: wafer-raw-data
+
+mlflow_instance:
+  name: Wafer-MLFlow
+  type: t2.small
+  security_group:
+    name: ec2_security_group
+    ingress:
+      rule1:
+        protocol: tcp
+        from_port: 8080
+        to_port: 8080
+        cidr_blocks: ['0.0.0.0/0']
+      rule2:
+        protocol: tcp
+        from_port: 8000
+        to_port: 8000
+        cidr_blocks: ['0.0.0.0/0']
+      rule3:        
+        protocol: tcp
+        from_port: 5000
+        to_port: 5000
+        cidr_blocks: ['0.0.0.0/0']
+
+
+
+
