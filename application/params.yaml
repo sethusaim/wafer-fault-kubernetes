@@ -18,7 +18,7 @@ run_name: wafer-run
 s3_bucket:
   components: wafer-components
   io_files: wafer-io-files
-  logs: logs
+  logs: wafer-logs
 
 templates:
   dir: templates
