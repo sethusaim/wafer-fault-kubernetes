@@ -1,11 +1,11 @@
 s3_bucket:
   input_files: wafer-io-files
-  wafer_model: wafer-model
-  wafer-mlflow: wafer-mlflow
-  wafer_pred_data: wafer-pred-data
-  wafer_train_data: wafer-train-data
-  wafer_raw_data: wafer-raw-data
-
+  model: wafer-model
+  mlflow: wafer-mlflow
+  pred_data: wafer-pred-data
+  train_data: wafer-train-data
+  raw_data: wafer-raw-data
+  logs: wafer-logsr
 
 ec2_instances:
   mlflow_instance:
