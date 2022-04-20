@@ -1,6 +1,7 @@
 s3_bucket:
   io_files: wafer-io-files
   model: wafer_model
+  logs: wafer-logs
 
 files:
   features: wafer_features.csv
@@ -9,6 +10,7 @@ files:
 
 logs:
   clustering: clustering_log.log
+  upload: upload_log.log
 
 log_dir: logs
 
