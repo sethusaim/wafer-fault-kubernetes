@@ -11,7 +11,7 @@ class App_Logger:
 
         self.config = read_params()
 
-        self.log_dir = self.config["logs_dir"]
+        self.log_dir = self.config["log_dir"]
 
         makedirs(self.log_dir, exist_ok=True)
 
