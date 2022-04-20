@@ -36,7 +36,7 @@ class App_Logger:
             log_fpath = join(self.log_dir, log_file)
 
             log_msg = (
-                str(self.date) + " " + str(self.current_time) + " " + log_info + "\n"
+                str(self.date) + "  " + str(self.current_time) + "  " + log_info + "\n"
             )
 
             self.write_info_to_file(log_msg, log_fpath)
