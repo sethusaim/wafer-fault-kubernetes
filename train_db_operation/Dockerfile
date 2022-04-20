@@ -1,8 +1,8 @@
 FROM python:3.7-slim-bullseye
 
-COPY . /app
-
 WORKDIR /app
+
+COPY . /app
 
 ARG AWS_ACCESS_KEY_ID
 
@@ -20,8 +20,6 @@ ENV AWS_DEFAULT_REGION $AWS_DEFAULT_REGION
 
 ENV MONGODB_URL=${MONGODB_URL}
 
-RUN pip install --upgrade pip
-
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 CMD ["python","run.py"]
