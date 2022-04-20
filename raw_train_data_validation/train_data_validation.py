@@ -15,12 +15,10 @@ class Raw_Train_Data_Validation:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, bucket: str):
+    def __init__(self):
         self.config = read_params()
 
         self.class_name = self.__class__.__name__
-
-        self.raw_data_bucket = bucket
 
         self.log_writer = App_Logger()
 

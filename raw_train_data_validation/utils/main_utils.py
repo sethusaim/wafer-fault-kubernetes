@@ -1,6 +1,5 @@
-from os import listdir
+from os import listdir, remove, removedirs
 from os.path import join
-from shutil import rmtree
 
 from s3_operations import S3_Operation
 
@@ -53,7 +52,7 @@ class Main_Utils:
                 "exit", self.class_name, method_name, self.log_file
             )
 
-            rmtree(self.log_dir)
+            removedirs(self.log_dir)
 
         except Exception as e:
             self.log_writer.exception_log(
