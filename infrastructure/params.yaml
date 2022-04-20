@@ -10,7 +10,7 @@ s3_bucket:
   wafer_raw_data: wafer-raw-data
 
 mlflow_instance:
-  name: Wafer-MLFlow
+  tag_name: Wafer-MLFlow
   type: t2.small
   security_group:
     name: ec2_security_group

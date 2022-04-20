@@ -27,10 +27,10 @@ class AWS_EC2:
         except Exception as e:
             raise e
 
-    def get_ec2_ingress_rule(self):
+    def get_ec2_ingress_rule(self,instance_name):
         try:
             rule_lst = list(
-                self.config["ec2_instance"]["security_group"]["ingress"].values()
+                self.config[instance_name]["security_group"]["ingress"].values()
             )
 
             return rule_lst
@@ -38,9 +38,9 @@ class AWS_EC2:
         except Exception as e:
             raise e
 
-    def get_ec2_security_group(self, group_name):
+    def get_ec2_security_group(self,instance_name,group_name):
         try:
-            rule_lst = self.get_ec2_ingress_rule()
+            rule_lst = self.get_ec2_ingress_rule(instance_name)
 
             group = SecurityGroup(group_name, ingress=rule_lst)
 
@@ -50,29 +50,29 @@ class AWS_EC2:
             raise e
 
     def get_ec2_instance(
-        self, instance_name, instance_type, instance_ami, security_group
+        self,instance_tag_name, instance_type, instance_ami, security_group
     ):
         try:
             web = Instance(
                 "web",
                 ami=instance_ami.id,
                 instance_type=instance_type,
-                tags={"Name": instance_name},
+                tags={"Name": instance_tag_name},
                 vpc_security_group_ids=[security_group.id],
             )
 
         except Exception as e:
             raise e
 
-    def launch_ec2_instance(self, instance_name, instance_type, sg_name):
+    def launch_ec2_instance(self,instance_name,instance_tag_name, instance_type, sg_name):
         try:
             ec2_ami = self.get_ubuntu_ami()
-
-            ec2_security_group = self.get_ec2_security_group(sg_name)
+            
+            ec2_security_group = self.get_ec2_security_group(instance_name,sg_name)
 
             self.get_ec2_instance(
-                instance_name, instance_type, ec2_ami, ec2_security_group
+                instance_tag_name, instance_type, ec2_ami, ec2_security_group
             )
-
+    
         except Exception as e:
             raise e
