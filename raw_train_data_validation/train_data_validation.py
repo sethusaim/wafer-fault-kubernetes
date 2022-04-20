@@ -134,7 +134,7 @@ class Raw_Train_Data_Validation:
                 e, self.class_name, method_name, self.train_log["general"],
             )
 
-    def create_dirs_for_good_bad_data(self, log_file: str):
+    def create_dirs_for_good_bad_data(self, log_file):
         """
         Method Name :   create_dirs_for_good_bad_data
         Description :   This method creates folders for good and bad data in s3 bucket
@@ -191,7 +191,7 @@ class Raw_Train_Data_Validation:
             self.create_dirs_for_good_bad_data(self.train_log["name_validation"])
 
             onlyfiles = self.s3.get_files_from_folder(
-                self.data_dir["raw_train"],
+                self.data_dir["raw_train_batch"],
                 self.bucket["raw_train_data"],
                 self.train_log["name_validation"],
             )
@@ -205,7 +205,7 @@ class Raw_Train_Data_Validation:
 
             for fname in train_batch_files:
                 raw_data_train_fname = self.utils.get_train_fname(
-                    "raw_train", fname, self.train_log["name_validation"]
+                    "raw_train_batch", fname, self.train_log["name_validation"]
                 )
 
                 good_data_train_fname = self.utils.get_train_fname(
@@ -230,7 +230,7 @@ class Raw_Train_Data_Validation:
                         if len(splitAtDot[2]) == LengthOfTimeStampInFile:
                             self.s3.copy_data(
                                 raw_data_train_fname,
-                                self.bucket["train_data"],
+                                self.bucket["raw_train_data"],
                                 good_data_train_fname,
                                 self.bucket["train_data"],
                                 self.train_log["name_validation"],
@@ -239,7 +239,7 @@ class Raw_Train_Data_Validation:
                         else:
                             self.s3.copy_data(
                                 raw_data_train_fname,
-                                self.bucket["train_data"],
+                                self.bucket["raw_train_data"],
                                 bad_data_train_fname,
                                 self.bucket["train_data"],
                                 self.train_log["name_validation"],
@@ -248,7 +248,7 @@ class Raw_Train_Data_Validation:
                     else:
                         self.s3.copy_data(
                             raw_data_train_fname,
-                            self.bucket["train_data"],
+                            self.bucket["raw_train_data"],
                             bad_data_train_fname,
                             self.bucket["train_data"],
                             self.train_log["name_validation"],
@@ -256,7 +256,7 @@ class Raw_Train_Data_Validation:
                 else:
                     self.s3.copy_data(
                         raw_data_train_fname,
-                        self.bucket["train_data"],
+                        self.bucket["raw_train_data"],
                         bad_data_train_fname,
                         self.bucket["train_data"],
                         self.train_log["name_validation"],
@@ -295,30 +295,26 @@ class Raw_Train_Data_Validation:
                 self.train_log["col_validation"],
             )
 
-            for idx, f in enumerate(lst):
-                df = f[idx][0]
+            for _, f in enumerate(lst):
+                df = f[0]
 
-                file = f[idx][1]
+                file = f[1]
 
-                abs_f = f[idx][2]
+                abs_f = f[2]
 
-                if file.endswith(".csv"):
-                    if df.shape[1] == NumberofColumns:
-                        pass
-
-                    else:
-                        dest_f = self.data_dir["train_bad"] + "/" + abs_f
-
-                        self.s3.move_data(
-                            file,
-                            self.bucket["train_data"],
-                            dest_f,
-                            self.bucket["train_data"],
-                            self.train_log["col_validation"],
-                        )
+                if df.shape[1] == NumberofColumns:
+                    pass
 
                 else:
-                    pass
+                    dest_f = self.data_dir["train_bad"] + "/" + abs_f
+
+                    self.s3.move_data(
+                        file,
+                        self.bucket["train_data"],
+                        dest_f,
+                        self.bucket["train_data"],
+                        self.train_log["col_validation"],
+                    )
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.train_log["col_validation"],
@@ -356,42 +352,41 @@ class Raw_Train_Data_Validation:
                 self.train_log["missing_values_in_col"],
             )
 
-            for idx, f in lst:
-                df = f[idx][0]
+            for _, f in enumerate(lst):
+                df = f[0]
 
-                file = f[idx][1]
+                file = f[1]
 
-                abs_f = f[idx][2]
+                abs_f = f[2]
 
-                if abs_f.endswith(".csv"):
-                    count = 0
+                count = 0
 
-                    for cols in df:
-                        if (len(df[cols]) - df[cols].count()) == len(df[cols]):
-                            count += 1
+                for cols in df:
+                    if (len(df[cols]) - df[cols].count()) == len(df[cols]):
+                        count += 1
 
-                            dest_f = self.data_dir["train_bas"] + "/" + abs_f
+                        dest_f = self.data_dir["train_bad"] + "/" + abs_f
 
-                            self.s3.move_data(
-                                file,
-                                self.bucket["train_data"],
-                                dest_f,
-                                self.bucket["train_data"],
-                                self.train_log["missing_values_in_col"],
-                            )
-
-                            break
-
-                    if count == 0:
-                        dest_f = self.data_dir["train_good"] + "/" + abs_f
-
-                        self.s3.upload_df_as_csv(
-                            df,
-                            abs_f,
+                        self.s3.move_data(
+                            file,
+                            self.bucket["train_data"],
                             dest_f,
                             self.bucket["train_data"],
                             self.train_log["missing_values_in_col"],
                         )
+
+                        break
+
+                if count == 0:
+                    dest_f = self.data_dir["train_good"] + "/" + abs_f
+
+                    self.s3.upload_df_as_csv(
+                        df,
+                        abs_f,
+                        dest_f,
+                        self.bucket["train_data"],
+                        self.train_log["missing_values_in_col"],
+                    )
 
                 else:
                     pass

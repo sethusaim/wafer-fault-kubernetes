@@ -9,6 +9,8 @@ from utils.read_params import read_params
 
 class Main_Utils:
     def __init__(self):
+        self.class_name = self.__class__.__name__
+
         self.s3 = S3_Operation()
 
         self.log_writer = App_Logger()
@@ -22,8 +24,6 @@ class Main_Utils:
         self.log_file = self.config["log"]["upload"]
 
         self.data_dir = self.config["data_dir"]
-
-        self.class_name = self.__class__.__name__
 
     def upload_logs(self):
         method_name = self.upload_logs.__name__

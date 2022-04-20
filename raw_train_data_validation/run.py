@@ -16,7 +16,7 @@ class Run:
 
         self.bucket = self.config["s3_bucket"]
 
-        self.raw_data = Raw_Train_Data_Validation(self.bucket["raw_train_data"])
+        self.raw_data = Raw_Train_Data_Validation()
 
     def raw_train_data_validation(self):
         """

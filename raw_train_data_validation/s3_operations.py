@@ -4,7 +4,7 @@ from os import remove
 
 from boto3 import client, resource
 from botocore.exceptions import ClientError
-from pandas import DataFrame, read_csv
+from pandas import read_csv
 
 from utils.logger import App_Logger
 
@@ -28,7 +28,7 @@ class S3_Operation:
         self.s3_resource = resource("s3")
 
     def read_object(
-        self, object, log_file: str, decode: bool = True, make_readable: bool = False,
+        self, object, log_file, decode=True, make_readable=False,
     ):
         """
         Method Name :   read_object
@@ -70,7 +70,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def read_text(self, fname: str, bucket: str, log_file: str):
+    def read_text(self, fname, bucket, log_file):
         """
         Method Name :   read_text
         Description :   This method reads the text data from s3 bucket
@@ -107,7 +107,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def read_json(self, fname: str, bucket: str, log_file: str):
+    def read_json(self, fname, bucket, log_file):
         """
         Method Name :   read_json
         Description :   This method reads the json data from s3 bucket
@@ -142,7 +142,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def get_df_from_object(self, object, log_file: str):
+    def get_df_from_object(self, object, log_file):
         """
         Method Name :   get_df_from_object
         Description :   This method gets dataframe from object 
@@ -177,7 +177,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def read_csv(self, fname: str, bucket: str, log_file: str):
+    def read_csv(self, fname, bucket, log_file):
         """
         Method Name :   read_csv
         Description :   This method reads the csv data from s3 bucket
@@ -212,7 +212,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def read_csv_from_folder(self, folder_name: str, bucket: str, log_file: str):
+    def read_csv_from_folder(self, folder_name, bucket, log_file):
         """
         Method Name :   read_csv_from_folder
         Description :   This method reads the csv files from folder
@@ -232,8 +232,9 @@ class S3_Operation:
             files = self.get_files_from_folder(folder_name, bucket, log_file)
 
             lst = [
-                (self.read_csv(f, bucket, log_file,), f, f.split("/")[-1],)
+                (self.read_csv(f, bucket, log_file), f, f.split("/")[-1])
                 for f in files
+                if f.endswith(".csv")
             ]
 
             self.log_writer.log(
@@ -252,38 +253,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def load_object(self, object, bucket: str, log_file: str):
-        """
-        Method Name :   load_object
-        Description :   This method loads the object from s3 bucket
-
-        Output      :   An object is loaded from s3 bucket
-        On Failure  :   Write an exception log and then raise an exception
-
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.load_object.__name__
-
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
-
-        try:
-            self.s3_resource.Object(bucket, object).load()
-
-            self.log_writer.log(f"Loaded {object} from {bucket} bucket", log_file)
-
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
-
-    def create_folder(self, folder_name: str, bucket: str, log_file: str):
+    def create_folder(self, folder_name, bucket, log_file):
         """
         Method Name :   create_folder
         Description :   This method creates a folder in s3 bucket
@@ -301,7 +271,7 @@ class S3_Operation:
         )
 
         try:
-            self.load_object(bucket, folder_name)
+            self.s3_resource.Object(bucket, folder_name).load()
 
             self.log_writer.log(f"Folder {folder_name} already exists.", log_file)
 
@@ -315,7 +285,9 @@ class S3_Operation:
                     f"{folder_name} folder does not exist,creating new one", log_file
                 )
 
-                self.s3_client.put_object(bucket, (object + "/"))
+                folder_obj = folder_name + "/"
+
+                self.s3_client.put_object(Bucket=bucket, Key=folder_obj)
 
                 self.log_writer.log(
                     f"{folder_name} folder created in {bucket} bucket", log_file
@@ -330,13 +302,11 @@ class S3_Operation:
                     e, self.class_name, method_name, log_file,
                 )
 
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
     def upload_file(
-        self,
-        from_fname: str,
-        to_fname: str,
-        bucket: str,
-        log_file: str,
-        delete: bool = True,
+        self, from_fname, to_fname, bucket, log_file, delete=True,
     ):
         """
         Method Name :   upload_file
@@ -388,7 +358,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def get_bucket(self, bucket: str, log_file: str):
+    def get_bucket(self, bucket, log_file):
         """
         Method Name :   get_bucket
         Description :   This method gets the bucket from s3 
@@ -422,12 +392,7 @@ class S3_Operation:
             )
 
     def copy_data(
-        self,
-        from_fname: str,
-        from_bucket: str,
-        to_fname: str,
-        to_bucket: str,
-        log_file: str,
+        self, from_fname, from_bucket, to_fname, to_bucket, log_file,
     ):
         """
         Method Name :   copy_data
@@ -463,7 +428,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def delete_file(self, fname: str, bucket: str, log_file: str):
+    def delete_file(self, fname, bucket, log_file):
         """
         Method Name :   delete_file
         Description :   This method delete the file from s3 bucket
@@ -495,12 +460,7 @@ class S3_Operation:
             )
 
     def move_data(
-        self,
-        from_fname: str,
-        from_bucket: str,
-        to_fname: str,
-        to_bucket: str,
-        log_file: str,
+        self, from_fname, from_bucket, to_fname, to_bucket, log_file,
     ):
         """
         Method Name :   move_data
@@ -521,7 +481,7 @@ class S3_Operation:
         try:
             self.copy_data(from_fname, from_bucket, to_fname, to_bucket, log_file)
 
-            self.delete_file(from_bucket, from_fname, log_file)
+            self.delete_file(from_fname, from_bucket, log_file)
 
             self.log_writer.log(
                 f"Moved {from_fname} from bucket {from_bucket} to {to_bucket}", log_file
@@ -536,7 +496,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def get_files_from_folder(self, folder_name: str, bucket: str, log_file: str):
+    def get_files_from_folder(self, folder_name, bucket, log_file):
         """
         Method Name :   get_files_from_folder
         Description :   This method gets the files a folder in s3 bucket
@@ -571,7 +531,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def get_file_object(self, fname: str, bucket: str, log_file: str):
+    def get_file_object(self, fname, bucket, log_file):
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
@@ -589,7 +549,7 @@ class S3_Operation:
         )
 
         try:
-            bucket = self.get_bucket(bucket, log_file,)
+            bucket = self.get_bucket(bucket, log_file)
 
             lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
 
@@ -613,12 +573,7 @@ class S3_Operation:
             )
 
     def upload_df_as_csv(
-        self,
-        data_frame: DataFrame,
-        local_fname: str,
-        bucket_fname: str,
-        bucket: str,
-        log_file: str,
+        self, data_frame, local_fname, bucket_fname, bucket, log_file,
     ):
         """
         Method Name :   upload_df_as_csv
