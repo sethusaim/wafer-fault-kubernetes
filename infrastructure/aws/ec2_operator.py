@@ -27,10 +27,12 @@ class AWS_EC2:
         except Exception as e:
             raise e
 
-    def get_ec2_ingress_rule(self,instance_name):
+    def get_ec2_ingress_rule(self, instance_name):
         try:
             rule_lst = list(
-                self.config[instance_name]["security_group"]["ingress"].values()
+                self.config["ec2_instances"][instance_name]["security_group"][
+                    "ingress"
+                ].values()
             )
 
             return rule_lst
@@ -38,7 +40,7 @@ class AWS_EC2:
         except Exception as e:
             raise e
 
-    def get_ec2_security_group(self,instance_name,group_name):
+    def get_ec2_security_group(self, instance_name, group_name):
         try:
             rule_lst = self.get_ec2_ingress_rule(instance_name)
 
@@ -50,7 +52,7 @@ class AWS_EC2:
             raise e
 
     def get_ec2_instance(
-        self,instance_tag_name, instance_type, instance_ami, security_group
+        self, instance_tag_name, instance_type, instance_ami, security_group
     ):
         try:
             web = Instance(
@@ -64,15 +66,19 @@ class AWS_EC2:
         except Exception as e:
             raise e
 
-    def launch_ec2_instance(self,instance_name,instance_tag_name, instance_type, sg_name):
+    def deploy_ec2_instance(self, instance_name):
         try:
+            ec2_config = self.config["ec2_instances"][instance_name]
+
             ec2_ami = self.get_ubuntu_ami()
-            
-            ec2_security_group = self.get_ec2_security_group(instance_name,sg_name)
+
+            ec2_security_group = self.get_ec2_security_group(
+                instance_name, ec2_config["sg_group"]
+            )
 
             self.get_ec2_instance(
-                instance_tag_name, instance_type, ec2_ami, ec2_security_group
+                ec2_config["tag_name"], ec2_config["type"], ec2_ami, ec2_security_group
             )
-    
+
         except Exception as e:
             raise e

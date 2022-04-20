@@ -9,27 +9,29 @@ s3_bucket:
   wafer_train_data: wafer-train-data
   wafer_raw_data: wafer-raw-data
 
-mlflow_instance:
-  tag_name: Wafer-MLFlow
-  type: t2.small
-  security_group:
-    name: ec2_security_group
-    ingress:
-      rule1:
-        protocol: tcp
-        from_port: 8080
-        to_port: 8080
-        cidr_blocks: ['0.0.0.0/0']
-      rule2:
-        protocol: tcp
-        from_port: 8000
-        to_port: 8000
-        cidr_blocks: ['0.0.0.0/0']
-      rule3:        
-        protocol: tcp
-        from_port: 5000
-        to_port: 5000
-        cidr_blocks: ['0.0.0.0/0']
+
+ec2_instances:
+  mlflow_instance:
+    tag_name: Wafer-MLFlow
+    type: t2.small
+    sg_group:
+      name: ec2_security_group
+      ingress:
+        rule1:
+          protocol: tcp
+          from_port: 8080
+          to_port: 8080
+          cidr_blocks: ['0.0.0.0/0']
+        rule2:
+          protocol: tcp
+          from_port: 8000
+          to_port: 8000
+          cidr_blocks: ['0.0.0.0/0']
+        rule3:        
+          protocol: tcp
+          from_port: 5000
+          to_port: 5000
+          cidr_blocks: ['0.0.0.0/0']
 
 
 
