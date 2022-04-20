@@ -9,6 +9,8 @@ from utils.read_params import read_params
 
 class Main_Utils:
     def __init__(self):
+        self.class_name = self.__class__.__name__
+
         self.s3 = S3_Operation()
 
         self.log_writer = App_Logger()
@@ -17,15 +19,9 @@ class Main_Utils:
 
         self.bucket = self.config["s3_bucket"]
 
-        self.models_dir = self.config["models_dir"]
-
         self.log_file = self.config["log"]["upload"]
 
         self.log_dir = self.config["log_dir"]
-
-        self.file_format = self.config["model_save_format"]
-
-        self.class_name = self.__class__.__name__
 
     def upload_logs(self):
         method_name = self.upload_logs.__name__

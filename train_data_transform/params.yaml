@@ -1,17 +1,17 @@
 s3_bucket:
-  wafer_train_data: wafer-train-data
-  io_files: wafer-io-files
-  logs: wafer-logs
-
-data_dir:
-  good_data_train: good/train
+  wafer_train_data: wafer-train-data-5acbd2d
+  io_files: wafer-io-files-03e0100
+  logs: wafer-logs-71efbdd
 
 logs_dir: logs
 
+data_dir:
+  train_good: good/train
+
 logs: 
-  db_train: wafer_db_train_log.log
-  data_transform: train_data_transform_log.log
-  train_main: training_main_log.log
+  db_train: wafer_db_train_log.txt
+  data_transform: train_data_transform_log.txt
+  train_main: training_main_log.txt
 
 col:
   target: Output

@@ -1,4 +1,4 @@
-from logging import DEBUG, basicConfig, error, info
+from datetime import datetime
 from os import makedirs
 from os.path import join
 
@@ -6,39 +6,45 @@ from utils.read_params import read_params
 
 
 class App_Logger:
-    """
-    Description :   This class is used for logging the info
-    
-    Version     :   1.2
-    Revisions   :   Moved to setup to cloud 
-    """
-
     def __init__(self):
         self.class_name = self.__class__.__name__
 
         self.config = read_params()
 
-        self.log_dir = self.config["log_dir"]
+        self.log_dir = self.config["logs_dir"]
 
         makedirs(self.log_dir, exist_ok=True)
 
-    def log(self, log_info: str, log_file: str):
+    def write_info_to_file(self, log_info, log_file):
         try:
-            log_fpath = join(self.log_dir, log_file)
+            with open(log_file, "a+") as f:
+                f.write(log_info)
 
-            basicConfig(
-                filename=log_fpath,
-                level=DEBUG,
-                format="%(asctime)s %(levelname)s %(message)s",
-                datefmt="%d-%m-%Y %H:%M:%S",
-            )
-
-            info(msg=log_info)
+                f.close()
 
         except Exception as e:
             raise e
 
-    def start_log(self, key: str, class_name: str, method_name: str, log_file: str):
+    def log(self, log_info, log_file):
+        try:
+            self.now = datetime.now()
+
+            self.date = self.now.date().strftime("%d-%m-%Y")
+
+            self.current_time = self.now.strftime("%H:%M:%S")
+
+            log_fpath = join(self.log_dir, log_file)
+
+            log_msg = (
+                str(self.date) + " " + str(self.current_time) + " " + log_info + "\n"
+            )
+
+            self.write_info_to_file(log_msg, log_fpath)
+
+        except Exception as e:
+            raise e
+
+    def start_log(self, key, class_name, method_name, log_file):
         """
         Method Name :   start_log
         Description :   This method creates an entry point log in DynamoDB
@@ -64,9 +70,7 @@ class App_Logger:
 
             raise Exception(error_msg)
 
-    def exception_log(
-        self, exception: str, class_name: str, method_name: str, log_file: str
-    ):
+    def exception_log(self, exception, class_name, method_name, log_file):
         """
         Method Name :   exception_log
         Description :   This method creates an exception log in DynamoDB and raises Exception
@@ -77,20 +81,10 @@ class App_Logger:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-
-        self.start_log("exit", class_name, method_name, log_file)
-
         exception_msg = f"Exception occured in Class : {class_name}, Method : {method_name}, Error : {str(exception)}"
 
-        log_fpath = join(self.log_dir, log_file)
+        self.log(exception_msg, log_file)
 
-        basicConfig(
-            filename=log_fpath,
-            level=DEBUG,
-            format="%(asctime)s %(levelname)s %(message)s",
-            datefmt="%d-%m-%Y %H:%M:%S",
-        )
-
-        error(exception_msg)
+        self.start_log("exit", class_name, method_name, log_file)
 
         raise Exception(exception_msg)

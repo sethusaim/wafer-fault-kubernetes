@@ -46,7 +46,7 @@ class Data_Transform_Train:
         )
 
         try:
-            lst = self.s3.read_csv_from_dir(
+            lst = self.s3.read_csv_from_folder(
                 self.data_dir["train_good"],
                 self.bucket["train_data"],
                 self.train_data_transform_log,
@@ -105,7 +105,7 @@ class Data_Transform_Train:
         )
 
         try:
-            lst = self.s3.read_csv_from_dir(
+            lst = self.s3.read_csv_from_folder(
                 self.data_dir["train_good"],
                 self.bucket["train_data"],
                 self.train_data_transform_log,
