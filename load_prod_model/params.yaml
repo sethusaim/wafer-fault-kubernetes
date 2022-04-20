@@ -8,9 +8,13 @@ model_save_format: .sav
 mlflow_config:
   exp_name : wafer-test
 
+files:
+  features: wafer-features.csv
+
 s3_bucket:
   io_files: wafer-io-files
   model: wafer_model
+  logs: wafer-logs
 
 log:
   upload: upload_log.log

@@ -194,3 +194,86 @@ class S3_Operation:
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def get_bucket(self, bucket: str, log_file: str):
+        """
+        Method Name :   get_bucket
+        Description :   This method gets the bucket from s3 
+        Output      :   A s3 bucket name is returned based on the bucket
+        On Failure  :   Write an exception log and then raise an exception
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.get_bucket.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            bucket = self.s3_resource.Bucket(bucket)
+
+            self.log_writer.log(f"Got {bucket} bucket", log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+            return bucket
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def get_file_object(self, fname: str, bucket: str, log_file: str):
+        """
+        Method Name :   get_file_object
+        Description :   This method gets the file object from s3 bucket
+        Output      :   A file object is returned
+        On Failure  :   Write an exception log and then raise an exception
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.get_file_object.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            bucket = self.get_bucket(bucket, log_file)
+
+            lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
+
+            self.log_writer.log(f"Got {fname} from bucket {bucket}", log_file)
+
+            func = lambda x: x[0] if len(x) == 1 else x
+
+            file_objs = func(lst_objs)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+            return file_objs
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def get_files_from_folder(self, folder_name: str, bucket: str, log_file: str):
+        """
+        Method Name :   get_files_from_folder
+        Description :   This method gets the files a folder in s3 bucket
+        Output      :   A list of files is returned
+        On Failure  :   Write an exception log and then raise an exception
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.get_files_from_folder.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            lst = self.get_file_object(folder_name, bucket, log_file)
+
+            list_of_files = [object.key for object in lst]
+
+            self.log_writer.log(f"Got list of files from bucket {bucket}", log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+            return list_of_files
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)

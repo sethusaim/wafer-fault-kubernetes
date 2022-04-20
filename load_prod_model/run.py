@@ -13,12 +13,10 @@ class Load_Prod_Model:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, num_clusters: int):
+    def __init__(self):
         self.config = read_params()
 
         self.class_name = self.__class__.__name__
-
-        self.num_clusters = num_clusters
 
         self.bucket = self.config["s3_bucket"]
 
@@ -27,6 +25,8 @@ class Load_Prod_Model:
         self.model_dir = self.config["models_dir"]
 
         self.mlflow_config = self.config["mlflow_config"]
+
+        self.files = self.config["files"]
 
         self.s3 = S3_Operation()
 
@@ -89,6 +89,14 @@ class Load_Prod_Model:
             )
 
             runs = self.mlflow_op.get_runs_from_mlflow(exp.experiment_id)
+
+            feat_fnames = self.s3.get_files_from_folder(
+                self.files["features"],
+                self.bucket["io_files"],
+                self.load_prod_model_log,
+            )
+
+            num_clusters = len(feat_fnames)
 
             """
             Code Explaination: 
@@ -155,7 +163,7 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                         if str(i) in file
                     ]
                 )
-                for i in range(0, self.num_clusters)
+                for i in range(0, num_clusters)
             ]
 
             self.log_writer.log(
