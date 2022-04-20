@@ -37,14 +37,6 @@ class Run:
         )
 
         try:
-            kmeans_model = self.s3.load_model(
-                "KMeans",
-                self.bucket["model"],
-                self.model_train_log,
-                self.save_format,
-                self.model_dir["train"],
-            )
-
             feat_fnames = self.s3.get_files_from_folder(
                 self.files["features"], self.bucket["io_files"], self.model_train_log
             )

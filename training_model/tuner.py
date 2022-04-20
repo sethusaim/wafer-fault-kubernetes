@@ -31,7 +31,7 @@ class Model_Finder:
 
         self.xgb_model = XGBClassifier(objective="binary:logistic")
 
-    def get_rf_model(self, train_x, train_y):
+    def get_rf_model(self, train_x:DataFrame, train_y:DataFrame):
         """
         Method Name :   get_rf_model
         Description :   get the parameters for Random Forest Algorithm which give the best accuracy.
