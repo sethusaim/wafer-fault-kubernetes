@@ -38,7 +38,7 @@ class Run:
             (
                 LengthOfDateStampInFile,
                 LengthOfTimeStampInFile,
-                column_names,
+                _,
                 noofcolumns,
             ) = self.raw_data.values_from_schema()
 
