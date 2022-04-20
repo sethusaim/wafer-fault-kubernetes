@@ -1,8 +1,5 @@
-base:
-  account_id: 
-
 s3_bucket:
-  input_files: input-files-for-train-and-pred
+  input_files: wafer-io-files
   wafer_model: wafer-model
   wafer-mlflow: wafer-mlflow
   wafer_pred_data: wafer-pred-data

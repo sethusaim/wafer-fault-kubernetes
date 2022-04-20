@@ -4,11 +4,12 @@ from pulumi_aws.iam import (
     get_policy_document_output,
 )
 from pulumi_aws.s3 import Bucket, BucketPolicy
+from utils.read_params import read_params
 
 
 class AWS_S3:
     def __init__(self):
-        pass
+        self.config = read_params()
 
     def create_bucket(self, bucket_name):
         try:
@@ -59,6 +60,18 @@ class AWS_S3:
             policy = self.get_s3_full_access_policy(account_id, bucket)
 
             self.attach_policy_to_bucket(bucket, policy)
+
+        except Exception as e:
+            raise e
+
+    def create_s3_buckets(self, account_id):
+        try:
+            lst_buckets = list(self.config["s3_bucket"].values())
+
+            [
+                self.create_and_attach_s3_full_access_bucket(bucket, account_id)
+                for bucket in lst_buckets
+            ]
 
         except Exception as e:
             raise e
