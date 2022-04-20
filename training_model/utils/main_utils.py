@@ -1,4 +1,4 @@
-from os import listdir,removedirs
+from os import listdir, removedirs
 from os.path import join
 
 
@@ -56,7 +56,7 @@ class Main_Utils:
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
             )
-                        
+
             removedirs(self.log_dir)
 
         except Exception as e:
