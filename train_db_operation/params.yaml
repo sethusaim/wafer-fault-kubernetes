@@ -1,6 +1,7 @@
 s3_bucket:
   train_data: wafer-train-data
-  io_files: input-files-for-train-and-pred
+  io_files: wafer-io-files
+  logs: wafer-logs
 
 files:
   train_export: train_input_file.csv
