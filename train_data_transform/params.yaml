@@ -8,10 +8,11 @@ log_dir: logs
 data_dir:
   train_good: good/train
 
-logs: 
+log: 
   db_train: wafer_db_train_log.txt
   data_transform: train_data_transform_log.txt
   train_main: training_main_log.txt
+  upload: upload_log.txt
 
 col:
   target: Output

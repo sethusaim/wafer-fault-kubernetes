@@ -158,8 +158,9 @@ class S3_Operation:
             files = self.get_files_from_folder(folder_name, bucket, log_file)
 
             lst = [
-                (self.read_csv(f, bucket, log_file,), f, f.split("/")[-1],)
+                (self.read_csv(f, bucket, log_file), f, f.split("/")[-1])
                 for f in files
+                if f.endswith(".csv")
             ]
 
             self.log_writer.log(

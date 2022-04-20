@@ -52,12 +52,12 @@ class Data_Transform_Train:
                 self.train_data_transform_log,
             )
 
-            for idx, f in enumerate(lst):
-                df = f[idx][0]
+            for _, f in enumerate(lst):
+                df = f[0]
 
-                file = f[idx][1]
+                file = f[1]
 
-                abs_f = f[idx][2]
+                abs_f = f[2]
 
                 if file.endswith(".csv"):
                     df.rename(
@@ -111,12 +111,12 @@ class Data_Transform_Train:
                 self.train_data_transform_log,
             )
 
-            for idx, f in enumerate(lst):
-                df = f[idx][0]
+            for _, f in enumerate(lst):
+                df = f[0]
 
-                file = f[idx][1]
+                file = f[1]
 
-                abs_f = f[idx][2]
+                abs_f = f[2]
 
                 if file.endswith(".csv"):
                     df.fillna("NULL", inplace=True)
