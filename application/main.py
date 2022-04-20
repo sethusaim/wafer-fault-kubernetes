@@ -14,8 +14,6 @@ config = read_params()
 
 templates = Jinja2Templates(directory=config["templates"]["dir"])
 
-pipeline_path = config["pipeline_path"]
-
 origins = ["*"]
 
 app.add_middleware(
@@ -39,7 +37,7 @@ async def trainRouteClient():
     try:
         pipeline = Train_Pipeline()
 
-        pipeline.run_train_pipeline(pipeline_path["train"])
+        pipeline.run_train_pipeline(config["pipeline_path"]["train"])
 
         return Response("Training successfull!!")
 
