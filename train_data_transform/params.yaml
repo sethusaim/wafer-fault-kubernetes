@@ -3,7 +3,7 @@ s3_bucket:
   io_files: wafer-io-files-03e0100
   logs: wafer-logs-71efbdd
 
-logs_dir: logs
+log_dir: logs
 
 data_dir:
   train_good: good/train
