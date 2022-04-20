@@ -9,7 +9,7 @@ from utils.logger import App_Logger
 
 class S3_Operation:
     """
-    Description :   This method is used for all the S3 bucket_name operations
+    Description :   This method is used for all the S3 bucket operations
     Written by  :   iNeuron Intelligence
     
     Version     :   1.2
@@ -103,7 +103,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def read_csv(self, fname: str, bucket_name: str, log_file: str):
+    def read_csv(self, fname: str, bucket: str, log_file: str):
         """
         Method Name :   read_csv
         Description :   This method reads the csv data from s3 bucket
@@ -121,13 +121,11 @@ class S3_Operation:
         )
 
         try:
-            csv_obj = self.get_file_object(fname, bucket_name, log_file,)
+            csv_obj = self.get_file_object(fname, bucket, log_file,)
 
             df = self.get_df_from_object(csv_obj, log_file)
 
-            self.log_writer.log(
-                f"Read {fname} csv file from {bucket_name} bucket", log_file
-            )
+            self.log_writer.log(f"Read {fname} csv file from {bucket} bucket", log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, log_file,
@@ -140,7 +138,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def read_csv_from_dir(self, folder_name: str, bucket_name: str, log_file: str):
+    def read_csv_from_dir(self, folder_name: str, bucket: str, log_file: str):
         """
         Method Name :   read_csv_from_dir
         Description :   This method reads the csv files from folder
@@ -157,15 +155,15 @@ class S3_Operation:
             "start", self.class_name, method_name, log_file,
         )
         try:
-            files = self.get_files_from_folder(folder_name, bucket_name, log_file)
+            files = self.get_files_from_folder(folder_name, bucket, log_file)
 
             lst = [
-                (self.read_csv(f, bucket_name, log_file,), f, f.split("/")[-1],)
+                (self.read_csv(f, bucket, log_file,), f, f.split("/")[-1],)
                 for f in files
             ]
 
             self.log_writer.log(
-                f"Read csv files from {folder_name} folder from {bucket_name} bucket",
+                f"Read csv files from {folder_name} folder from {bucket} bucket",
                 log_file,
             )
 
@@ -184,7 +182,7 @@ class S3_Operation:
         self,
         from_fname: str,
         to_fname: str,
-        bucket_name: str,
+        bucket: str,
         log_file: str,
         delete: bool = True,
     ):
@@ -206,13 +204,13 @@ class S3_Operation:
 
         try:
             self.log_writer.log(
-                f"Uploading {from_fname} to s3 bucket {bucket_name}", log_file
+                f"Uploading {from_fname} to s3 bucket {bucket}", log_file
             )
 
-            self.s3_resource.meta.client.upload_file(from_fname, bucket_name, to_fname)
+            self.s3_resource.meta.client.upload_file(from_fname, bucket, to_fname)
 
             self.log_writer.log(
-                f"Uploaded {from_fname} to s3 bucket {bucket_name}", log_file
+                f"Uploaded {from_fname} to s3 bucket {bucket}", log_file
             )
 
             if delete is True:
@@ -238,12 +236,12 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def get_bucket(self, bucket_name: str, log_file: str):
+    def get_bucket(self, bucket: str, log_file: str):
         """
         Method Name :   get_bucket
         Description :   This method gets the bucket from s3 
 
-        Output      :   A s3 bucket name is returned based on the bucket_name
+        Output      :   A s3 bucket name is returned based on the bucket
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
@@ -256,22 +254,22 @@ class S3_Operation:
         )
 
         try:
-            bucket_name = self.s3_resource.Bucket(bucket_name)
+            bucket = self.s3_resource.Bucket(bucket)
 
-            self.log_writer.log(f"Got {bucket_name} bucket_name", log_file)
+            self.log_writer.log(f"Got {bucket} bucket", log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, log_file,
             )
 
-            return bucket_name
+            return bucket
 
         except Exception as e:
             self.log_writer.exception_log(
                 e, self.class_name, method_name, log_file,
             )
 
-    def delete_file(self, fname: str, bucket_name: str, log_file: str):
+    def delete_file(self, fname: str, bucket: str, log_file: str):
         """
         Method Name :   delete_file
         Description :   This method delete the file from s3 bucket
@@ -289,11 +287,9 @@ class S3_Operation:
         )
 
         try:
-            self.s3_resource.Object(bucket_name, fname).delete()
+            self.s3_resource.Object(bucket, fname).delete()
 
-            self.log_writer.log(
-                f"Deleted {fname} from bucket_name {bucket_name}", log_file
-            )
+            self.log_writer.log(f"Deleted {fname} from bucket {bucket}", log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, log_file,
@@ -304,7 +300,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def get_files_from_folder(self, folder_name: str, bucket_name: str, log_file: str):
+    def get_files_from_folder(self, folder_name: str, bucket: str, log_file: str):
         """
         Method Name :   get_files_from_folder
         Description :   This method gets the files a folder in s3 bucket
@@ -322,13 +318,11 @@ class S3_Operation:
         )
 
         try:
-            lst = self.get_file_object(folder_name, bucket_name, log_file)
+            lst = self.get_file_object(folder_name, bucket, log_file)
 
             list_of_files = [object.key for object in lst]
 
-            self.log_writer.log(
-                f"Got list of files from bucket_name {bucket_name}", log_file
-            )
+            self.log_writer.log(f"Got list of files from bucket {bucket}", log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, log_file,
@@ -341,7 +335,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def get_file_object(self, fname: str, bucket_name: str, log_file: str):
+    def get_file_object(self, fname: str, bucket: str, log_file: str):
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
@@ -359,11 +353,11 @@ class S3_Operation:
         )
 
         try:
-            bucket = self.get_bucket(bucket_name, log_file)
+            bucket = self.get_bucket(bucket, log_file)
 
             lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
 
-            self.log_writer.log(f"Got {fname} from bucket_name {bucket_name}", log_file)
+            self.log_writer.log(f"Got {fname} from bucket {bucket}", log_file)
 
             func = lambda x: x[0] if len(x) == 1 else x
 
@@ -385,7 +379,7 @@ class S3_Operation:
         data_frame: DataFrame,
         local_fname: str,
         bucket_fname: str,
-        bucket_name: str,
+        bucket: str,
         log_file: str,
     ):
         """
@@ -412,7 +406,7 @@ class S3_Operation:
             )
 
             self.upload_file(
-                local_fname, bucket_fname, bucket_name, log_file,
+                local_fname, bucket_fname, bucket, log_file,
             )
 
             self.log_writer.start_log(
