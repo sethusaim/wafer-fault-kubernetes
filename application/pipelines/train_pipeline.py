@@ -1,5 +1,6 @@
 from components.train_components import Train_Component
 from kfp.dsl import pipeline
+from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.pipeline_utils import Pipeline
 from utils.read_params import read_params
@@ -13,7 +14,11 @@ class Train_Pipeline:
 
         self.train_pipeline_log = self.config["log"]["train_pipeline"]
 
+        self.bucket = self.config["s3_bucket"]
+
         self.train_comp = Train_Component()
+
+        self.s3 = S3_Operation()
 
         self.pipe = Pipeline()
 
@@ -153,6 +158,10 @@ class Train_Pipeline:
 
             self.log_writer.log(
                 "Training pipeline executed successfully", self.train_pipeline_log
+            )
+
+            self.s3.upload_file(
+                pkg_file, pkg_file, self.bucket["io_files"], self.train_pipeline_log
             )
 
             self.log_writer.start_log(
