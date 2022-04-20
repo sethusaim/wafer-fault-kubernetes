@@ -1,35 +1,34 @@
 app:
-  host : 0.0.0.0
-  port : 8080 
+  host: 0.0.0.0
+  port: 8080
 
-templates:
-  dir : templates
-  index : index.html
+log:
+  train_comp: train_comp.log
+  train_pipeline: train_pipeline_log.log
+  upload: upload_log.log
+
+log_dir: app_logs
+
+pipeline_path:
+  pred: wafer-pred.zip
+  train: wafer-train.zip
 
 run_name: wafer-run
 
-pipeline_path:
-  train: wafer-train.zip
-  pred: wafer-pred.zip
-
 s3_bucket:
+  components: wafer-components
   io_files: wafer-io-files
   logs: logs
-  components: wafer-components
-   
+
+templates:
+  dir: templates
+  index: index.html
+
 train_components:
   clustering: wafer-clustering.yaml
-  prod_model : wafer-prod.yaml
   preprocessing: wafer-preprocess.yaml
-  raw_train_data_val : wafer-raw-data-val.yaml
-  train_data_trans : wafer-train-data-transform.yaml
+  prod_model: wafer-prod.yaml
+  raw_train_data_val: wafer-raw-data-val.yaml
+  train_data_trans: wafer-train-data-transform.yaml
   train_db_op: wafer-train-db.yaml
-  train_model: wafer-train.yaml 
-
-
-log:
-  train_pipeline: train_pipeline_log.log
-  upload: upload_log.log
-  train_comp: train_comp.log
-  
-log_dir: app_logs
+  train_model: wafer-train.yaml
