@@ -1,8 +1,8 @@
 FROM python:3.7-slim-buster
 
-COPY . /app
-
 WORKDIR /app
+
+COPY . /app
 
 ARG AWS_ACCESS_KEY_ID
 
