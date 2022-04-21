@@ -70,7 +70,7 @@ class Data_Transform_Train:
                     df,
                     abs_f,
                     file,
-                    self.bucket["io_files"],
+                    self.bucket["train_data"],
                     self.train_log["data_transform"],
                 )
 

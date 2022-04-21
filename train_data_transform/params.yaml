@@ -1,7 +1,6 @@
 s3_bucket:
   train_data: wafer-train-data-5acbd2d
-  io_files: wafer-io-files-03e0100
-  logs: wafer-logs-71efbdd
+  logs: wafer-logs-4e1f3bd
 
 log_dir: logs
 
@@ -11,7 +10,7 @@ data_dir:
 log: 
   db_train: wafer_db_train_log.txt
   data_transform: train_data_transform_log.txt
-  train_main: training_main_log.txt
+  data_transform_main: data_transform_main.txt
   upload: upload_log.txt
 
 col:
