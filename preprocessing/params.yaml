@@ -1,6 +1,6 @@
 s3_bucket:
-  io_files: wafer-io-files
-  logs: wafer-logs
+  io_files: wafer-io-files-03e0100
+  logs: wafer-logs-4e1f3bd
 
 files:
   wafer_features: wafer_features.csv
@@ -11,8 +11,8 @@ files:
 target_col: Output
 
 log:
-  preprocess: preprocess_log.log
-  upload: upload_log.log
+  preprocess: preprocess_log.txt
+  upload: upload_log.txt
 
 knn_imputer:
   n_neighbors: 3

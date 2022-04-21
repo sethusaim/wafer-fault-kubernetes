@@ -1,6 +1,6 @@
+from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
-from s3_operations import S3_Operation
 
 
 class Data_Getter_Train:
@@ -47,7 +47,8 @@ class Data_Getter_Train:
             )
 
             self.log_writer.log(
-                f"Training data loaded from {self.files['train_export']} file and {self.bucket['io_files']} bucket"
+                f"Training data loaded from {self.files['train_export']} file and {self.bucket['io_files']} bucket",
+                self.log_file,
             )
 
             self.log_writer.start_log(

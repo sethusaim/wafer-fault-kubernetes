@@ -137,8 +137,8 @@ class Preprocessor:
                 )
 
             self.log_writer.log(
-                self.log_file,
                 "Finding missing values is a success.Data written to the null values file",
+                self.log_file,
             )
 
             self.log_writer.start_log(
@@ -148,7 +148,7 @@ class Preprocessor:
             return self.null_present
 
         except Exception as e:
-            self.log_writer.log(self.log_file, "Finding missing values failed")
+            self.log_writer.log("Finding missing values failed", self.log_file)
 
             self.log_writer.exception_log(
                 e, self.class_name, method_name, self.log_file
@@ -176,7 +176,7 @@ class Preprocessor:
 
             self.new_data = DataFrame(data=self.new_array, columns=data.columns)
 
-            self.log_writer.log(self.log_file, "Imputing missing values Successful")
+            self.log_writer.log("Imputing missing values Successful", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
@@ -185,7 +185,7 @@ class Preprocessor:
             return self.new_data
 
         except Exception as e:
-            self.log_writer.log(self.log_file, "Imputing missing values failed")
+            self.log_writer.log("Imputing missing values failed", self.log_file)
 
             self.log_writer.exception_log(
                 e, self.class_name, method_name, self.log_file
@@ -213,8 +213,8 @@ class Preprocessor:
             self.col_to_drop = [x for x in data.columns if data_n[x]["std"] == 0]
 
             self.log_writer.log(
-                self.log_file,
                 "Column search for Standard Deviation of Zero Successful.",
+                self.log_file,
             )
 
             self.log_writer.start_log(
@@ -225,7 +225,7 @@ class Preprocessor:
 
         except Exception as e:
             self.log_writer.log(
-                self.log_file, "Column search for Standard Deviation of Zero Failed."
+                "Column search for Standard Deviation of Zero Failed.", self.log_file
             )
 
             self.log_writer.exception_log(

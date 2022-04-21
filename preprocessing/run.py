@@ -12,7 +12,7 @@ class Run:
 
         self.target_col = self.config["target_col"]
 
-        self.preprocess_log = self.config["log"]["preprocess_log"]
+        self.preprocess_log = self.config["log"]["preprocess"]
 
         self.files = self.config["files"]
 
@@ -83,15 +83,15 @@ class Run:
 
 
 if __name__ == "__main__":
-    run = Run()
-
-    utils = Main_Utils()
-
     try:
+        run = Run()
+
         run.run_preprocess()
 
     except Exception as e:
         raise e
 
     finally:
+        utils = Main_Utils()
+
         utils.upload_logs()
