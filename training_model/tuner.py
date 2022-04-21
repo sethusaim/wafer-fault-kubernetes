@@ -8,6 +8,7 @@ from utils.logger import App_Logger
 from utils.model_utils import Model_Utils
 from utils.read_params import read_params
 
+
 class Model_Finder:
     """
     Description :   This class shall  be used to find the model with best accuracy and AUC score.
@@ -42,7 +43,9 @@ class Model_Finder:
 
         self.rf_model = RandomForestClassifier()
 
-        self.xgb_model = XGBClassifier(objective="binary:logistic",eval_metric="logloss")
+        self.xgb_model = XGBClassifier(
+            objective="binary:logistic", eval_metric="logloss"
+        )
 
     def get_rf_model(self, train_x, train_y):
         """
