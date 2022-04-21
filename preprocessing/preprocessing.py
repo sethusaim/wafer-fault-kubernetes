@@ -15,7 +15,7 @@ class Preprocessor:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, log_file: str):
+    def __init__(self, log_file):
         self.log_file = log_file
 
         self.config = read_params()
@@ -32,7 +32,7 @@ class Preprocessor:
 
         self.class_name = self.__class__.__name__
 
-    def remove_columns(self, data: DataFrame, columns):
+    def remove_columns(self, data, columns):
         """
         Method Name :   remove_columns
         Description :   This method removes the given columns from a pandas dataframe
@@ -62,7 +62,7 @@ class Preprocessor:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def separate_label_feature(self, data: DataFrame, label_col_name: str):
+    def separate_label_feature(self, data, label_col_name):
         """
         Method name :   separate_label_feature
         Description :   This method separates the features and a label columns
@@ -96,7 +96,7 @@ class Preprocessor:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def is_null_present(self, data: DataFrame):
+    def is_null_present(self, data):
         """
         Method name :   is_null_present
         Description :   This method checks whether there are null values present in the pandas
@@ -154,7 +154,7 @@ class Preprocessor:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def impute_missing_values(self, data: DataFrame):
+    def impute_missing_values(self, data):
         """
         Method Name :   impute_missing_values
         Desrciption :   This method  replaces all the missing values in th dataframe using KNN imputer
@@ -191,7 +191,7 @@ class Preprocessor:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_columns_with_zero_std_deviation(self, data: DataFrame):
+    def get_columns_with_zero_std_deviation(self, data):
         """
         Method Name :   get_columns_with_zero_std_deviation
         Description :   This method replaces all the missing values in the dataframe using KNN imputer

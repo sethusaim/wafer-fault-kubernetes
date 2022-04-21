@@ -11,7 +11,7 @@ class Data_Getter_Train:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, log_file: str):
+    def __init__(self, log_file):
         self.config = read_params()
 
         self.log_file = log_file
