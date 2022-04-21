@@ -3,6 +3,7 @@ boto3==1.21.43
 botocore==1.24.43
 certifi==2021.10.8
 colorama==0.4.3
+dnspython==2.2.1
 docutils==0.15.2
 jmespath==1.0.0
 numpy==1.21.6

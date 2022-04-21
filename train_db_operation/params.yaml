@@ -1,8 +1,8 @@
 s3_bucket:
-  train_data: wafer-train-data
-  io_files: wafer-io-files
-  logs: wafer-logs
-
+  train_data: wafer-train-data-5acbd2d
+  io_files: wafer-io-files-03e0100
+  logs: wafer-logs-4e1f3bd
+  
 files:
   train_export: train_input_file.csv
 
@@ -12,9 +12,10 @@ data_dir:
 log_dir: logs
 
 log:
-  db_insert: train_db_insert_log.log
-  export_csv: train_export_to_csv_log.log
-  train_main: training_main_log.log
+  db_insert: train_db_insert_log.txt
+  export_csv: train_export_to_csv_log.txt
+  db_main: training_main_log.txt
+  upload: upload_log.txt
 
 mongodb:
   db_name: wafer-data

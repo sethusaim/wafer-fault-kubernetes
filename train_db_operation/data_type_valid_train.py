@@ -1,7 +1,7 @@
 from mongo_db_operations import MongoDB_Operation
+from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
-from s3_operations import S3_Operation
 
 
 class DB_Operation_Train:
@@ -17,7 +17,7 @@ class DB_Operation_Train:
 
         self.class_name = self.__class__.__name__
 
-        self.bucket = self.bucket["s3_bucket"]
+        self.bucket = self.config["s3_bucket"]
 
         self.files = self.config["files"]
 
@@ -55,21 +55,15 @@ class DB_Operation_Train:
                 self.train_log["db_insert"],
             )
 
-            for idx, f in enumerate(lst):
-                df = f[idx][0]
+            for _, f in enumerate(lst):
+                df = f[0]
 
-                file = f[idx][1]
-
-                if file.endswith(".csv"):
-                    self.mongo.insert_dataframe_as_record(
-                        df,
-                        good_data_db_name,
-                        good_data_collection_name,
-                        self.train_log["db_insert"],
-                    )
-
-                else:
-                    pass
+                self.mongo.insert_dataframe_as_record(
+                    df,
+                    good_data_db_name,
+                    good_data_collection_name,
+                    self.train_log["db_insert"],
+                )
 
                 self.log_writer.log(
                     "Inserted dataframe as collection record in mongodb",

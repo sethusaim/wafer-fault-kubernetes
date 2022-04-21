@@ -262,6 +262,7 @@ class S3_Operation:
             lst = [
                 (self.read_csv(f, bucket, log_file,), f, f.split("/")[-1],)
                 for f in files
+                if f.endswith(".csv")
             ]
 
             self.log_writer.log(

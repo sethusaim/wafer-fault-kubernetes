@@ -10,7 +10,7 @@ class Run:
 
         self.class_name = self.__class__.__name__
 
-        self.train_main_log = self.config["log"]["train_main"]
+        self.train_main_log = self.config["log"]["db_main"]
 
         self.mongo_config = self.config["mongodb"]
 

@@ -1,5 +1,6 @@
-from os import listdir, removedirs
+from os import listdir
 from os.path import join
+from shutil import rmtree
 
 from s3_operations import S3_Operation
 
@@ -17,13 +18,9 @@ class Main_Utils:
 
         self.bucket = self.config["s3_bucket"]
 
-        self.models_dir = self.config["models_dir"]
-
         self.log_file = self.config["log"]["upload"]
 
         self.log_dir = self.config["log_dir"]
-
-        self.file_format = self.config["model_save_format"]
 
         self.class_name = self.__class__.__name__
 
@@ -54,7 +51,7 @@ class Main_Utils:
                 "exit", self.class_name, method_name, self.log_file
             )
 
-            removedirs(self.log_dir)
+            rmtree(self.log_dir)
 
         except Exception as e:
             self.log_writer.exception_log(
