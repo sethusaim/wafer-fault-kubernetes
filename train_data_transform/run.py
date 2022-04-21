@@ -12,6 +12,8 @@ class Run:
 
         self.train_main_log = self.config["log"]["train_main"]
 
+        self.col = self.config["col"]
+
         self.log_writer = App_Logger()
 
         self.data_transform = Data_Transform_Train()
@@ -22,7 +24,9 @@ class Run:
         try:
             self.log_writer.log("Starting Data Transformation", self.train_main_log)
 
-            self.data_transform.rename_target_column()
+            self.data_transform.rename_column(self.col["unnamed"], self.col["wafer"])
+
+            self.data_transform.rename_column(self.col["good_bad"], self.col["output"])
 
             self.data_transform.replace_missing_with_null()
 

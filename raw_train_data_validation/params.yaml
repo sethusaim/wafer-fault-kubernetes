@@ -13,13 +13,10 @@ files:
   train_schema: wafer-schema_training.json
   regex: wafer-regex.txt
 
-log_dir: logs
-
 log:
-  upload: upload_log.txt
-  train_main: train_main_log.txt
-  values_from_schema: values_from_schema_log.txt
-  general: general_log.txt
-  name_validation: train_name_validation_log.txt
-  col_validation: train_col_validation_log.txt
-  missing_values_in_col: train_missing_values_in_column.txt
+  train_main: train_main_log
+  values_from_schema: values_from_schema_log
+  general: general_log
+  name_validation: train_name_validation_log
+  col_validation: train_col_validation_log
+  missing_values_in_col: train_missing_values_in_column

@@ -1,5 +1,5 @@
 s3_bucket:
-  wafer_train_data: wafer-train-data-5acbd2d
+  train_data: wafer-train-data-5acbd2d
   io_files: wafer-io-files-03e0100
   logs: wafer-logs-71efbdd
 
@@ -15,5 +15,8 @@ log:
   upload: upload_log.txt
 
 col:
-  target: Output
-  replace: Good/Bad
+  output: Output
+  good_bad: Good/Bad
+  wafer: Wafer
+  unnamed: "Unnamed: 0"
+

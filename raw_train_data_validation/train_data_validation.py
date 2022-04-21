@@ -134,7 +134,7 @@ class Raw_Train_Data_Validation:
                 e, self.class_name, method_name, self.train_log["general"],
             )
 
-    def create_dirs_for_good_bad_data(self, log_file):
+    def create_dirs_for_good_bad_data(self, log_table):
         """
         Method Name :   create_dirs_for_good_bad_data
         Description :   This method creates folders for good and bad data in s3 bucket
@@ -147,26 +147,26 @@ class Raw_Train_Data_Validation:
         """
         method_name = self.create_dirs_for_good_bad_data.__name__
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", self.class_name, method_name, log_table)
 
         try:
             self.s3.create_folder(
-                self.data_dir["train_good"], self.bucket["train_data"], log_file
+                self.data_dir["train_good"], self.bucket["train_data"], log_table
             )
 
             self.s3.create_folder(
-                self.data_dir["train_bad"], self.bucket["train_data"], log_file
+                self.data_dir["train_bad"], self.bucket["train_data"], log_table
             )
 
             self.log_writer.log(
                 f"Created folders for good and bad data in {self.bucket['train_data']}",
-                log_file,
+                log_table,
             )
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", self.class_name, method_name, log_table)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, self.class_name, method_name, log_table)
 
     def validate_raw_fname(
         self, regex, LengthOfDateStampInFile, LengthOfTimeStampInFile

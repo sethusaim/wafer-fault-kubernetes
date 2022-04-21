@@ -1,6 +1,8 @@
+from time import sleep
+
 from train_data_validation import Raw_Train_Data_Validation
+from utils.log_tables import Log_Table
 from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
 from utils.read_params import read_params
 
 
@@ -68,12 +70,13 @@ if __name__ == "__main__":
     try:
         run = Run()
 
+        table = Log_Table()
+
+        table.generate_log_tables()
+        
+        sleep(5)
+
         run.raw_train_data_validation()
 
     except Exception as e:
         raise e
-
-    finally:
-        utils = Main_Utils()
-
-        utils.upload_logs()
