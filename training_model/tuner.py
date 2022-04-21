@@ -1,4 +1,3 @@
-from pandas import DataFrame
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 
@@ -16,7 +15,7 @@ class Model_Finder:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, log_file: str):
+    def __init__(self, log_file):
         self.log_file = log_file
 
         self.class_name = self.__class__.__name__
@@ -31,7 +30,7 @@ class Model_Finder:
 
         self.xgb_model = XGBClassifier(objective="binary:logistic")
 
-    def get_rf_model(self, train_x: DataFrame, train_y: DataFrame):
+    def get_rf_model(self, train_x, train_y):
         """
         Method Name :   get_rf_model
         Description :   get the parameters for Random Forest Algorithm which give the best accuracy.
@@ -85,7 +84,7 @@ class Model_Finder:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_xgboost_model(self, train_x: DataFrame, train_y: DataFrame):
+    def get_xgboost_model(self, train_x, train_y):
         """
         Method Name :   get_xgboost_model
         Description :   get the parameters for XGBoost Algorithm which give the best accuracy.
@@ -140,11 +139,7 @@ class Model_Finder:
             )
 
     def get_trained_models(
-        self,
-        train_x: DataFrame,
-        train_y: DataFrame,
-        test_x: DataFrame,
-        test_y: DataFrame,
+        self, train_x, train_y, test_x, test_y,
     ):
         """
         Method Name :   get_trained_models

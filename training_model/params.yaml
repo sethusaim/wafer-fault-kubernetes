@@ -4,8 +4,9 @@ base:
   test_size: 0.33
 
 s3_bucket:
-  io_files: input-files-for-train-and-pred
-  wafer_model: wafer-model
+  io_files: wafer-io-files-03e0100
+  wafer_model: wafer-model-3e502a3
+  feature_store|: wafer-feature-store-02126f6
 
 mlflow_config:
   exp_name: wafer-ops-test
@@ -13,15 +14,15 @@ mlflow_config:
   serialization_format: cloudpickle
 
 model_dir:
-  train: trained/
+  train: trained
 
 files:
   features: wafer-cluster_features.csv
   labels: wafer-cluster_labels.csv
 
 log:
-  model_train_log: model_training_log.log
-  upload: upload_log.log
+  model_train_log: model_training_log.txt
+  upload: upload_log.txt
 
 log_dir: logs
 

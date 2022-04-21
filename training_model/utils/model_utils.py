@@ -39,9 +39,7 @@ class Model_Utils:
 
         self.class_name = self.__class__.__name__
 
-    def get_model_score(
-        self, model, test_x: DataFrame, test_y: DataFrame, log_file: str
-    ):
+    def get_model_score(self, model, test_x, test_y, log_file):
         """
         Method Name :   get_model_score
         Description :   This method gets model score againist the test data
@@ -87,9 +85,7 @@ class Model_Utils:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def get_model_params(
-        self, model, x_train: DataFrame, y_train: DataFrame, log_file: str
-    ):
+    def get_model_params(self, model, x_train, y_train, log_file):
         """
         Method Name :   get_model_params
         Description :   This method gets the model parameters based on model_key_name and train data
@@ -131,7 +127,7 @@ class Model_Utils:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def train_models(self, X_data: DataFrame, Y_data: DataFrame, log_file: str):
+    def train_models(self, X_data, Y_data, log_file):
         method_name = self.train_models.__name__
 
         self.log_writer.start_log("start", log_file, self.class_name, method_name)
@@ -168,7 +164,7 @@ class Model_Utils:
         except Exception as e:
             self.log_writer.exception_log(e, log_file, self.class_name, method_name)
 
-    def get_model_file(self, key: str, model_name: str, log_file: str):
+    def get_model_file(self, key, model_name, log_file):
         method_name = self.get_model_file.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)

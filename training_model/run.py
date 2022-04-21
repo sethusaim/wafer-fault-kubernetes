@@ -38,7 +38,9 @@ class Run:
 
         try:
             feat_fnames = self.s3.get_files_from_folder(
-                self.files["features"], self.bucket["io_files"], self.model_train_log
+                self.files["features"],
+                self.bucket["feature_store"],
+                self.model_train_log,
             )
 
             lst_clusters = len(feat_fnames)
@@ -63,15 +65,15 @@ class Run:
                 )
 
                 cluster_feat = self.s3.read_csv(
-                    feat_name, self.bucket["io_files"], self.model_train_log
+                    feat_name, self.bucket["feature_store"], self.model_train_log
                 )
 
                 cluster_label = self.s3.read_csv(
-                    label_name, self.bucket["io_files"], self.model_train_log
+                    label_name, self.bucket["feature_store"], self.model_train_log
                 )
 
                 self.log_writer.log(
-                    f"Got cluster features and cluster labels dataframe from {self.bucket['io_files']} bucket",
+                    f"Got cluster features and cluster labels dataframe from {self.bucket['feature_store']} bucket",
                     self.model_train_log,
                 )
 
@@ -90,15 +92,15 @@ class Run:
 
 
 if __name__ == "__main__":
-    run = Run()
-
-    utils = Main_Utils()
-
     try:
+        run = Run()
+
         run.training_model()
 
     except Exception as e:
         raise e
 
     finally:
+        utils = Main_Utils()
+
         utils.upload_logs()

@@ -44,7 +44,7 @@ class MLFlow_Operation:
 
         self.model_save_format = self.config["model_utils"]["save_format"]
 
-    def get_experiment_from_mlflow(self, exp_name: str):
+    def get_experiment_from_mlflow(self, exp_name):
         """
         Method Name :   get_experiment_from_mlflow
         Description :   This method gets the experiment from mlflow server using the experiment name
@@ -76,7 +76,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_runs_from_mlflow(self, exp_id: int):
+    def get_runs_from_mlflow(self, exp_id):
         """
         Method Name :   get_runs_from_mlflow
         Description :   This method gets the runs from the mlflow server for a particular experiment id
@@ -111,7 +111,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def set_mlflow_experiment(self, exp_name: str):
+    def set_mlflow_experiment(self, exp_name):
         """
         Method Name :   set_mlflow_experiment
         Description :   This method sets the mlflow experiment with the particular experiment name
@@ -143,7 +143,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_mlflow_client(self, server_uri: str):
+    def get_mlflow_client(self, server_uri):
         """
         Method Name :   get_mlflow_client
         Description :   This method gets mlflow client for the particular server uri
@@ -239,7 +239,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def search_mlflow_models(self, order: str):
+    def search_mlflow_models(self, order):
         """
         Method Name :   search_mlflow_models
         Description :   This method searches for registered models and returns them in the mentioned order
@@ -275,7 +275,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def log_sklearn_model(self, model, model_name: str):
+    def log_sklearn_model(self, model, model_name):
         """
         Method Name :   log_sklearn_model
         Description :   This method logs the model to mlflow server
@@ -310,7 +310,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def log_model_metric(self, model_name: str, metric: float):
+    def log_model_metric(self, model_name, metric: float):
         """
         Method Name :   log_model_metric
         Description :   This method logs the model metric to mlflow server
@@ -342,7 +342,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def log_model_param(self, idx: int, model, model_name: str, param: str):
+    def log_model_param(self, idx, model, model_name, param):
         """
         Method Name :   log_model_param
         Description :   This method logs the model param to mlflow server
@@ -374,7 +374,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def log_all_for_model(self, model, model_score: float, idx: int = None):
+    def log_all_for_model(self, model, model_score: float, idx=None):
         """
         Method Name :   log_all_for_model
         Description :   This method logs model,model params and model score to mlflow server
@@ -428,12 +428,7 @@ class MLFlow_Operation:
             )
 
     def transition_mlflow_model(
-        self,
-        model_version: int,
-        stage: str,
-        model_name: str,
-        from_bucket: str,
-        to_bucket: str,
+        self, model_version, stage, model_name, from_bucket, to_bucket,
     ):
         """
         Method Name :   transition_mlflow_model
