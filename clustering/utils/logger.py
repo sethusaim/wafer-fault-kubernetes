@@ -22,7 +22,7 @@ class App_Logger:
 
         makedirs(self.log_dir, exist_ok=True)
 
-    def log(self, log_info: str, log_file: str):
+    def log(self, log_info, log_file):
         try:
             log_fpath = join(self.log_dir, log_file)
 
@@ -38,7 +38,7 @@ class App_Logger:
         except Exception as e:
             raise e
 
-    def start_log(self, key: str, class_name: str, method_name: str, log_file: str):
+    def start_log(self, key, class_name, method_name, log_file):
         """
         Method Name :   start_log
         Description :   This method creates an entry point log in DynamoDB
@@ -63,9 +63,7 @@ class App_Logger:
 
             raise Exception(error_msg)
 
-    def exception_log(
-        self, exception: str, class_name: str, method_name: str, log_file: str
-    ):
+    def exception_log(self, exception, class_name, method_name, log_file):
         """
         Method Name :   exception_log
         Description :   This method creates an exception log in DynamoDB and raises Exception

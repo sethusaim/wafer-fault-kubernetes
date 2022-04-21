@@ -1,7 +1,7 @@
 s3_bucket:
-  io_files: wafer-io-files
-  model: wafer_model
-  logs: wafer-logs
+  io_files: wafer-io-files-03e0100
+  model: wafer-model-3e502a3
+  logs: wafer-logs-4e1f3bd
 
 files:
   features: wafer_features.csv
@@ -9,8 +9,8 @@ files:
   elbow_plot: K-Means_Elbow.png
 
 logs:
-  clustering: clustering_log.log
-  upload: upload_log.log
+  clustering: clustering_log.txt
+  upload: upload_log.txt
 
 log_dir: logs
 

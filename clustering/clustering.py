@@ -16,7 +16,7 @@ class KMeans_Clustering:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, log_file: str):
+    def __init__(self, log_file):
         self.log_file = log_file
 
         self.config = read_params()
@@ -104,7 +104,7 @@ class KMeans_Clustering:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def create_clusters(self, data: DataFrame, num_clusters: int):
+    def create_clusters(self, data, num_clusters):
         """
         Method Name :   create_clusters
         Description :   Create a new dataframe consisting of the cluster information.

@@ -58,7 +58,7 @@ class Main_Utils:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_cluster_fname(self, fname: str, idx: int):
+    def get_cluster_fname(self, fname, idx):
         method_name = self.get_cluster_fname.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
