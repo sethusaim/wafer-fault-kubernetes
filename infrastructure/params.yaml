@@ -6,6 +6,7 @@ s3_bucket:
   train_data: wafer-train-data
   raw_data: wafer-raw-data
   logs: wafer-logs
+  feature_store: wafer-feature-store
 
 ec2_instances:
   mlflow_instance:
