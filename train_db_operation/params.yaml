@@ -9,6 +9,8 @@ files:
 data_dir:
   train_good: good/train
 
+log_dir: logs
+
 log:
   db_insert: train_db_insert_log.log
   export_csv: train_export_to_csv_log.log

@@ -16,7 +16,7 @@ class S3_Operation:
         self.log_writer = App_Logger()
 
     def read_object(
-        self, object, log_file: str, decode: bool = True, make_readable: bool = False,
+        self, object, log_file, decode: bool = True, make_readable: bool = False,
     ):
         """
         Method Name :   read_object
@@ -60,7 +60,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def get_df_from_object(self, object, log_file: str):
+    def get_df_from_object(self, object, log_file):
         """
         Method Name :   get_df_from_object
         Description :   This method gets dataframe from object 
@@ -95,7 +95,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def read_csv(self, fname: str, bucket: str, log_file: str):
+    def read_csv(self, fname, bucket, log_file):
         """
         Method Name :   read_csv
         Description :   This method reads the csv data from s3 bucket
@@ -130,7 +130,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def get_bucket(self, bucket: str, log_file: str):
+    def get_bucket(self, bucket, log_file):
         """
         Method Name :   get_bucket
         Description :   This method gets the bucket from s3 
@@ -163,7 +163,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def get_file_object(self, fname: str, bucket: str, log_file: str):
+    def get_file_object(self, fname, bucket, log_file):
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
@@ -204,7 +204,7 @@ class S3_Operation:
         except Exception as e:
             raise e
 
-    def get_files_from_folder(self, folder_name: str, bucket: str, log_file: str):
+    def get_files_from_folder(self, folder_name, bucket, log_file):
         """
         Method Name :   get_files_from_folder
         Description :   This method gets the files a folder in s3 bucket
@@ -239,7 +239,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def read_csv_from_folder(self, folder_name: str, bucket: str, log_file: str):
+    def read_csv_from_folder(self, folder_name, bucket, log_file):
         """
         Method Name :   read_csv_from_folder
         Description :   This method reads the csv files from folder
@@ -281,12 +281,7 @@ class S3_Operation:
             )
 
     def upload_file(
-        self,
-        from_fname: str,
-        to_fname: str,
-        bucket: str,
-        log_file: str,
-        delete: bool = True,
+        self, from_fname, to_fname, bucket, log_file, delete: bool = True,
     ):
         """
         Method Name :   upload_file
@@ -339,12 +334,7 @@ class S3_Operation:
             )
 
     def upload_df_as_csv(
-        self,
-        data_frame: DataFrame,
-        local_fname: str,
-        bucket_fname: str,
-        bucket: str,
-        log_file: str,
+        self, data_frame: DataFrame, local_fname, bucket_fname, bucket, log_file,
     ):
         """
         Method Name :   upload_df_as_csv

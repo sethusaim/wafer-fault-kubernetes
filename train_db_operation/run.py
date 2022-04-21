@@ -53,15 +53,15 @@ class Run:
 
 
 if __name__ == "__main__":
-    run = Run()
-
-    utils = Main_Utils()
-
     try:
+        run = Run()
+
         run.train_data_type_valid()
 
     except Exception as e:
         raise e
 
     finally:
+        utils = Main_Utils()
+
         utils.upload_logs()

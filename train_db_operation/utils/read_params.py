@@ -1,7 +1,7 @@
 from yaml import safe_load
 
 
-def read_params(config_path: str = "params.yaml"):
+def read_params(config_path="params.yaml"):
     """
     Method Name :   read_params
     Description :   This method reads the parameters from params.yaml file
