@@ -1,6 +1,5 @@
 from kneed import KneeLocator
 from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
-from pandas import DataFrame
 from sklearn.cluster import KMeans
 
 from s3_operations import S3_Operation
