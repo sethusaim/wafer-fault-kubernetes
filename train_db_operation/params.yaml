@@ -1,7 +1,7 @@
 s3_bucket:
   train_data: wafer-train-data-5acbd2d
-  io_files: wafer-io-files-03e0100
   logs: wafer-logs-4e1f3bd
+  feature_store: wafer-feature-store-02126f6
   
 files:
   train_export: train_input_file.csv

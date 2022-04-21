@@ -107,7 +107,7 @@ class DB_Operation_Train:
                 df,
                 self.files["train_export"],
                 self.files["train_export"],
-                self.bucket["io_files"],
+                self.bucket["feature_store"],
                 self.train_log["export_csv"],
             )
 
