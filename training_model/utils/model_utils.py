@@ -100,8 +100,8 @@ class Model_Utils:
                 f"Initialized {model_grid.__class__.__name__}  with {model_param_grid} as params",
                 log_file,
             )
-
-            model_grid.fit(x_train, y_train)
+        
+            model_grid.fit(x_train.to_numpy(), y_train["Labels"].to_numpy(dtype=int))
 
             self.log_writer.log(
                 f"Found the best params for {model_name} model based on {model_param_grid} as params",

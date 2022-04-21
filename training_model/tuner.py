@@ -8,7 +8,6 @@ from utils.logger import App_Logger
 from utils.model_utils import Model_Utils
 from utils.read_params import read_params
 
-
 class Model_Finder:
     """
     Description :   This class shall  be used to find the model with best accuracy and AUC score.
@@ -43,9 +42,7 @@ class Model_Finder:
 
         self.rf_model = RandomForestClassifier()
 
-        self.xgb_model = XGBClassifier(
-            objective="binary:logistic", use_label_encoder=False
-        )
+        self.xgb_model = XGBClassifier(objective="binary:logistic",eval_metric="logloss")
 
     def get_rf_model(self, train_x, train_y):
         """
@@ -61,6 +58,8 @@ class Model_Finder:
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_rf_model.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
@@ -226,7 +225,7 @@ class Model_Finder:
     def train_and_log_models(self, X_data, Y_data, log_file):
         method_name = self.train_and_log_models.__name__
 
-        self.log_writer.start_log("start", log_file, self.class_name, method_name)
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             x_train, x_test, y_train, y_test = train_test_split(

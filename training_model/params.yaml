@@ -21,7 +21,6 @@ models_dir:
 file_pattern:
   wafer_features-
 
-
 log:
   model_train: model_training_log.txt
   upload: upload_log.txt
