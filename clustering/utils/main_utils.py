@@ -58,26 +58,21 @@ class Main_Utils:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_cluster_fname(self, fname, idx):
+    def get_cluster_fname(self, fname, idx, log_file):
         method_name = self.get_cluster_fname.__name__
 
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             cluster_fname = fname.replace(".csv", "-" + str(idx) + ".csv")
 
             self.log_writer.log(
-                f"Got cluster file name for cluster {idx} of file {fname}",
-                self.log_file,
+                f"Got cluster file name for cluster {idx} of file {fname}", log_file,
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return cluster_fname
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)

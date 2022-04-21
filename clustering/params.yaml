@@ -10,7 +10,7 @@ files:
 
 log:
   clustering: clustering_log.txt
-  upload: upload_log.txt
+  upload: upload_cluster_log.txt
 
 log_dir: logs
 

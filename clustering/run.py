@@ -71,11 +71,11 @@ class Run:
                 cluster_label = cluster_data["Labels"]
 
                 cluster_feats_fname = self.utils.get_cluster_fname(
-                    self.files["features"], i
+                    self.files["features"], i, self.clustering_log
                 )
 
                 cluster_label_fname = self.utils.get_cluster_fname(
-                    self.files["labels"], i
+                    self.files["targets"], i, self.clustering_log
                 )
 
                 self.s3.upload_df_as_csv(
