@@ -17,7 +17,7 @@ log_dir: logs
 
 log:
   upload: upload_log.txt
-  train_main: train_main_log.txt
+  raw_train_main: raw_train_main_log.txt
   values_from_schema: values_from_schema_log.txt
   general: general_log.txt
   name_validation: train_name_validation_log.txt
