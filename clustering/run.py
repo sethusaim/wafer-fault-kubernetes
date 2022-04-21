@@ -13,7 +13,7 @@ class Run:
 
         self.bucket = self.config["s3_bucket"]
 
-        self.clustering_log = self.config["log"]["clustering_log"]
+        self.clustering_log = self.config["log"]["clustering"]
 
         self.s3 = S3_Operation()
 
@@ -105,15 +105,15 @@ class Run:
 
 
 if __name__ == "__main__":
-    run = Run()
-
-    utils = Main_Utils()
-
     try:
+        run = Run()
+
         run.run_clustering()
 
     except Exception as e:
         raise e
 
     finally:
+        utils = Main_Utils()
+
         utils.upload_logs()

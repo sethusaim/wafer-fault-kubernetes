@@ -8,7 +8,7 @@ files:
   targets: wafer_targets.csv
   elbow_plot: K-Means_Elbow.png
 
-logs:
+log:
   clustering: clustering_log.txt
   upload: upload_log.txt
 
