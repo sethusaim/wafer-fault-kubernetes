@@ -74,7 +74,7 @@ class S3_Operation:
 
             lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
 
-            self.log_writer.log(log_file, f"Got {fname} from bucket {bucket}")
+            self.log_writer.log(f"Got {fname} from bucket {bucket}", log_file)
 
             func = lambda x: x[0] if len(x) == 1 else x
 
@@ -88,7 +88,7 @@ class S3_Operation:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def read_object(
-        self, object, log_file, decode: bool = True, make_readable: bool = False,
+        self, object, log_file, decode=True, make_readable=False,
     ):
         """
         Method Name :   read_object
@@ -127,7 +127,7 @@ class S3_Operation:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def upload_file(
-        self, from_fname, to_fname, bucket, log_file, delete: bool = True,
+        self, from_fname, to_fname, bucket, log_file, delete=True,
     ):
         """
         Method Name :   upload_file
