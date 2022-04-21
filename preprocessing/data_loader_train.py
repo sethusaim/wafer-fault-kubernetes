@@ -43,11 +43,11 @@ class Data_Getter_Train:
 
         try:
             df = self.s3.read_csv(
-                self.files["train_export"], self.bucket["io_files"], self.log_file
+                self.files["train_export"], self.bucket["feature_store"], self.log_file
             )
 
             self.log_writer.log(
-                f"Training data loaded from {self.files['train_export']} file and {self.bucket['io_files']} bucket",
+                f"Training data loaded from {self.files['train_export']} file and {self.bucket['feature_store']} bucket",
                 self.log_file,
             )
 

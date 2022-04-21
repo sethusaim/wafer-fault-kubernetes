@@ -55,7 +55,7 @@ class Run:
                 X,
                 self.files["wafer_features"],
                 self.files["wafer_features"],
-                self.bucket["io_files"],
+                self.bucket["feature_store"],
                 self.preprocess_log,
             )
 
@@ -63,12 +63,12 @@ class Run:
                 Y,
                 self.files["wafer_targets"],
                 self.files["wafer_targets"],
-                self.bucket["io_files"],
+                self.bucket["feature_store"],
                 self.preprocess_log,
             )
 
             self.log_writer.log(
-                f"Uploaded features and target csv files in {self.bucket['io_files']} bucket",
+                f"Uploaded features and target csv files in {self.bucket['feature_store']} bucket",
                 self.preprocess_log,
             )
 

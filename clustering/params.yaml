@@ -2,6 +2,7 @@ s3_bucket:
   io_files: wafer-io-files-03e0100
   model: wafer-model-3e502a3
   logs: wafer-logs-4e1f3bd
+  feature_store: wafer-feature-store-02126f6
 
 files:
   features: wafer_features.csv
