@@ -42,7 +42,7 @@ class MLFlow_Operation:
 
         self.model_dir = self.config["models_dir"]
 
-        self.model_save_format = self.config["model_utils"]["save_format"]
+        self.model_save_format = self.config["save_format"]
 
     def get_experiment_from_mlflow(self, exp_name):
         """
@@ -194,7 +194,7 @@ class MLFlow_Operation:
         try:
             set_tracking_uri(environ["MLFLOW_TRACKING_URI"])
 
-            self.log_writer.log(self.log_file, "Set mlflow tracking uri")
+            self.log_writer.log("Set mlflow tracking uri", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
@@ -310,7 +310,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def log_model_metric(self, model_name, metric: float):
+    def log_model_metric(self, model_name, metric):
         """
         Method Name :   log_model_metric
         Description :   This method logs the model metric to mlflow server
@@ -374,7 +374,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def log_all_for_model(self, model, model_score: float, idx=None):
+    def log_all_for_model(self, model, model_score, idx=None):
         """
         Method Name :   log_all_for_model
         Description :   This method logs model,model params and model score to mlflow server
@@ -402,7 +402,7 @@ class MLFlow_Operation:
                 model_name = base_model_name + str(idx)
 
                 self.log_writer.log(
-                    self.log_file, f"Got the model name as {model_name}",
+                    f"Got the model name as {model_name}", self.log_file
                 )
 
                 model_params_list = list(self.config[model_name].keys())
@@ -411,111 +411,14 @@ class MLFlow_Operation:
                     f"Created a list of params based on {model_name}", self.log_file
                 )
 
-                for param in model_params_list:
-                    self.log_model_param(idx, model, model_name, param=param)
+                [
+                    self.log_model_param(idx, model, model_name, param)
+                    for param in model_params_list
+                ]
 
                 self.log_sklearn_model(model, model_name)
 
                 self.log_model_metric(model_name, metric=float(model_score))
-
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file
-            )
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
-
-    def transition_mlflow_model(
-        self, model_version, stage, model_name, from_bucket, to_bucket,
-    ):
-        """
-        Method Name :   transition_mlflow_model
-        Description :   This method transitions mlflow model from one stage to other stage, and does the same in s3 bucket
-
-        Output      :   A mlflow model is transitioned from one stage to another, and same is reflected in s3 bucket
-        On Failure  :   Write an exception log and then raise an exception
-
-        Version     :   1.2
-        
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.transition_mlflow_model.__name__
-
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
-
-        try:
-            current_version = model_version
-
-            self.log_writer.log(
-                self.log_file, f"Got {current_version} as the current model version",
-            )
-
-            client = self.get_mlflow_client(environ["MLFLOW_TRACKING_URI"])
-
-            trained_model_file = self.model_utils.get_model_file(
-                "train", model_name, self.log_file
-            )
-
-            stag_model_file = self.model_utils.get_model_file(
-                "stag", model_name, self.log_file
-            )
-
-            prod_model_file = self.model_utils.get_model_file(
-                "prod", model_name, self.log_file
-            )
-
-            self.log_writer.log(
-                "Created trained,stag and prod model files", self.log_file
-            )
-
-            if stage == "Production":
-                self.log_writer.log(
-                    f"{stage} is selected for transition", self.log_file
-                )
-
-                client.transition_model_version_stage(
-                    model_name, current_version, stage
-                )
-
-                self.log_writer.log(
-                    f"Transitioned {model_name} to {stage} in mlflow", self.log_file
-                )
-
-                self.s3.copy_data(
-                    trained_model_file,
-                    from_bucket,
-                    prod_model_file,
-                    to_bucket,
-                    self.log_file,
-                )
-
-            elif stage == "Staging":
-                self.log_writer.log(
-                    f"{stage} is selected for transition", self.log_file
-                )
-
-                client.transition_model_version_stage(
-                    model_name, current_version, stage
-                )
-
-                self.log_writer.log(
-                    f"Transitioned {model_name} to {stage} in mlflow", self.log_file
-                )
-
-                self.s3.copy_data(
-                    trained_model_file,
-                    from_bucket,
-                    stag_model_file,
-                    to_bucket,
-                    self.log_file,
-                )
-
-            else:
-                self.log_writer.log(
-                    "Please select stage for model transition", self.log_file
-                )
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file

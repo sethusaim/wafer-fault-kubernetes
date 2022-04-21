@@ -1,7 +1,7 @@
 from s3_operations import S3_Operation
+from tuner import Model_Finder
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
-from utils.model_utils import Model_Utils
 from utils.read_params import read_params
 
 
@@ -11,7 +11,13 @@ class Run:
 
         self.config = read_params()
 
-        self.model_utils = Model_Utils()
+        self.train_log = self.config["log"]
+
+        self.bucket = self.config["s3_bucket"]
+
+        self.model_dir = self.config["models_dir"]
+
+        self.model = Model_Finder(self.train_log["model_train"])
 
         self.utils = Main_Utils()
 
@@ -19,75 +25,69 @@ class Run:
 
         self.log_writer = App_Logger()
 
-        self.model_train_log = self.config["log"]["model_train"]
-
-        self.bucket = self.config["s3_bucket"]
-
-        self.model_dir = self.config["model_dir"]
-
-        self.save_format = self.config["model_save_format"]
-
-        self.files = self.config["files"]
-
     def training_model(self):
         method_name = self.training_model.__name__
 
         self.log_writer.start_log(
-            "start", self.class_name, method_name, self.model_train_log
+            "start", self.class_name, method_name, self.train_log["model_train"]
         )
 
         try:
             feat_fnames = self.s3.get_files_from_folder(
-                self.files["features"],
+                self.config["file_pattern"],
                 self.bucket["feature_store"],
-                self.model_train_log,
+                self.train_log["model_train"],
             )
 
             lst_clusters = len(feat_fnames)
 
             self.log_writer.log(
                 f"Found the number of cluster to be {lst_clusters}",
-                self.model_train_log,
+                self.train_log["model_train"],
             )
 
             for i in range(lst_clusters):
                 feat_name = self.utils.get_cluster_fname(
-                    "features", i, self.model_train_log
+                    "features", i, self.train_log["model_train"]
                 )
 
                 label_name = self.utils.get_cluster_fname(
-                    "labels", i, self.model_train_log
+                    "targets", i, self.train_log["model_train"]
                 )
 
                 self.log_writer.log(
                     "Got the cluster features and cluster label file names",
-                    self.model_train_log,
+                    self.train_log["model_train"],
                 )
 
                 cluster_feat = self.s3.read_csv(
-                    feat_name, self.bucket["feature_store"], self.model_train_log
+                    feat_name,
+                    self.bucket["feature_store"],
+                    self.train_log["model_train"],
                 )
 
                 cluster_label = self.s3.read_csv(
-                    label_name, self.bucket["feature_store"], self.model_train_log
+                    label_name,
+                    self.bucket["feature_store"],
+                    self.train_log["model_train"],
                 )
 
                 self.log_writer.log(
                     f"Got cluster features and cluster labels dataframe from {self.bucket['feature_store']} bucket",
-                    self.model_train_log,
+                    self.train_log["model_train"],
                 )
 
-                self.model_utils.train_models(
-                    cluster_feat, cluster_label, self.model_train_log
+                self.model.train_and_log_models(
+                    cluster_feat, cluster_label, self.train_log["model_train"]
                 )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.model_train_log
+                "exit", self.class_name, method_name, self.train_log["model_train"]
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.model_train_log
+                e, self.class_name, method_name, self.train_log["model_train"]
             )
 
 

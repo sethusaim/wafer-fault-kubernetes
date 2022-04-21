@@ -1,0 +1,16 @@
+21-04-2022  19:10:36  Entered read_csv method of class S3_Operation
+21-04-2022  19:10:36  Entered get_file_object method of class S3_Operation
+21-04-2022  19:10:36  Entered get_bucket method of class S3_Operation
+21-04-2022  19:10:36  Got s3.Bucket(name='wafer-feature-store-02126f6') bucket
+21-04-2022  19:10:36  Exited get_bucket method of class S3_Operation
+21-04-2022  19:10:37  Got wafer_targets-1.csv from bucket s3.Bucket(name='wafer-feature-store-02126f6')
+21-04-2022  19:10:37  Exited get_file_object method of class S3_Operation
+21-04-2022  19:10:37  Entered get_df_from_object method of class S3_Operation
+21-04-2022  19:10:37  Entered read_object method of class S3_Operation
+21-04-2022  19:10:37  Read the s3 object with decode as True
+21-04-2022  19:10:37  read the s3 object with make_readable as True
+21-04-2022  19:10:37  Exited read_object method of class S3_Operation
+21-04-2022  19:10:38  Got dataframe fro object
+21-04-2022  19:10:38  Exited get_df_from_object method of class S3_Operation
+21-04-2022  19:10:38  Read wafer_targets-1.csv csv file from wafer-feature-store-02126f6 bucket
+21-04-2022  19:10:38  Exited read_csv method of class S3_Operation

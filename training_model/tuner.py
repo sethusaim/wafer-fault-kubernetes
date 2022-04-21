@@ -1,6 +1,9 @@
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
 
+from mlflow_operations import MLFlow_Operation
+from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.model_utils import Model_Utils
 from utils.read_params import read_params
@@ -22,13 +25,27 @@ class Model_Finder:
 
         self.config = read_params()
 
+        self.split_kwargs = self.config["base"]
+
+        self.model_dir = self.config["models_dir"]
+
+        self.bucket = self.config["s3_bucket"]
+
+        self.save_format = self.config["save_format"]
+
+        self.mlflow_op = MLFlow_Operation(self.log_file)
+
         self.model_utils = Model_Utils()
 
         self.log_writer = App_Logger()
 
+        self.s3 = S3_Operation()
+
         self.rf_model = RandomForestClassifier()
 
-        self.xgb_model = XGBClassifier(objective="binary:logistic")
+        self.xgb_model = XGBClassifier(
+            objective="binary:logistic", use_label_encoder=False
+        )
 
     def get_rf_model(self, train_x, train_y):
         """
@@ -138,9 +155,7 @@ class Model_Finder:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_trained_models(
-        self, train_x, train_y, test_x, test_y,
-    ):
+    def get_trained_models(self, train_x, train_y, test_x, test_y):
         """
         Method Name :   get_trained_models
         Description :   Find out the Model which has the best score.
@@ -207,3 +222,47 @@ class Model_Finder:
             self.log_writer.exception_log(
                 e, self.class_name, method_name, self.log_file
             )
+
+    def train_and_log_models(self, X_data, Y_data, log_file):
+        method_name = self.train_and_log_models.__name__
+
+        self.log_writer.start_log("start", log_file, self.class_name, method_name)
+
+        try:
+            x_train, x_test, y_train, y_test = train_test_split(
+                X_data, Y_data, **self.split_kwargs
+            )
+
+            self.log_writer.log(
+                f"Performed train test split with kwargs as {self.split_kwargs}",
+                log_file,
+            )
+
+            lst = self.get_trained_models(x_train, y_train, x_test, y_test)
+
+            self.log_writer.log("Got trained models", log_file)
+
+            for idx, tm in enumerate(lst):
+                model = tm[0]
+
+                model_score = tm[1]
+
+                self.s3.save_model(
+                    model,
+                    self.model_dir["train"],
+                    self.bucket["model"],
+                    log_file,
+                    self.save_format,
+                    idx=idx,
+                )
+
+                self.mlflow_op.log_all_for_model(model, model_score, idx=idx)
+
+            self.log_writer.log(
+                "Saved and logged all trained models to mlflow", log_file
+            )
+
+            self.log_writer.start_log("exit", log_file, self.class_name, method_name)
+
+        except Exception as e:
+            self.log_writer.exception_log(e, log_file, self.class_name, method_name)

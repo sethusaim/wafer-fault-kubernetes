@@ -1,27 +1,29 @@
 base:
   random_state: 42
-  target_col: Output
   test_size: 0.33
+
+target_col: Output
 
 s3_bucket:
   io_files: wafer-io-files-03e0100
   wafer_model: wafer-model-3e502a3
-  feature_store|: wafer-feature-store-02126f6
+  feature_store: wafer-feature-store-02126f6
+  logs: wafer-logs-4e1f3bd
 
 mlflow_config:
   exp_name: wafer-ops-test
   run_name: mlops
   serialization_format: cloudpickle
 
-model_dir:
+models_dir:
   train: trained
 
-files:
-  features: wafer-cluster_features.csv
-  labels: wafer-cluster_labels.csv
+file_pattern:
+  wafer_features-
+
 
 log:
-  model_train_log: model_training_log.txt
+  model_train: model_training_log.txt
   upload: upload_log.txt
 
 log_dir: logs
@@ -30,7 +32,8 @@ model_utils:
   verbose: 3
   cv: 5
   n_jobs: -1
-  save_format: .sav
+
+save_format: .sav
 
 RandomForestClassifier:
   n_estimators:

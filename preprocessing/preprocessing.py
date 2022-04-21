@@ -1,4 +1,4 @@
-from numpy import asarray, nan
+import numpy as np
 from pandas import DataFrame
 from sklearn.impute import KNNImputer
 
@@ -126,7 +126,7 @@ class Preprocessor:
 
                 null_df["columns"] = data.columns
 
-                null_df["missing values count"] = asarray(data.isna().sum())
+                null_df["missing values count"] = np.asarray(data.isna().sum())
 
                 self.s3.upload_df_as_csv(
                     null_df,
@@ -170,7 +170,7 @@ class Preprocessor:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            imputer = KNNImputer(missing_values=nan, **self.imputer_params)
+            imputer = KNNImputer(missing_values=np.nan, **self.imputer_params)
 
             self.new_array = imputer.fit_transform(data)
 
