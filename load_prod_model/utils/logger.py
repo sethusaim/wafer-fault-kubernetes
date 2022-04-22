@@ -1,4 +1,4 @@
-from logging import DEBUG, basicConfig, error, info
+from datetime import datetime
 from os import makedirs
 from os.path import join
 
@@ -6,13 +6,6 @@ from utils.read_params import read_params
 
 
 class App_Logger:
-    """
-    Description :   This class is used for logging the info
-    
-    Version     :   1.2
-    Revisions   :   Moved to setup to cloud 
-    """
-
     def __init__(self):
         self.class_name = self.__class__.__name__
 
@@ -22,18 +15,31 @@ class App_Logger:
 
         makedirs(self.log_dir, exist_ok=True)
 
+    def write_info_to_file(self, log_info, log_file):
+        try:
+            with open(log_file, "a+") as f:
+                f.write(log_info)
+
+                f.close()
+
+        except Exception as e:
+            raise e
+
     def log(self, log_info, log_file):
         try:
+            self.now = datetime.now()
+
+            self.date = self.now.date().strftime("%d-%m-%Y")
+
+            self.current_time = self.now.strftime("%H:%M:%S")
+
             log_fpath = join(self.log_dir, log_file)
 
-            basicConfig(
-                filename=log_fpath,
-                level=DEBUG,
-                format="%(asctime)s %(levelname)s %(message)s",
-                datefmt="%d-%m-%Y %H:%M:%S",
+            log_msg = (
+                str(self.date) + "  " + str(self.current_time) + "  " + log_info + "\n"
             )
 
-            info(msg=log_info)
+            self.write_info_to_file(log_msg, log_fpath)
 
         except Exception as e:
             raise e
@@ -75,20 +81,10 @@ class App_Logger:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-
-        self.start_log("exit", class_name, method_name, log_file)
-
         exception_msg = f"Exception occured in Class : {class_name}, Method : {method_name}, Error : {str(exception)}"
 
-        log_fpath = join(self.log_dir, log_file)
+        self.log(exception_msg, log_file)
 
-        basicConfig(
-            filename=log_fpath,
-            level=DEBUG,
-            format="%(asctime)s %(levelname)s %(message)s",
-            datefmt="%d-%m-%Y %H:%M:%S",
-        )
-
-        error(exception_msg)
+        self.start_log("exit", class_name, method_name, log_file)
 
         raise Exception(exception_msg)
