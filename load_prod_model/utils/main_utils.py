@@ -68,13 +68,39 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            model_file = self.models_dir[key] + model_name + self.file_format
+            model_file = self.models_dir[key] + "/" + model_name + self.file_format
 
             self.log_writer.log(f"Got model file for {key}", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return model_file
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def create_prod_and_stag_dirs(self, bucket, log_file):
+        """
+        Method Name :   create_prod_and_stag_dirs
+        Description :   This method creates folders for production and staging bucket
+
+        Output      :   Folders for production and staging are created in s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+
+        Version     :   1.2
+        
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.create_prod_and_stag_dirs.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            self.s3.create_folder(self.models_dir["prod"], bucket, log_file)
+
+            self.s3.create_folder(self.models_dir["stag"], bucket, log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
