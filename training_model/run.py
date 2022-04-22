@@ -114,8 +114,7 @@ class Run:
                     )
 
             self.log_writer.log(
-                "Completed model and training and logging of the models to mlflow",
-                self.train_log["model_train"],
+                "Completed model and training and logging of the models to mlflow",self.train_log["model_train"]
             )
 
             self.log_writer.start_log(

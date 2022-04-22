@@ -16,7 +16,7 @@ class Model_Utils:
     """
 
     def __init__(self):
-        self.log_writer = App_Logger()
+        self.class_name = self.__class__.__name__
 
         self.config = read_params()
 
@@ -26,7 +26,7 @@ class Model_Utils:
 
         self.s3 = S3_Operation()
 
-        self.class_name = self.__class__.__name__
+        self.log_writer = App_Logger()
 
     def get_model_score(self, model, test_x, test_y, log_file):
         """
@@ -85,7 +85,6 @@ class Model_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-
         method_name = self.get_model_params.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)

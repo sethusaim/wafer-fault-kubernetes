@@ -350,7 +350,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def load_model(self, model_name, bucket, log_file, format, model_dir=None):
+    def load_model(self, model_name, bucket, log_file, save_format, model_dir=None):
         """
         Method Name :   load_model
         Description :   This method loads the model from s3 bucket
@@ -365,9 +365,9 @@ class S3_Operation:
 
         try:
             func = (
-                lambda: model_name + format
+                lambda: model_name + save_format
                 if model_dir is None
-                else model_dir + "/" + model_name + format
+                else model_dir + "/" + model_name + save_format
             )
 
             model_file = func()

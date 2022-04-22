@@ -258,7 +258,7 @@ class Model_Finder:
                     idx=idx,
                 )
 
-                self.mlflow_op.log_all_for_model(model, model_score, idx=idx)
+                self.mlflow_op.log_all_for_model(model, model_score, idx)
 
             self.log_writer.log(
                 "Saved and logged all trained models to mlflow", log_file
