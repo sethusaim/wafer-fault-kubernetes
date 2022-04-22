@@ -7,7 +7,7 @@ s3_bucket:
 files:
   features: wafer_train_features.csv
   targets: wafer_train_targets.csv
-  elbow_plot: K-Means_Elbow.png
+  elbow_plot: K-Means_Elbow_train.png
 
 log:
   clustering: train_clustering_log.txt
