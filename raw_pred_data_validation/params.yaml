@@ -2,7 +2,7 @@ s3_bucket:
   io_files: wafer-io-files-03e0100
   logs: wafer-logs-4e1f3bd
   raw_pred_data: wafer-raw-data-140436f
-  pred_data: wafer-pred-data-5acbd2d
+  pred_data: wafer-pred-data-2648352
 
 data_dir:
   raw_pred_batch: pred_batch
