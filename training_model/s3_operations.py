@@ -1,6 +1,6 @@
 from io import StringIO
 from os import remove
-from pickle import dump
+from pickle import dump, loads
 
 from boto3 import resource
 from pandas import read_csv
@@ -346,6 +346,45 @@ class S3_Operation:
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return df
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def load_model(self, model_name, bucket, log_file, format, model_dir=None):
+        """
+        Method Name :   load_model
+        Description :   This method loads the model from s3 bucket
+        Output      :   A pandas series object consisting of runs for the particular experiment id
+        On Failure  :   Write an exception log and then raise an exception
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.load_model.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            func = (
+                lambda: model_name + format
+                if model_dir is None
+                else model_dir + model_name + format
+            )
+
+            model_file = func()
+
+            self.log_writer.log(f"Got {model_file} as model file", log_file)
+
+            f_obj = self.get_file_object(model_file, bucket, log_file)
+
+            model_obj = self.read_object(f_obj, log_file, decode=False)
+
+            model = loads(model_obj)
+
+            self.log_writer.log(f"Loaded {model_name} from bucket {bucket}", log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+            return model
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)

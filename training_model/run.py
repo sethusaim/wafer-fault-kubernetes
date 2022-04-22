@@ -1,3 +1,6 @@
+from mlflow import start_run
+
+from mlflow_operations import MLFlow_Operation
 from s3_operations import S3_Operation
 from tuner import Model_Finder
 from utils.logger import App_Logger
@@ -17,6 +20,10 @@ class Run:
 
         self.model_dir = self.config["models_dir"]
 
+        self.mlflow_config = self.config["mlflow_config"]
+
+        self.save_format = self.config["save_format"]
+
         self.model = Model_Finder(self.train_log["model_train"])
 
         self.utils = Main_Utils()
@@ -24,6 +31,8 @@ class Run:
         self.s3 = S3_Operation()
 
         self.log_writer = App_Logger()
+
+        self.mlflow_op = MLFlow_Operation(self.train_log["model_train"])
 
     def training_model(self):
         method_name = self.training_model.__name__
@@ -46,40 +55,61 @@ class Run:
                 self.train_log["model_train"],
             )
 
-            for i in range(lst_clusters):
-                feat_name = self.utils.get_cluster_fname(
-                    "features", i, self.train_log["model_train"]
-                )
+            kmeans_model = self.s3.load_model(
+                "KMeans",
+                self.bucket["model"],
+                self.train_log["model_train"],
+                self.save_format,
+                model_dir=self.model_dir["train"],
+            )
 
-                label_name = self.utils.get_cluster_fname(
-                    "targets", i, self.train_log["model_train"]
-                )
+            kmeans_model_name = kmeans_model.__class__.__name__
 
-                self.log_writer.log(
-                    "Got the cluster features and cluster label file names",
-                    self.train_log["model_train"],
-                )
+            self.mlflow_op.set_mlflow_tracking_uri()
 
-                cluster_feat = self.s3.read_csv(
-                    feat_name,
-                    self.bucket["feature_store"],
-                    self.train_log["model_train"],
-                )
+            self.mlflow_op.set_mlflow_experiment(self.mlflow_config["exp_name"])
 
-                cluster_label = self.s3.read_csv(
-                    label_name,
-                    self.bucket["feature_store"],
-                    self.train_log["model_train"],
-                )
+            with start_run(run_name=self.mlflow_config["run_name"]):
+                self.mlflow_op.log_sklearn_model(kmeans_model, kmeans_model_name)
 
-                self.log_writer.log(
-                    f"Got cluster features and cluster labels dataframe from {self.bucket['feature_store']} bucket",
-                    self.train_log["model_train"],
-                )
+                for i in range(lst_clusters):
+                    feat_name = self.utils.get_cluster_fname(
+                        "features", i, self.train_log["model_train"]
+                    )
 
-                self.model.train_and_log_models(
-                    cluster_feat, cluster_label, self.train_log["model_train"]
-                )
+                    label_name = self.utils.get_cluster_fname(
+                        "targets", i, self.train_log["model_train"]
+                    )
+
+                    self.log_writer.log(
+                        "Got the cluster features and cluster label file names",
+                        self.train_log["model_train"],
+                    )
+
+                    cluster_feat = self.utils.get_features_csv_as_numpy_array(
+                        feat_name,
+                        self.bucket["feature_store"],
+                        self.train_log["model_train"],
+                    )
+
+                    cluster_label = self.utils.get_targets_csv_as_numpy_array(
+                        label_name,
+                        self.bucket["feature_store"],
+                        self.train_log["model_train"],
+                    )
+
+                    self.log_writer.log(
+                        f"Got cluster features and cluster labels dataframe from {self.bucket['feature_store']} bucket",
+                        self.train_log["model_train"],
+                    )
+
+                    self.model.train_and_log_models(
+                        cluster_feat, cluster_label, self.train_log["model_train"]
+                    )
+
+            self.log_writer.log(
+                "Completed model and training and logging of the models to mlflow"
+            )
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.train_log["model_train"]

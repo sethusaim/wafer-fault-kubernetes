@@ -1,3 +1,4 @@
+from numpy import unique
 from s3_operations import S3_Operation
 from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import GridSearchCV
@@ -52,7 +53,7 @@ class Model_Utils:
                 f"Used {model_name} model to get predictions on test data", log_file
             )
 
-            if len(test_y.unique()) == 1:
+            if len(unique(test_y)) == 1:
                 model_score = accuracy_score(test_y, preds)
 
                 self.log_writer.log(
@@ -101,7 +102,7 @@ class Model_Utils:
                 log_file,
             )
 
-            model_grid.fit(x_train.to_numpy(), y_train["Labels"].to_numpy(dtype=int))
+            model_grid.fit(x_train, y_train)
 
             self.log_writer.log(
                 f"Found the best params for {model_name} model based on {model_param_grid} as params",

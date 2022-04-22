@@ -1,6 +1,7 @@
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
+from mlflow import start_run
 
 from mlflow_operations import MLFlow_Operation
 from s3_operations import S3_Operation
@@ -30,6 +31,8 @@ class Model_Finder:
         self.model_dir = self.config["models_dir"]
 
         self.bucket = self.config["s3_bucket"]
+
+        self.mlflow_config = self.config["mlflow_config"]
 
         self.save_format = self.config["save_format"]
 
@@ -61,8 +64,6 @@ class Model_Finder:
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_rf_model.__name__
-
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
@@ -128,7 +129,7 @@ class Model_Finder:
             )
 
             self.log_writer.log(
-                f"{self.rf_model_name} model best params are {self.rf_best_params}",
+                f"{self.xgb_model_name} model best params are {self.xgb_best_params}",
                 self.log_file,
             )
 
@@ -254,7 +255,7 @@ class Model_Finder:
                     self.model_dir["train"],
                     self.bucket["model"],
                     log_file,
-                    self.save_format,
+                    format=self.save_format,
                     idx=idx,
                 )
 
