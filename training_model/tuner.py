@@ -1,7 +1,6 @@
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
-from mlflow import start_run
 
 from mlflow_operations import MLFlow_Operation
 from s3_operations import S3_Operation
@@ -226,7 +225,7 @@ class Model_Finder:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def train_and_log_models(self, X_data, Y_data, log_file):
+    def train_and_log_models(self, X_data, Y_data, log_file, idx):
         method_name = self.train_and_log_models.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
@@ -245,7 +244,7 @@ class Model_Finder:
 
             self.log_writer.log("Got trained models", log_file)
 
-            for idx, tm in enumerate(lst):
+            for _, tm in enumerate(lst):
                 model = tm[0]
 
                 model_score = tm[1]
@@ -265,7 +264,7 @@ class Model_Finder:
                 "Saved and logged all trained models to mlflow", log_file
             )
 
-            self.log_writer.start_log("exit", log_file, self.class_name, method_name)
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
-            self.log_writer.exception_log(e, log_file, self.class_name, method_name)
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)

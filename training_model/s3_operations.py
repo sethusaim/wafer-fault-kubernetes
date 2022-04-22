@@ -367,7 +367,7 @@ class S3_Operation:
             func = (
                 lambda: model_name + format
                 if model_dir is None
-                else model_dir + model_name + format
+                else model_dir + "/" + model_name + format
             )
 
             model_file = func()
