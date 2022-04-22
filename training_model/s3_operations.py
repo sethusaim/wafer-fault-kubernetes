@@ -96,7 +96,7 @@ class S3_Operation:
 
             self.log_writer.log(f"Read the s3 object with decode as {decode}", log_file)
 
-            conv_func = lambda: StringIO(func() if make_readable is True else func())
+            conv_func = lambda: StringIO(func()) if make_readable is True else func()
 
             self.log_writer.log(
                 f"read the s3 object with make_readable as {make_readable}", log_file
