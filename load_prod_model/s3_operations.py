@@ -27,7 +27,7 @@ class S3_Operation:
 
         self.s3_resource = resource("s3")
 
-    def load_object(self, object, bucket: str, log_file: str):
+    def load_object(self, object, bucket, log_file):
         """
         Method Name :   load_object
         Description :   This method loads the object from s3 bucket
@@ -56,7 +56,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def create_folder(self, folder_name: str, bucket: str, log_file: str):
+    def create_folder(self, folder_name, bucket, log_file):
         """
         Method Name :   create_folder
         Description :   This method creates a folder in s3 bucket
@@ -102,12 +102,7 @@ class S3_Operation:
                 )
 
     def copy_data(
-        self,
-        from_fname: str,
-        from_bucket: str,
-        to_fname: str,
-        to_bucket: str,
-        log_file: str,
+        self, from_fname, from_bucket, to_fname, to_bucket, log_file,
     ):
         """
         Method Name :   copy_data
@@ -144,12 +139,7 @@ class S3_Operation:
             )
 
     def upload_file(
-        self,
-        from_fname: str,
-        to_fname: str,
-        bucket: str,
-        log_file: str,
-        delete: bool = True,
+        self, from_fname, to_fname, bucket, log_file, delete: bool = True,
     ):
         """
         Method Name :   upload_file
@@ -195,7 +185,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def get_bucket(self, bucket: str, log_file: str):
+    def get_bucket(self, bucket, log_file):
         """
         Method Name :   get_bucket
         Description :   This method gets the bucket from s3 
@@ -220,7 +210,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def get_file_object(self, fname: str, bucket: str, log_file: str):
+    def get_file_object(self, fname, bucket, log_file):
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
@@ -251,7 +241,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def get_files_from_folder(self, folder_name: str, bucket: str, log_file: str):
+    def get_files_from_folder(self, folder_name, bucket, log_file):
         """
         Method Name :   get_files_from_folder
         Description :   This method gets the files a folder in s3 bucket

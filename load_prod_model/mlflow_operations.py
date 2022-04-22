@@ -17,7 +17,7 @@ class MLFlow_Operation:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, log_file: str):
+    def __init__(self, log_file):
         self.config = read_params()
 
         self.class_name = self.__class__.__name__
@@ -67,7 +67,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_experiment_from_mlflow(self, exp_name: str):
+    def get_experiment_from_mlflow(self, exp_name):
         """
         Method Name :   get_experiment_from_mlflow
         Description :   This method gets the experiment from mlflow server using the experiment name
@@ -98,7 +98,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_runs_from_mlflow(self, exp_id: int):
+    def get_runs_from_mlflow(self, exp_id):
         """
         Method Name :   get_runs_from_mlflow
         Description :   This method gets the runs from the mlflow server for a particular experiment id
@@ -148,9 +148,7 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            client = MlflowClient(self.remote_server_uri)
-
-            reg_model_names = [rm.name for rm in client.list_registered_models()]
+            reg_model_names = [rm.name for rm in self.client.list_registered_models()]
 
             self.log_writer.log("Got registered models from mlflow", self.log_file)
 
@@ -165,7 +163,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file,
             )
 
-    def search_mlflow_models(self, order: str):
+    def search_mlflow_models(self, order):
         """
         Method Name :   search_mlflow_models
         Description :   This method searches for registered models and returns them in the mentioned order
@@ -199,12 +197,7 @@ class MLFlow_Operation:
             )
 
     def transition_mlflow_model(
-        self,
-        model_version: int,
-        stage: str,
-        model_name: str,
-        from_bucket: str,
-        to_bucket: str,
+        self, model_version, stage, model_name, from_bucket, to_bucket,
     ):
         """
         Method Name :   transition_mlflow_model

@@ -12,13 +12,13 @@ files:
   features: wafer-features.csv
 
 s3_bucket:
-  io_files: wafer-io-files
-  model: wafer_model
-  logs: wafer-logs
+  model: wafer-model-3e502a3
+  logs: wafer-logs-4e1f3bd
+  feature_store: wafer-feature-store-02126f6
 
 log:
-  upload: upload_log.log
-  load_prod_model: load_prod_model.log
+  upload: upload_log.txt
+  load_prod_model: load_prod_model.txt
 
 log_dir: logs
 
