@@ -21,7 +21,7 @@ class Run:
     def raw_pred_data_validation(self):
         """
         Method Name :   raw_pred_data_validation
-        Description :   This method is used for validating the preding batch files
+        Description :   This method is used for validating the prediction batch files
         
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -69,11 +69,11 @@ if __name__ == "__main__":
         run = Run()
 
         run.raw_pred_data_validation()
-        
+
     except Exception as e:
         raise e
-    
+
     finally:
         utils = Main_Utils()
-        
+
         utils.upload_logs()

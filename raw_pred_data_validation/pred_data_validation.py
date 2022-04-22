@@ -8,7 +8,7 @@ from utils.read_params import read_params
 
 class Raw_Pred_Data_Validation:
     """
-    Description :   This method is used for validating the raw preding data
+    Description :   This method is used for validating the raw prediction data
     Written by  :   iNeuron Intelligence
     
     Version     :   1.2
@@ -37,9 +37,9 @@ class Raw_Pred_Data_Validation:
     def values_from_schema(self):
         """
         Method Name :   values_from_schema
-        Description :   This method gets schema values from the schema_preding.json file
+        Description :   This method gets schema values from the schema_prediction.json file
 
-        Output      :   Schema values are extracted from the schema_preding.json file
+        Output      :   Schema values are extracted from the schema_prediction.json file
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
@@ -199,7 +199,7 @@ class Raw_Pred_Data_Validation:
             pred_batch_files = [f.split("/")[1] for f in onlyfiles]
 
             self.log_writer.log(
-                "Got preding files with absolute file name",
+                "Got prediction files with absolute file name",
                 self.pred_log["name_validation"],
             )
 
@@ -400,8 +400,5 @@ class Raw_Pred_Data_Validation:
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.pred_log["missing_values_in_col"],
+                e, self.class_name, method_name, self.pred_log["missing_values_in_col"],
             )

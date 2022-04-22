@@ -51,9 +51,7 @@ class S3_Operation:
                 else object.get()["Body"].read()
             )
 
-            self.log_writer.log(
-                f"Read the s3 object with decode as {decode}", log_file
-            )
+            self.log_writer.log(f"Read the s3 object with decode as {decode}", log_file)
 
             conv_func = lambda: StringIO(func()) if make_readable is True else func()
 
@@ -201,9 +199,7 @@ class S3_Operation:
 
             df = self.get_df_from_object(csv_obj, log_file)
 
-            self.log_writer.log(
-                f"Read {fname} csv file from {bucket} bucket", log_file
-            )
+            self.log_writer.log(f"Read {fname} csv file from {bucket} bucket", log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, log_file,
@@ -346,9 +342,7 @@ class S3_Operation:
 
                 remove(from_fname)
 
-                self.log_writer.log(
-                    f"Removed the local copy of {from_fname}", log_file
-                )
+                self.log_writer.log(f"Removed the local copy of {from_fname}", log_file)
 
                 self.log_writer.start_log(
                     "exit", self.class_name, method_name, log_file,

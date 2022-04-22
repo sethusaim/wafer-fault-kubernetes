@@ -10,7 +10,7 @@ data_dir:
   pred_bad: bad/pred
 
 files:
-  pred_schema: wafer-schema_preding.json
+  pred_schema: wafer-schema_prediction.json
   regex: wafer-regex.txt
 
 log_dir: logs
