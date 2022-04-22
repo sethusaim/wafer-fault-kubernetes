@@ -1,0 +1,25 @@
+s3_bucket:
+  io_files: wafer-io-files-03e0100
+  logs: wafer-logs-4e1f3bd
+  raw_pred_data: wafer-raw-data-140436f
+  pred_data: wafer-pred-data-5acbd2d
+
+data_dir:
+  raw_pred_batch: pred_batch
+  pred_good: good/pred  
+  pred_bad: bad/pred
+
+files:
+  pred_schema: wafer-schema_preding.json
+  regex: wafer-regex.txt
+
+log_dir: logs
+
+log:
+  upload: upload_log.txt
+  raw_pred_main: raw_pred_main_log.txt
+  values_from_schema: values_from_schema_log.txt
+  general: general_log.txt
+  name_validation: pred_name_validation_log.txt
+  col_validation: pred_col_validation_log.txt
+  missing_values_in_col: pred_missing_values_in_column.txt
