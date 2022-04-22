@@ -11,7 +11,7 @@ s3_bucket:
   logs: wafer-logs-4e1f3bd
 
 mlflow_config:
-  exp_name: wafer-ops-test
+  exp_name: wafer-ops-test-4
   run_name: mlops
   serialization_format: cloudpickle
 

@@ -1,5 +1,3 @@
-from cmath import log
-from fnmatch import fnmatch
 from os import listdir
 from os.path import join
 from shutil import rmtree
@@ -13,9 +11,7 @@ from utils.read_params import read_params
 
 class Main_Utils:
     def __init__(self):
-        self.s3 = S3_Operation()
-
-        self.log_writer = App_Logger()
+        self.class_name = self.__class__.__name__
 
         self.config = read_params()
 
@@ -25,7 +21,9 @@ class Main_Utils:
 
         self.log_dir = self.config["log_dir"]
 
-        self.class_name = self.__class__.__name__
+        self.s3 = S3_Operation()
+
+        self.log_writer = App_Logger()
 
     def upload_logs(self):
         method_name = self.upload_logs.__name__

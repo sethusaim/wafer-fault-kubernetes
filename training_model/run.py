@@ -104,11 +104,14 @@ class Run:
                     )
 
                     self.model.train_and_log_models(
-                        cluster_feat, cluster_label, self.train_log["model_train"]
+                        cluster_feat,
+                        cluster_label,
+                        self.train_log["model_train"],
+                        idx=i,
                     )
 
             self.log_writer.log(
-                "Completed model and training and logging of the models to mlflow"
+                "Completed model and training and logging of the models to mlflow",self.train_log["model_train"]
             )
 
             self.log_writer.start_log(
