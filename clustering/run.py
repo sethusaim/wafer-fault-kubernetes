@@ -34,7 +34,9 @@ class Run:
 
         try:
             X = self.s3.read_csv(
-                self.files["features"], self.bucket["feature_store"], self.clustering_log
+                self.files["features"],
+                self.bucket["feature_store"],
+                self.clustering_log,
             )
 
             self.log_writer.log(
