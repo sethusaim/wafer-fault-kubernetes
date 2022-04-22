@@ -26,39 +26,13 @@ class Load_Prod_Model:
 
         self.mlflow_config = self.config["mlflow_config"]
 
-        self.files = self.config["files"]
-
         self.s3 = S3_Operation()
 
         self.log_writer = App_Logger()
 
+        self.utils = Main_Utils()
+
         self.mlflow_op = MLFlow_Operation(self.load_prod_model_log)
-
-    def create_prod_and_stag_dirs(self, bucket, log_file):
-        """
-        Method Name :   create_prod_and_stag_dirs
-        Description :   This method creates folders for production and staging bucket
-
-        Output      :   Folders for production and staging are created in s3 bucket
-        On Failure  :   Write an exception log and then raise an exception
-
-        Version     :   1.2
-        
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.create_prod_and_stag_dirs.__name__
-
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
-
-        try:
-            self.s3.create_folder(self.bucket["prod"], bucket, log_file)
-
-            self.s3.create_folder(self.bucket["stag"], bucket, log_file)
-
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
-
-        except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def load_production_model(self):
         """
@@ -78,7 +52,7 @@ class Load_Prod_Model:
         )
 
         try:
-            self.create_prod_and_stag_dirs(
+            self.utils.create_prod_and_stag_dirs(
                 self.bucket["model"], self.load_prod_model_log
             )
 
@@ -91,8 +65,8 @@ class Load_Prod_Model:
             runs = self.mlflow_op.get_runs_from_mlflow(exp.experiment_id)
 
             feat_fnames = self.s3.get_files_from_folder(
-                self.files["features"],
-                self.bucket["io_files"],
+                self.config["feature_pattern"],
+                self.bucket["feature_store"],
                 self.load_prod_model_log,
             )
 
@@ -120,7 +94,7 @@ class Load_Prod_Model:
                 "Created cols for all registered model", self.load_prod_model_log
             )
 
-            runs_cols = runs[cols].max().sort_values(ascending=False)
+            runs_cols = runs.filter(cols).max().sort_values(ascending=False)
 
             self.log_writer.log(
                 "Sorted the runs cols in descending order", self.load_prod_model_log
@@ -237,15 +211,15 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
 
 
 if __name__ == "__main__":
-    run = Load_Prod_Model()
-
-    utils = Main_Utils()
-
     try:
+        run = Load_Prod_Model()
+
         run.load_production_model()
 
     except Exception as e:
         raise e
 
     finally:
+        utils = Main_Utils()
+
         utils.upload_logs()

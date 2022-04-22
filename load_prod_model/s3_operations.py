@@ -27,35 +27,6 @@ class S3_Operation:
 
         self.s3_resource = resource("s3")
 
-    def load_object(self, object, bucket, log_file):
-        """
-        Method Name :   load_object
-        Description :   This method loads the object from s3 bucket
-        Output      :   An object is loaded from s3 bucket
-        On Failure  :   Write an exception log and then raise an exception
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.load_object.__name__
-
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
-
-        try:
-            self.s3_resource.Object(bucket, object).load()
-
-            self.log_writer.log(f"Loaded {object} from {bucket} bucket", log_file)
-
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
-
     def create_folder(self, folder_name, bucket, log_file):
         """
         Method Name :   create_folder
@@ -72,7 +43,7 @@ class S3_Operation:
         )
 
         try:
-            self.load_object(bucket, folder_name)
+            self.s3_resource.Object(bucket, folder_name).load()
 
             self.log_writer.log(f"Folder {folder_name} already exists.", log_file)
 
@@ -86,7 +57,7 @@ class S3_Operation:
                     f"{folder_name} folder does not exist,creating new one", log_file
                 )
 
-                self.s3_client.put_object(Bucket=bucket, Key=(object + "/"))
+                self.s3_client.put_object(Bucket=bucket, Key=(folder_name + "/"))
 
                 self.log_writer.log(
                     f"{folder_name} folder created in {bucket} bucket", log_file

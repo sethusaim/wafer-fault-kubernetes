@@ -6,10 +6,9 @@ models_dir:
 model_save_format: .sav
 
 mlflow_config:
-  exp_name : wafer-test
+  exp_name : wafer-ops-test-2
 
-files:
-  features: wafer-features.csv
+feature_pattern: wafer_features-
 
 s3_bucket:
   model: wafer-model-3e502a3
