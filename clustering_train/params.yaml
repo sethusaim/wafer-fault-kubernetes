@@ -5,13 +5,13 @@ s3_bucket:
   feature_store: wafer-feature-store-02126f6
 
 files:
-  features: wafer_features.csv
-  targets: wafer_targets.csv
+  features: wafer_train_features.csv
+  targets: wafer_train_targets.csv
   elbow_plot: K-Means_Elbow.png
 
 log:
-  clustering: clustering_log.txt
-  upload: upload_cluster_log.txt
+  clustering: train_clustering_log.txt
+  upload: upload_train_cluster_log.txt
 
 log_dir: logs
 
