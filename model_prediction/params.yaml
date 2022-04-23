@@ -1,0 +1,20 @@
+log:
+  pred: prediction_log.txt
+  upload: upload_log.txt
+
+model_dir:
+  prod: production
+
+save_format: ".sav"
+
+log_dir: logs
+
+files:
+  pred_input_file_preprocess: pred_input_file_preprocess.csv
+  pred_output: predictions.csv
+
+s3_bucket:
+  feature_store: wafer-feature-store-02126f6
+  logs: wafer-logs-4e1f3bd
+  model: wafer-model-3e502a3
+  io_files: wafer-io-files-03e0100
