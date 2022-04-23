@@ -7,6 +7,7 @@ s3_bucket:
   raw_data: wafer-raw-data
   logs: wafer-logs
   feature_store: wafer-feature-store
+  kubeflow_components: wafer-kubeflow-components
 
 ec2_instances:
   mlflow_instance:
