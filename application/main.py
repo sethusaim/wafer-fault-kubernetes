@@ -4,6 +4,7 @@ from fastapi.responses import Response
 from fastapi.templating import Jinja2Templates
 from uvicorn import run as app_run
 
+from pipelines.prediction_pipeline import Pred_Pipeline
 from pipelines.train_pipeline import Train_Pipeline
 from utils.main_utils import Main_Utils
 from utils.read_params import read_params
@@ -48,6 +49,10 @@ async def trainRouteClient():
 @app.get("/predict")
 async def predictRouteClient():
     try:
+        pipeline = Pred_Pipeline()
+
+        pipeline.run_pred_pipeline(config["pipeline_path"]["pred"])
+
         return Response("Prediction Successfull")
 
     except Exception as e:
@@ -55,8 +60,6 @@ async def predictRouteClient():
 
 
 if __name__ == "__main__":
-    utils = Main_Utils()
-
     try:
         app_run(app, host=config["app"]["host"], port=config["app"]["port"])
 
@@ -64,4 +67,6 @@ if __name__ == "__main__":
         raise e
 
     finally:
+        utils = Main_Utils()
+
         utils.upload_logs()

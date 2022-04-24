@@ -154,7 +154,7 @@ class Train_Pipeline:
         )
 
         try:
-            self.pipe.execute_pipeline(pipe_func=self.train_pipeline, pkg_file=pkg_file)
+            self.pipe.execute_pipeline(self.train_pipeline, pkg_file)
 
             self.log_writer.log(
                 "Training pipeline executed successfully", self.train_pipeline_log

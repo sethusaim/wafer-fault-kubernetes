@@ -24,6 +24,30 @@ class Pred_Component:
         self.kfp_comp = Component(self.comp_log)
 
     @component
+    def pred_data_transform(self):
+        method_name = self.pred_data_transform.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, self.comp_log)
+
+        try:
+            comp = self.kfp_comp.load_kfp_component(
+                self.pred_comp["data_trans"], self.bucket["components"]
+            )
+
+            self.log_writer.log("Got pred data transform component", self.comp_log)
+
+            self.log_writer.start_log(
+                "exit", self.class_name, method_name, self.comp_log
+            )
+
+            return comp
+
+        except Exception as e:
+            self.log_writer.exception_log(
+                e, self.class_name, method_name, self.comp_log
+            )
+
+    @component
     def preprocessing_component(self):
         method_name = self.preprocessing_component.__name__
 
