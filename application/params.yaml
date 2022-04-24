@@ -26,9 +26,17 @@ templates:
 
 train_components:
   clustering: wafer-clustering.yaml
-  preprocessing: wafer-preprocess.yaml
-  prod_model: wafer-prod.yaml
-  raw_train_data_val: wafer-raw-data-val.yaml
-  train_data_trans: wafer-train-data-transform.yaml
-  train_db_op: wafer-train-db.yaml
-  train_model: wafer-train.yaml
+  preprocessing: wafer-preprocess-train.yaml
+  load_prod: wafer-prod.yaml
+  raw_data_val: wafer-raw-data-val.yaml
+  data_trans: wafer-train-data-transform.yaml
+  db_operation: wafer-train-db.yaml
+  model: wafer-train.yaml
+
+
+pred_components:
+  pred_data_trans: wafer-pred-data-transform.yaml
+  pred_db_op: wafer-pred-db.yaml
+  model: wafer-prediction.yaml
+  preprocessing: wafer-preprocess-pred.yaml
+  raw_data_val: wafer-raw-data-val.yaml
