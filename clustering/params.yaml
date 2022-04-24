@@ -3,6 +3,7 @@ s3_bucket:
   model: wafer-model-3e502a3
   logs: wafer-logs-4e1f3bd
   feature_store: wafer-feature-store-02126f6
+  component: wafer-kubeflow-components-4efdbdc
 
 files:
   features: wafer_train_features.csv
@@ -32,4 +33,5 @@ knee:
   curve: convex
   direction: decreasing
 
+component: clustering_component.yaml
 

@@ -3,9 +3,9 @@ app:
   port: 8080
 
 log:
-  train_comp: train_comp.log
-  train_pipeline: train_pipeline_log.log
-  upload: upload_log.log
+  train_comp: train_comp.txt
+  train_pipeline: train_pipeline_log.txt
+  upload: upload_log.txt
 
 log_dir: app_logs
 
@@ -16,9 +16,9 @@ pipeline_path:
 run_name: wafer-run
 
 s3_bucket:
-  components: wafer-components
-  io_files: wafer-io-files
-  logs: wafer-logs
+  components: wafer-kubeflow-components-4efdbdc
+  io_files: wafer-io-files-03e0100
+  logs: wafer-logs-4e1f3bd
 
 templates:
   dir: templates
