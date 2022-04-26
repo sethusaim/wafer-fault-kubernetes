@@ -7,7 +7,7 @@ from utils.logger import App_Logger
 
 
 class Pipeline:
-    def __init__(self, log_file: str):
+    def __init__(self, log_file):
         self.class_name = self.__class__.__name__
 
         self.log_file = log_file
@@ -20,7 +20,7 @@ class Pipeline:
 
         self.log_writer = App_Logger()
 
-    def compile_pipeline(self, func, pkg_file: str):
+    def compile_pipeline(self, func, pkg_file):
         method_name = self.compile_pipeline.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
@@ -41,7 +41,7 @@ class Pipeline:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def run_pipeline(self, pkg_file: str):
+    def run_pipeline(self, pkg_file):
         method_name = self.run_pipeline.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
@@ -60,7 +60,7 @@ class Pipeline:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def execute_pipeline(self, pipe_func: function, pkg_file: str):
+    def execute_pipeline(self, pipe_func: function, pkg_file):
         method_name = self.execute_pipeline.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)

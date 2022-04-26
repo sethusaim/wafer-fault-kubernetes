@@ -5,7 +5,7 @@ from utils.logger import App_Logger
 
 
 class Component:
-    def __init__(self, log_file: str):
+    def __init__(self, log_file):
         self.log_writer = App_Logger()
 
         self.s3 = S3_Operation()
@@ -14,7 +14,7 @@ class Component:
 
         self.log_file = log_file
 
-    def load_kfp_component(self, fname: str, bucket: str):
+    def load_kfp_component(self, fname, bucket):
         method_name = self.load_kfp_component.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name)

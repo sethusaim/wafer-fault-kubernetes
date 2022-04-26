@@ -22,7 +22,7 @@ class S3_Operation:
 
         self.log_writer = App_Logger()
 
-    def get_bucket(self, bucket: str, log_file: str):
+    def get_bucket(self, bucket, log_file):
         """
         Method Name :   get_bucket
         Description :   This method gets the bucket from s3 
@@ -47,7 +47,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def get_file_object(self, fname: str, bucket: str, log_file: str):
+    def get_file_object(self, fname, bucket, log_file):
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
@@ -81,7 +81,7 @@ class S3_Operation:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def read_object(
-        self, object, log_file: str, decode: bool = True, make_readable: bool = False,
+        self, object, log_file, decode=True, make_readable=False,
     ):
         """
         Method Name :   read_object
@@ -117,7 +117,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def read_yaml_as_str(self, fname: str, bucket: str, log_file: str):
+    def read_yaml_as_str(self, fname, bucket, log_file):
         """
         Method Name :   read_yaml_as_str
         Description :   This method reads the yaml file from bucket
@@ -149,12 +149,7 @@ class S3_Operation:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def upload_file(
-        self,
-        from_fname: str,
-        to_fname: str,
-        bucket: str,
-        log_file: str,
-        delete: bool = True,
+        self, from_fname, to_fname, bucket, log_file, delete=True,
     ):
         """
         Method Name :   upload_file

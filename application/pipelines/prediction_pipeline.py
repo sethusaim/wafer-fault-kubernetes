@@ -114,7 +114,7 @@ class Pred_Pipeline:
                 e, self.class_name, method_name, self.pred_pipeline_log
             )
 
-    def run_pred_pipeline(self, pkg_file: str):
+    def run_pred_pipeline(self, pkg_file):
         method_name = self.run_pred_pipeline.__name__
 
         self.log_writer.start_log(

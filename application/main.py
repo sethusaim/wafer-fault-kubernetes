@@ -13,7 +13,7 @@ app = FastAPI()
 
 config = read_params()
 
-templates = Jinja2Templates(directory=config["templates"]["dir"])
+templates = Jinja2Templates(config["templates"]["dir"])
 
 origins = ["*"]
 
