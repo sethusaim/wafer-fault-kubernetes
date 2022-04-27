@@ -268,7 +268,7 @@ pipeline {
     {
         when 
         {
-            changeset "raw_pred_dat_validation/*"
+            changeset "raw_pred_data_validation/*"
         }
         steps
         {
