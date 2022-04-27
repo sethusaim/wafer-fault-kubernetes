@@ -20,7 +20,7 @@ class Component:
         self.log_writer.start_log("start", self.class_name, method_name)
 
         try:
-            content = self.s3.read_yaml_as_str(fname, bucket)
+            content = self.s3.read_yaml_as_str(fname, bucket, self.log_file)
 
             self.log_writer.log(
                 f"Got {fname} train component from {bucket}", self.log_file
