@@ -32,9 +32,7 @@ class Main_Utils:
         try:
             lst = listdir(self.log_dir)
 
-            self.log_writer.log(
-                "Got list of logs from pred_logs folder", self.log_file
-            )
+            self.log_writer.log("Got list of logs from pred_logs folder", self.log_file)
 
             for f in lst:
                 local_f = join(self.log_dir, f)

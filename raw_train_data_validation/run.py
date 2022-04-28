@@ -69,11 +69,11 @@ if __name__ == "__main__":
         run = Run()
 
         run.raw_train_data_validation()
-        
+
     except Exception as e:
         raise e
-    
+
     finally:
         utils = Main_Utils()
-        
+
         utils.upload_logs()

@@ -69,13 +69,13 @@ class Run:
             self.log_writer.log(
                 "Removed columns with zero standard deviation", self.preprocess_log
             )
-            
+
             self.s3.upload_df_as_csv(
                 data,
                 self.files["pred_input_preprocess"],
                 self.files["pred_input_preprocess"],
                 self.bucket["feature_store"],
-                self.preprocess_log
+                self.preprocess_log,
             )
 
             self.log_writer.log(
