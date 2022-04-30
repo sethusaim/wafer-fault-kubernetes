@@ -60,7 +60,7 @@ class Pipeline:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def execute_pipeline(self, pipe_func: function, pkg_file):
+    def execute_pipeline(self, pipe_func, pkg_file):
         method_name = self.execute_pipeline.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
