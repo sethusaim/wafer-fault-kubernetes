@@ -1,7 +1,7 @@
 from json import loads
 from subprocess import PIPE, Popen, run
 
-cluster_name = ""
+cluster_name = "wafer-test-1"
 
 def run_command(cmd):
     try:
@@ -87,4 +87,4 @@ run_command(
     "wget https://raw.githubusercontent.com/marcel-dempers/docker-development-youtube-series/master/jenkins/jenkins.service.yaml"
 )
 
-run_command("kubectl apply -n jenkins -f ./jenkins/jenkins.service.yaml")
+run_command("kubectl apply -n jenkins -f jenkins.service.yaml")
