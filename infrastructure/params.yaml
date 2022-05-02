@@ -46,10 +46,23 @@ ec2_instances:
 
 
 ecr_repository:
-  wafer-application:
+  ecr_repo_params:
     scan_on_push: True
     image_tag_mutability: MUTABLE
 
-  wafer-clustering:
-    scan_on_push: True
-    image_tag_mutability: MUTABLE
+  ecr_repo_names:
+   - wafer-application
+   - wafer-clustering
+   - wafer-data_transform_pred
+   - wafer-data_transform_train
+   - wafer-db-operation-pred
+   - wafer-data-transform-train
+   - wafer-data-transform-pred
+   - wafer-load_prod_model
+   - wafer-model-prediction
+   - wafer-model-training
+   - wafer-preprocessing-pred
+   - wafer-preprocessing-train
+   - wafer-raw-pred-data-validation
+   - wafer-raw-train-data-validation
+
