@@ -64,7 +64,7 @@ class AWS_S3:
         except Exception as e:
             raise e
 
-    def create_s3_buckets(self, account_id):
+    def deploy_s3_buckets(self, account_id):
         try:
             lst_buckets = list(self.config["s3_bucket"].values())
 

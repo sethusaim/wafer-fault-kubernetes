@@ -31,6 +31,7 @@ ec2_instances:
           from_port: 5000
           to_port: 5000
           cidr_blocks: ["0.0.0.0/0"]
+          
   jenkins_instance:
     tag_name: Wafer-Jenkins
     type: t2.medium
@@ -42,3 +43,13 @@ ec2_instances:
           from_port: 8080
           to_port: 8080
           cidr_blocks: ["0.0.0.0/0"]
+
+
+ecr_repository:
+  wafer-application:
+    scan_on_push: True
+    image_tag_mutability: MUTABLE
+
+  wafer-clustering:
+    scan_on_push: True
+    image_tag_mutability: MUTABLE
