@@ -23,10 +23,7 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile application/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-            '''
+                    sh '''/kaniko/executor --dockerfile=application/Dockerfile --context='pwd' --destination=charlie2056/wafer-application:${BUILD_NUMBER} '''
                 }
             }
 
@@ -45,10 +42,7 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile clustering/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-                        '''
+                    sh '''/kaniko/executor --dockerfile=clustering/Dockerfile --context='pwd' --destination=charli2056/wafer-clustering:${BUILD_NUMBER}'''
                 }
             }
         }
@@ -66,10 +60,7 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile data_transform_pred/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-            '''
+                    sh '''/kaniko/executor --dockerfile=data_transform_pred/Dockerfile --context='pwd' --destination=charlie2056/wafer-data-transform-pred:${BUILD_NUMER} '''
                 }
             }
         }
@@ -87,10 +78,8 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile data_transform_pred/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-            '''
+                    sh '''/kaniko/executor --dockerfile data_transform_train/Dockerfile --context 'pwd' --destination=charlie2056/wafer-data-transform-train:${BUILD_NUMBER}'''
+
                 }
             }
         }
@@ -108,10 +97,8 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile data_transform_train/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-            '''
+                    sh '''/kaniko/executor --dockerfile=db_operation_pred/Dockerfile --context='pwd' --destination=charlie2056/wafer-data-transform-train:${BUILD_NUMBER} '''
+
                 }
             }
         }
@@ -129,10 +116,8 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile db_operation_train/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-            '''
+                    sh '''/kaniko/executor --dockerfile=db_operation_train/Dockerfile --context='pwd' --destination=charlie2056/wafer-db-operation-train:${BUILD_NUMBER} '''
+
                 }
             }
         }
@@ -150,10 +135,8 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile db_operation_pred/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-            '''
+                    sh '''/kaniko/executor --dockerfile="db_operation_pred/Dockerfile --context='pwd' --destination=charlie2056/wafer-db-operation-pred:${BUILD_NUMBER}'''
+
                 }
             }
         }
@@ -171,10 +154,9 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile load_prod_model/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-            '''
+                    sh '''/kaniko/executor --dockerfile=load_prod_model/Dockerfile --context='pwd' --destination=charlie2056/wafer-load-prod-model:${BUILD_NUMBER} '''
+
+
                 }
             }
         }
@@ -192,10 +174,8 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile model_prediction/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-            '''
+                    sh '''/kaniko/executor --dockefile model_prediction/Dockerfile --context='pwd' --destination=charlie2056/wafer-model-prediction:${BUILD_NUMBER}  '''
+
                 }
             }
         }
@@ -213,10 +193,7 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile model_training/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-            '''
+                    sh '''/kaniko/executor --dockerfile model_training/Dockerfile --context='pwd' --destination=charlie2056/wafer-model-training:${BUILD_NUMBER} '''
                 }
             }
         }
@@ -234,10 +211,7 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile preprocessing_pred/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-            '''
+                    sh '''/kaniko/executor --dockefile=preprocessing_pred/Dockerfile --context='pwd' --destination=charlie2056/wafer-preprocessing-pred:${BUILD_NUMBER} '''
                 }
             }
         }
@@ -255,10 +229,7 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile preprocessing_train/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-            '''
+                    sh '''/kaniko/executor --dockerfile=preprocessing_train/Dockerfile --context='pwd' --destination=charlie2056/preprocessing-train:${BUILD_NUMBER} '''
                 }
             }
         }
@@ -276,10 +247,7 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile raw_pred_data_validation/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-            '''
+                    sh '''/kaniko/executor --dockerfile=raw_pred_data_validation/Dockerfile --context='pwd' --destination=charlie2056/raw-pred-data-validation:${BUILD_NUMBER} '''
                 }
             }
         }
@@ -297,10 +265,7 @@ pipeline {
             {
                 script
                 {
-                    sh '''/kaniko/executor --dockerfile raw_train_data_validation/Dockerfile \
-                                        --context s3://wafer-image-contexts/" \
-                                        --destination=aws_account_id.dkr.ecr.region.amazonaws.com/my-repository:${BUILD_NUMBER}"
-            '''
+                    sh '''/kaniko/executor --dockerfile=raw_train_data_validation/Dockerfile --context='pwd' --destination=charlie2056/raw-train-data-validation:${BUILD_NUMBER} '''
                 }
             }
         }
@@ -320,11 +285,9 @@ pipeline {
             nodejs(nodeJSInstallationName: "node 8.9.4") {
                     withEnv(["PATH+PULUMI=$HOME/.pulumi/bin"]) {
                         sh "cd infrastructure && npm install"
-                        sh "pulumi stack select ${PULUMI_STACK} --cwd infrastructure/"
+                        sh "pulumi stack select dev --cwd infrastructure/"
                         sh "pulumi up --yes --cwd infrastructure/"
                     }
-
-
         }
     }
   }

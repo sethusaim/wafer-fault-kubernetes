@@ -11,8 +11,11 @@ spec:
     tty: true
     volumeMounts:
       - name: kaniko-secret
-        mountPath: /root/.aws/
+        mountPath: /kaniko/.docker
   volumes:
-    - name: aws-secret
+    - name: kaniko-secret
       secret:
-        secretName: aws-secret
+        secretName: regcred
+        items:
+          - key: .dockerconfigjson
+            path: config.json
