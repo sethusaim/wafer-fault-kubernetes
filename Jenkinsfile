@@ -26,7 +26,6 @@ pipeline {
                     sh '''/kaniko/executor --dockerfile=application/Dockerfile --context='pwd' --destination=charlie2056/wafer-application:${BUILD_NUMBER} '''
                 }
             }
-
         }
     }
 
