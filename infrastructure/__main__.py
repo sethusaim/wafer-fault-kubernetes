@@ -7,3 +7,5 @@ s3 = AWS_S3()
 ecr = AWS_ECR()
 
 s3.deploy_s3_buckets(environ["account_id"])
+
+ecr.deploy_ecr_repository()
