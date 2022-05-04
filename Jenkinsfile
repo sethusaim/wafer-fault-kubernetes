@@ -310,33 +310,5 @@ pipeline {
         sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-raw_train_data_validation:${BUILD_NUMBER}'
       }
     }
-
-    stage {
-      environment {
-        PULUMI_STACK = credentials('PULUMI_STACK')
-
-        PULUMI_TOKEN = credentials('PULUMI_TOKEN')
-      }
-
-      when {
-        changeset 'infrastructure/'
-      }
-
-      steps {
-        sh "curl -fsSL https://get.pulumi.com | sh"
-
-        sh "$HOME/.pulumi/bin/pulumi version"
-
-        nodejs(nodeJSInstallationName: "node 8.9.4") {
-          withEnv(["PATH+PULUMI=$HOME/.pulumi/bin"]) {
-            sh "cd infrastructure && npm install"
-            sh "pulumi stack select ${PULUMI_STACK} --cwd infrastructure/"
-            sh "pulumi up --yes --cwd infrastructure/"
-          }
-        }
-      }
-
-    }
-
   }
 }
