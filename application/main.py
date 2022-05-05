@@ -25,16 +25,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 @app.get("/")
-async def index(request: Request):
+def index(request: Request):
     return templates.TemplateResponse(
         config["templates"]["index"], {"request": request}
     )
-
+    
 
 @app.get("/train")
-async def trainRouteClient():
+def trainRouteClient():
     try:
         pipeline = Train_Pipeline()
 
@@ -47,7 +46,7 @@ async def trainRouteClient():
 
 
 @app.get("/predict")
-async def predictRouteClient():
+def predictRouteClient():
     try:
         pipeline = Pred_Pipeline()
 
