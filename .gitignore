@@ -10,6 +10,18 @@ demotest.py
 
 git-push.sh
 
+creds.conf
+
+.terraform
+
+sethu.pem
+
+terraform.tfstate
+
+terraform.tfstate.backup
+
+.terraform.lock.hcl
+
 # Distribution / packaging
 .Python
 build/
