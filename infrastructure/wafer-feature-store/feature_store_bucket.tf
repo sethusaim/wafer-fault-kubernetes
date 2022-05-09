@@ -1,7 +1,6 @@
-
-
 resource "aws_s3_bucket" "feature_store" {
-  bucket = "wafer-feature-store-02126f6"
+  bucket = var.feature_store_bucket
+
 }
 
 resource "aws_s3_bucket_policy" "allow_full_access" {
@@ -14,7 +13,7 @@ data "aws_iam_policy_document" "allow_full_access" {
   statement {
     principals {
       type        = "AWS"
-      identifiers = ["347460842118"]
+      identifiers = [var.aws_account_id]
     }
 
     actions = ["s3:*"]
