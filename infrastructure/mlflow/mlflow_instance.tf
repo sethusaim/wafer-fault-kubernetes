@@ -48,7 +48,7 @@ resource "aws_security_group" "security_group" {
     from_port   = var.ingress_from_port[3]
     to_port     = var.ingress_to_port[3]
     protocol    = var.protocol
-    cidr_blocks = var
+    cidr_blocks = var.ingress_cidr
   }
 
 
