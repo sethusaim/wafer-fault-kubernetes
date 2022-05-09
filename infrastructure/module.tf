@@ -1,5 +1,5 @@
 module "jenkins_instance" {
-  source = "./jenkins"
+  source = "./jenkins_instance"
 }
 
 module "mlflow_instance" {
