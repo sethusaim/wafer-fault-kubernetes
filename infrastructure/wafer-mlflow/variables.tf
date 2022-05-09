@@ -3,9 +3,9 @@ variable "aws_region" {
   default = "us-east-1"
 }
 
-variable "io_files" {
+variable "mlflow" {
   type    = string
-  default = "wafer-io-files-03e0100"
+  default = "wafer-mlflow-35789c9"
 }
 
 variable "aws_account_id" {

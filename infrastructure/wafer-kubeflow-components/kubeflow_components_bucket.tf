@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "kubeflow_components" {
-    bucket = var.io_files_bucket
+    bucket = var.kubeflow_components
   
 }
 
@@ -19,8 +19,8 @@ data "aws_iam_policy_document" "allow_full_access" {
     actions = ["s3:*"]
 
     resources = [
-      aws_s3_bucket.example.arn,
-      "${aws_s3_bucket.example.arn}/*",
+      aws_s3_bucket.kubeflow_components.arn,
+      "${aws_s3_bucket.kubeflow_components.arn}/*",
     ]
   }
 }

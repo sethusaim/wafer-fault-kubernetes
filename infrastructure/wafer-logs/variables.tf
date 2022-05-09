@@ -3,9 +3,9 @@ variable "aws_region" {
   default = "us-east-1"
 }
 
-variable "io_files" {
+variable "logs" {
   type    = string
-  default = "wafer-io-files-03e0100"
+  default = "wafer-logs-4e1f3bd"
 }
 
 variable "aws_account_id" {

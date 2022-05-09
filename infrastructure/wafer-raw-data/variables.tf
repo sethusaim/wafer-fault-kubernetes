@@ -3,9 +3,9 @@ variable "aws_region" {
   default = "us-east-1"
 }
 
-variable "io_files" {
+variable "pred-data" {
   type    = string
-  default = "wafer-io-files-03e0100"
+  default = "wafer-raw-data-140436f"
 }
 
 variable "aws_account_id" {

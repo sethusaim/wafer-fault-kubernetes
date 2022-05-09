@@ -1,10 +1,9 @@
-resource "aws_s3_bucket" "io_files" {
-    bucket = var.io_files
-  
+resource "aws_s3_bucket" "model" {
+  bucket = var.model
 }
 
 resource "aws_s3_bucket_policy" "allow_full_access" {
-  bucket = aws_s3_bucket.io_files.id
+  bucket = aws_s3_bucket.model.id
   policy = data.aws_iam_policy_document.allow_full_access.json
 }
 
@@ -19,8 +18,8 @@ data "aws_iam_policy_document" "allow_full_access" {
     actions = ["s3:*"]
 
     resources = [
-      aws_s3_bucket.io_files.arn,
-      "${aws_s3_bucket.io_files.arn}/*",
+      aws_s3_bucket.logs.arn,
+      "${aws_s3_bucket.logs.arn}/*",
     ]
   }
 }

@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "feature_store" {
-  bucket = var.feature_store_bucket
+  bucket = var.feature_store
 
 }
 
@@ -19,8 +19,8 @@ data "aws_iam_policy_document" "allow_full_access" {
     actions = ["s3:*"]
 
     resources = [
-      aws_s3_bucket.example.arn,
-      "${aws_s3_bucket.example.arn}/*",
+      aws_s3_bucket.feature_store.arn,
+      "${aws_s3_bucket.feature_store.arn}/*",
     ]
   }
 }

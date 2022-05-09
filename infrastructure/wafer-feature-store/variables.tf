@@ -3,7 +3,7 @@ variable "aws_region" {
   default = "us-east-1"
 }
 
-variable "feature_store_bucket" {
+variable "feature_store" {
   type    = string
   default = "wafer-feature-store-02126f6"
 }

@@ -13,3 +13,11 @@ module "feature_store" {
 module "io_files" {
   source = "./wafer-io-files"
 }
+
+module "kubeflow_components" {
+  source = "./wafer-kubeflow-components" 
+}
+
+module "logs" {
+  source = "./wafer-logs"
+}
