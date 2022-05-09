@@ -3,41 +3,41 @@ module "jenkins_instance" {
 }
 
 module "mlflow_instance" {
-  source = "./wafer-mlflow"
+  source = "./mlflow_instance"
 }
 
 module "feature_store_bucket" {
-  source = "./wafer-feature-store"
+  source = "./wafer_feature_store_bucket"
 }
 
 module "io_files_bucket" {
-  source = "./wafer-io-files"
+  source = "./wafer_io_files_bucket"
 }
 
 module "kubeflow_components_bucket" {
-  source = "./wafer-kubeflow-components"
+  source = "./wafer_kubeflow_components_bucket"
 }
 
 module "logs_bucket" {
-  source = "./wafer-logs"
+  source = "./wafer_logs_bucket"
 }
 
 module "mlflow_bucket" {
-  source = "./wafer-mlflow"
+  source = "./wafer_mlflow_bucket"
 }
 
 module "model_bucket" {
-  source = "./wafer-model"
+  source = "./wafer_model_bucket"
 }
 
-module "pred-data_bucket" {
-  source = "./wafer-pred-data"
+module "pred_data_bucket" {
+  source = "./wafer_pred_data_bucket"
 }
 
-module "raw-data_bucket" {
-  source = "./wafer-raw-data"
+module "raw_data_bucket" {
+  source = "./wafer_raw_data_bucket"
 }
 
-module "train-data_bucket" {
-  source = "./wafer-train-data"
+module "train_data_bucket" {
+  source = "./wafer_train_data_bucket"
 }
