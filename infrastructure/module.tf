@@ -7,5 +7,9 @@ module "mlflow" {
 }
 
 module "feature_store" {
-  source = "./wafer_feature_store"
+  source = "./wafer-feature-store"
+}
+
+module "io_files" {
+  source = "./wafer-io-files"
 }
