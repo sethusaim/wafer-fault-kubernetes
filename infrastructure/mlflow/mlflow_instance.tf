@@ -1,3 +1,7 @@
+provider "aws" {
+  region = var.aws_region
+}
+
 resource "aws_instance" "instance" {
   ami                    = var.ami
   instance_type          = var.instance_type
@@ -34,17 +38,17 @@ resource "aws_security_group" "security_group" {
   }
 
   ingress {
-    from_port   = var.ingress_from_port[2]
-    to_port     = var.ingress_to_port[2]
-    protocol    = var.protocol
+    from_port = var.ingress_from_port[2]
+    to_port = var.ingress_to_port[2]
+    protocol = var.protocol
     cidr_blocks = var.ingress_cidr
   }
 
   ingress {
-    from_port   = var.ingress_from_port[3]
-    to_port     = var.ingress_to_port[3]
-    protocol    = var.protocol
-    cidr_blocks = var.ingress_cidr
+    from_port = var.ingress_from_port[3]
+    to_port = var.ingress_to_port[3]
+    protocol =  var.protocol
+    cidr_blocks = var
   }
 
 
