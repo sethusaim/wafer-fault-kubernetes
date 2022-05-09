@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "logs" {
-    bucket = var.logs
-  
+  bucket = var.logs
+
 }
 
 resource "aws_s3_bucket_policy" "allow_full_access" {

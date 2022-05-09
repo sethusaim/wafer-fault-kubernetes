@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "kubeflow_components" {
-    bucket = var.kubeflow_components
-  
+  bucket = var.kubeflow_components
+
 }
 
 resource "aws_s3_bucket_policy" "allow_full_access" {

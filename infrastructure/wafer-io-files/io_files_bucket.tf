@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "io_files" {
-    bucket = var.io_files
-  
+  bucket = var.io_files
+
 }
 
 resource "aws_s3_bucket_policy" "allow_full_access" {

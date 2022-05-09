@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "mlflow" {
-    bucket = var.mlflow
-  
+  bucket = var.mlflow
+
 }
 
 resource "aws_s3_bucket_policy" "allow_full_access" {
