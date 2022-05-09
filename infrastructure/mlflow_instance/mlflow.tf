@@ -2,7 +2,7 @@ provider "aws" {
   region = var.aws_region
 }
 
-resource "aws_instance" "instance" {
+resource "aws_instance" "mlflow_sinstance" {
   ami                    = var.ami
   instance_type          = var.instance_type
   key_name               = var.key_pair_name
@@ -27,36 +27,35 @@ resource "aws_security_group" "security_group" {
     from_port   = var.ingress_from_port[0]
     to_port     = var.ingress_to_port[0]
     protocol    = var.protocol
-    cidr_blocks = var.ingress_cidr
+    cidr_blocks = var.cidr_block
   }
 
   ingress {
     from_port   = var.ingress_from_port[1]
     to_port     = var.ingress_to_port[1]
     protocol    = var.protocol
-    cidr_blocks = var.ingress_cidr
+    cidr_blocks = var.cidr_block
   }
 
   ingress {
     from_port   = var.ingress_from_port[2]
     to_port     = var.ingress_to_port[2]
     protocol    = var.protocol
-    cidr_blocks = var.ingress_cidr
+    cidr_blocks = var.cidr_block
   }
 
   ingress {
     from_port   = var.ingress_from_port[3]
     to_port     = var.ingress_to_port[3]
     protocol    = var.protocol
-    cidr_blocks = var.ingress_cidr
+    cidr_blocks = var.cidr_block
   }
 
-
   egress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = var.egress_from_port
+    to_port     = var.egress_to_port
+    protocol    = var.protocol
+    cidr_blocks = var.cidr_block
   }
 
   tags = {

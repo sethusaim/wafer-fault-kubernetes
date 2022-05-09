@@ -24,17 +24,10 @@ resource "aws_security_group" "security_group" {
   description = "Security Group for Jenkins Server"
 
   ingress {
-    from_port   = var.ingress_from_port[0]
-    to_port     = var.ingress_to_port[0]
+    from_port   = var.ingress_from_port
+    to_port     = var.ingress_to_port
     protocol    = var.protocol
-    cidr_blocks = var.cidr_block
-  }
-
-  ingress {
-    from_port   = var.ingress_from_port[1]
-    to_port     = var.ingress_to_port[1]
-    protocol    = var.protocol
-    cidr_blocks = var.cidr_block
+    cidr_blocks = var.ingress_cidr
   }
 
   egress {
@@ -51,7 +44,7 @@ resource "aws_security_group" "security_group" {
 
 resource "aws_eip" "elastic_ip" {
   vpc      = true
-  instance = aws_instance.jenkins_instance.id
+  instance = aws_instance.instance.id
   tags = {
     Name = "Elastic_IP"
   }

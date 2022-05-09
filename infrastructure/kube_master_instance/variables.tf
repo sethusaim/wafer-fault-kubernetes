@@ -10,7 +10,7 @@ variable "ami" {
 
 variable "instance_type" {
   type    = string
-  default = "t2.small"
+  default = "t2.micro"
 
 }
 
@@ -21,7 +21,7 @@ variable "key_pair_name" {
 
 variable "tag_name" {
   type    = string
-  default = "MLFlow Server"
+  default = "Kube Master"
 }
 
 variable "sg_group_name" {
@@ -30,13 +30,23 @@ variable "sg_group_name" {
 }
 
 variable "ingress_from_port" {
-  type    = list(any)
-  default = [22, 8080, 8000, 5000]
+  type    = number
+  default = 22
 }
 
 variable "ingress_to_port" {
   type    = list(any)
-  default = [22, 8080, 8000, 5000]
+  default = 22
+}
+
+variable "egress_from_port" {
+  type    = number
+  default = 0
+}
+
+variable "egress_to_port" {
+  type    = number
+  default = 65535
 }
 
 variable "cidr_block" {
@@ -50,12 +60,4 @@ variable "protocol" {
   default = "tcp"
 }
 
-variable "egress_from_port" {
-  type    = number
-  default = 0
-}
 
-variable "egress_to_port" {
-  type    = number
-  default = 65535
-}

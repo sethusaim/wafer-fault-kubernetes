@@ -35,7 +35,7 @@ variable "ingress_from_port" {
   default = [22, 8080]
 }
 
-variable "ingress_cidr" {
+variable "cidr_block" {
   type    = list(any)
   default = ["0.0.0.0/0"]
 
@@ -49,4 +49,14 @@ variable "protocol" {
 variable "ingress_to_port" {
   type    = list(any)
   default = [22, 8080]
+}
+
+variable "egress_from_port" {
+  type    = number
+  default = 0
+}
+
+variable "egress_to_port" {
+  type    = number
+  default = 65535
 }
