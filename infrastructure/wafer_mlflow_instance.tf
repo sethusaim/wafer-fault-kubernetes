@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "4.13.0"
-    }
-  }
-}
-
 resource "aws_instance" "mlflow_instance" {
   ami                    = "ami-0c4f7023847b90238"
   instance_type          = "t2.small"
