@@ -18,8 +18,8 @@ data "aws_iam_policy_document" "allow_full_access" {
     actions = ["s3:*"]
 
     resources = [
-      aws_s3_bucket.logs.arn,
-      "${aws_s3_bucket.logs.arn}/*",
+      aws_s3_bucket.train-data.arn,
+      "${aws_s3_bucket.train-data.arn}/*",
     ]
   }
 }
