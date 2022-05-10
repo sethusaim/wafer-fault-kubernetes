@@ -14,7 +14,7 @@ creds.conf
 
 .terraform
 
-sethu.pem
+kubeconfig.yaml
 
 terraform.tfstate
 

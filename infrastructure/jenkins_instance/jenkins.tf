@@ -6,7 +6,7 @@ resource "aws_instance" "jenkins_instance" {
   ami                    = var.jenkins_ami
   instance_type          = var.jenkins_instance_type
   key_name               = var.jenkins_key_pair_name
-  vpc_security_group_ids = [aws_security_group.security_group.id]
+  vpc_security_group_ids = [aws_security_group.jenkins_security_group.id]
   tags = {
     Name = var.tag_name
   }
@@ -19,7 +19,7 @@ resource "aws_instance" "jenkins_instance" {
   }
 }
 
-resource "aws_security_group" "security_group" {
+resource "aws_security_group" "jenkins_security_group" {
   name        = var.jenkins_sg_group_name
   description = "Security Group for Jenkins Server"
 

@@ -6,7 +6,7 @@ resource "aws_instance" "mlflow_instance" {
   ami                    = var.mlflow_ami
   instance_type          = var.mlflow_instance_type
   key_name               = var.mlflow_key_pair_name
-  vpc_security_group_ids = [aws_security_group.security_group.id]
+  vpc_security_group_ids = [aws_security_group.mlflow_security_group.id]
   tags = {
     Name = var.mlflow_tag_name
   }
