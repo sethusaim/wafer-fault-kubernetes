@@ -2,13 +2,13 @@ provider "aws" {
   region = var.aws_region
 }
 
-resource "aws_instance" "mlflow_sinstance" {
-  ami                    = var.ami
-  instance_type          = var.instance_type
-  key_name               = var.key_pair_name
+resource "aws_instance" "mlflow_instance" {
+  ami                    = var.mlflow_ami
+  instance_type          = var.mlflow_instance_type
+  key_name               = var.mlflow_key_pair_name
   vpc_security_group_ids = [aws_security_group.security_group.id]
   tags = {
-    Name = var.tag_name
+    Name = var.mlflow_tag_name
   }
 
   connection {
@@ -19,54 +19,55 @@ resource "aws_instance" "mlflow_sinstance" {
   }
 }
 
-resource "aws_security_group" "security_group" {
-  name        = var.sg_group_name
+resource "aws_security_group" "mlflow_security_group" {
+  name        = var.mlflow_sg_group_name
   description = "Security Group for MLFlow Server"
 
   ingress {
-    from_port   = var.ingress_from_port[0]
-    to_port     = var.ingress_to_port[0]
-    protocol    = var.protocol
-    cidr_blocks = var.cidr_block
+    from_port   = var.mlflow_ingress_from_port[0]
+    to_port     = var.mlflow_ingress_to_port[0]
+    protocol    = var.mlflow_protocol
+    cidr_blocks = var.mlflow_cidr_block
   }
 
   ingress {
-    from_port   = var.ingress_from_port[1]
-    to_port     = var.ingress_to_port[1]
-    protocol    = var.protocol
-    cidr_blocks = var.cidr_block
+    from_port   = var.mlflow_ingress_from_port[1]
+    to_port     = var.mlflow_ingress_to_port[1]
+    protocol    = var.mlflow_protocol
+    cidr_blocks = var.mlflow_cidr_block
   }
 
   ingress {
-    from_port   = var.ingress_from_port[2]
-    to_port     = var.ingress_to_port[2]
-    protocol    = var.protocol
-    cidr_blocks = var.cidr_block
+    from_port   = var.mlflow_ingress_from_port[2]
+    to_port     = var.mlflow_ingress_to_port[2]
+    protocol    = var.mlflow_protocol
+    cidr_blocks = var.mlflow_cidr_block
   }
 
   ingress {
-    from_port   = var.ingress_from_port[3]
-    to_port     = var.ingress_to_port[3]
-    protocol    = var.protocol
-    cidr_blocks = var.cidr_block
+    from_port   = var.mlflow_ingress_from_port[3]
+    to_port     = var.mlflow_ingress_to_port[3]
+    protocol    = var.mlflow_protocol
+    cidr_blocks = var.mlflow_cidr_block
   }
 
   egress {
-    from_port   = var.egress_from_port
-    to_port     = var.egress_to_port
-    protocol    = var.protocol
-    cidr_blocks = var.cidr_block
+    from_port   = var.mlflow_egress_from_port
+    to_port     = var.mlflow_egress_to_port
+    protocol    = var.mlflow_protocol
+    cidr_blocks = var.mlflow_cidr_block
   }
 
   tags = {
-    Name = "MLFlow-Security-Group"
+    Name = var.mlflow_sg_group_name
   }
+
 }
 
-resource "aws_eip" "elastic_ip" {
+resource "aws_eip" "mlflow_elastic_ip" {
   vpc      = true
-  instance = aws_instance.instance.id
+  instance = aws_instance.mlflow_instance.id
   tags = {
-    Name = "Elastic_IP"
+    Name = var.mlflow_eip_name
   }
 }

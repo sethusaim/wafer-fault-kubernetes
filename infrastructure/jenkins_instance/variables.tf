@@ -4,18 +4,18 @@ variable "aws_region" {
 
 }
 
-variable "ami" {
+variable "jenkins_ami" {
   type    = string
   default = "ami-0022f774911c1d690"
 }
 
-variable "instance_type" {
+variable "jenkins_instance_type" {
   type    = string
   default = "t2.medium"
 
 }
 
-variable "key_pair_name" {
+variable "jenkins_key_pair_name" {
   type    = string
   default = "sethu"
 }
@@ -25,38 +25,44 @@ variable "tag_name" {
   default = "Jenkins Server"
 }
 
-variable "sg_group_name" {
+variable "jenkins_eip_name" {
+  type    = string
+  default = "jenkins-ip"
+
+}
+
+variable "jenkins_sg_group_name" {
   type    = string
   default = "jenkins_sg_group"
 }
 
-variable "ingress_from_port" {
+variable "jenkins_ingress_from_port" {
   type    = list(any)
   default = [22, 8080]
 }
 
-variable "cidr_block" {
+variable "jenkins_cidr_block" {
   type    = list(any)
   default = ["0.0.0.0/0"]
 
 }
 
-variable "protocol" {
+variable "jenkins_protocol" {
   type    = string
   default = "tcp"
 }
 
-variable "ingress_to_port" {
+variable "jenkins_ingress_to_port" {
   type    = list(any)
   default = [22, 8080]
 }
 
-variable "egress_from_port" {
+variable "jenkins_egress_from_port" {
   type    = number
   default = 0
 }
 
-variable "egress_to_port" {
+variable "jenkins_egress_to_port" {
   type    = number
   default = 65535
 }

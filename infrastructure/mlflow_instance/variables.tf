@@ -3,59 +3,65 @@ variable "aws_region" {
   default = "us-east-1"
 }
 
-variable "ami" {
+variable "mlflow_ami" {
   type    = string
   default = "ami-0c4f7023847b90238"
 }
 
-variable "instance_type" {
+variable "mlflow_instance_type" {
   type    = string
   default = "t2.small"
 
 }
 
-variable "key_pair_name" {
+variable "mlflow_key_pair_name" {
   type    = string
   default = "sethu"
 }
 
-variable "tag_name" {
+variable "mlflow_tag_name" {
   type    = string
   default = "MLFlow Server"
 }
 
-variable "sg_group_name" {
+variable "mlflow_eip_name" {
+  type    = string
+  default = "MLFlow_Elastic_IP"
+
+}
+
+variable "mlflow_sg_group_name" {
   type    = string
   default = "mlflow_sg_group"
 }
 
-variable "ingress_from_port" {
-  type    = list(any)
+variable "mlflow_ingress_from_port" {
+  type    = list(number)
   default = [22, 8080, 8000, 5000]
 }
 
-variable "ingress_to_port" {
-  type    = list(any)
+variable "mlflow_ingress_to_port" {
+  type    = list(number)
   default = [22, 8080, 8000, 5000]
 }
 
-variable "cidr_block" {
-  type    = list(any)
+variable "mlflow_cidr_block" {
+  type    = list(string)
   default = ["0.0.0.0/0"]
 
 }
 
-variable "protocol" {
+variable "mlflow_protocol" {
   type    = string
   default = "tcp"
 }
 
-variable "egress_from_port" {
+variable "mlflow_egress_from_port" {
   type    = number
   default = 0
 }
 
-variable "egress_to_port" {
+variable "mlflow_egress_to_port" {
   type    = number
   default = 65535
 }
