@@ -1,0 +1,11 @@
+
+
+pipeline
+{
+    agent any
+
+    stage("Build and Push Docker Image")
+    {
+        
+    }
+}
