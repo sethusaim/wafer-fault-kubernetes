@@ -4,12 +4,12 @@ variable "aws_region" {
 }
 
 variable "cluster-name" {
-  default = "terraform-eks-demo"
+  default = "terraform-eks-wafer"
   type    = string
 }
 
 variable "clutser_instance_type" {
-  default = "t2.small"
+  default = "t2.medium"
   type = string
 }
 
@@ -54,17 +54,17 @@ variable "eks_node_group_name" {
 }
 
 variable "desired_node_size" {
-  default = 2
+  default = 4
   type    = number
 }
 
 variable "min_node_size" {
-  default = 1
+  default = 4
   type    = number
 }
 
 variable "max_node_size" {
-  default = 3
+  default = 5
   type    = number
 }
 
