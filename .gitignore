@@ -8,13 +8,7 @@ __pycache__/
 
 demotest.py
 
-git-push.sh
-
-creds.conf
-
 .terraform
-
-kubeconfig.yaml
 
 terraform.tfstate
 
