@@ -19,6 +19,8 @@ pipeline {
         KFP_HOST = credentials('KFP_HOST')
 
         AWS_DEFAULT_REGION = "us-east-1"
+
+        REPO_NAME = "wafer_application"
       }
 
       when {
@@ -29,11 +31,11 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t wafer-application application/'
+          sh 'docker build -t $REPO_NAME application/'
 
-          sh 'docker tag wafer-application:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-application:${BUILD_NUMBER}'
+          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-application:${BUILD_NUMBER}'
+          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
         }
       }
     }
@@ -45,6 +47,8 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
 
         AWS_DEFAULT_REGION = "us-east-1"
+
+        REPO_NAME = "wafer_clustering"
       }
 
       when {
@@ -55,11 +59,11 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t wafer-clustering clustering/'
+          sh 'docker build -t $REPO_NAME clustering/'
 
-          sh 'docker tag wafer-clustering:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-clustering:${BUILD_NUMBER}'
+          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-clustering:${BUILD_NUMBER}'
+          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
         }
       }
     }
@@ -71,6 +75,8 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
 
         AWS_DEFAULT_REGION = "us-east-1"
+
+        REPO_NAME = "wafer_data_transform_pred"
       }
 
       when {
@@ -81,11 +87,11 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t wafer-data_transform_pred data_transform_pred/'
+          sh 'docker build -t $REPO_NAME data_transform_pred/'
 
-          sh 'docker tag wafer-data_transform_pred:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-data_transform_pred:${BUILD_NUMBER}'
+          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-data_transform_pred:${BUILD_NUMBER}'
+          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
         }
       }
     }
@@ -97,6 +103,8 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
 
         AWS_DEFAULT_REGION = "us-east-1"
+
+        REPO_NAME = "wafer_data_transform_train"
       }
 
       when {
@@ -106,11 +114,11 @@ pipeline {
       steps {
         sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t wafer-data_transform_train data_transform_train/'
+        sh 'docker build -t $REPO_NAME data_transform_train/'
 
-        sh 'docker tag wafer-data_transform_train:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-data_transform_train:${BUILD_NUMBER}'
+        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-data_transform_train:${BUILD_NUMBER}'
+        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
       }
     }
 
@@ -123,6 +131,8 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         MONGODB_URL = credentials('MONGODB_URL')
+
+        REPO_NAME = "wafer_db_operation_pred"
       }
 
       when {
@@ -132,11 +142,11 @@ pipeline {
       steps {
         sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t wafer-db_operation_pred db_operation_pred/'
+        sh 'docker build -t $REPO_NAME db_operation_pred/'
 
-        sh 'docker tag wafer-db_operation_pred:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-db_operation_pred:${BUILD_NUMBER}'
+        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-db_operation_pred:${BUILD_NUMBER}'
+        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
       }
     }
 
@@ -149,6 +159,8 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         MONGODB_URL = credentials('MONGODB_URL')
+
+        REPO_NAME = "wafer_db_operation_trains"
       }
 
       when {
@@ -158,11 +170,11 @@ pipeline {
       steps {
         sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t wafer-db_operation_train db_operation_train/'
+        sh 'docker build -t $REPO_NAME db_operation_train/'
 
-        sh 'docker tag wafer-db_operation_train:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-db_operation_pred:${BUILD_NUMBER}'
+        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-db_operation_train:${BUILD_NUMBER}'
+        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
       }
     }
 
@@ -175,6 +187,8 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
+
+        REPO_NAME = "wafer_load_prod_model"
       }
 
       when {
@@ -184,11 +198,11 @@ pipeline {
       steps {
         sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t wafer-load_prod_model load_prod_model/'
+        sh 'docker build -t $REPO_NAME load_prod_model/'
 
-        sh 'docker tag wafer-load_prod_model:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-load_prod_model:${BUILD_NUMBER}'
+        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-load_prod_model:${BUILD_NUMBER}'
+        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
       }
 
     }
@@ -206,6 +220,8 @@ pipeline {
         MLFLOW_TRACKING_USERNAME = credentials('MLFLOW_TRACKING_USERNAME')
 
         MLFLOW_TRACKING_PASSWORD = credentials('MLFLOW_TRACKING_PASSWORD')
+
+        REPO_NAME = "wafer_model_prediction"
       }
 
       when {
@@ -215,11 +231,11 @@ pipeline {
       steps {
         sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t wafer-model_prediction model_prediction/'
+        sh 'docker build -t $REPO_NAME model_prediction/'
 
-        sh 'docker tag wafer-model_prediction:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-model_prediction:${BUILD_NUMBER}'
+        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-model_prediction:${BUILD_NUMBER}'
+        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
       }
 
     }
@@ -232,6 +248,7 @@ pipeline {
 
         AWS_DEFAULT_REGION = "us-east-1"
 
+        REPO_NAME = "wafer_model_training"
       }
 
       when {
@@ -241,11 +258,11 @@ pipeline {
       steps {
         sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t wafer-model_training model_training/'
+        sh 'docker build -t $REPO_NAME model_training/'
 
-        sh 'docker tag wafer-model_training:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-model_training:${BUILD_NUMBER}'
+        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-model_training:${BUILD_NUMBER}'
+        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
       }
 
     }
@@ -257,6 +274,8 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
 
         AWS_DEFAULT_REGION = "us-east-1"
+
+        REPO_NAME = "wafer_preprocessing_pred"
       }
 
       when {
@@ -266,11 +285,11 @@ pipeline {
       steps {
         sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t wafer-preprocessing_pred preprocessing_pred/'
+        sh 'docker build -t $REPO_NAME preprocessing_pred/'
 
-        sh 'docker tag wafer-preprocessing_pred:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-preprocessing_pred:${BUILD_NUMBER}'
+        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-preprocessing_pred:${BUILD_NUMBER}'
+        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
       }
 
     }
@@ -282,6 +301,8 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
 
         AWS_DEFAULT_REGION = "us-east-1"
+
+        REPO_NAME = "wafer_preprocessing_train"
       }
 
       when {
@@ -291,11 +312,11 @@ pipeline {
       steps {
         sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t wafer-preprocessing_train preprocessing_train/'
+        sh 'docker build -t $REPO_NAME preprocessing_train/'
 
-        sh 'docker tag wafer-preprocessing_train:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-preprocessing_train:${BUILD_NUMBER}'
+        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-preprocessing_train:${BUILD_NUMBER}'
+        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
       }
 
     }
@@ -307,6 +328,8 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
 
         AWS_DEFAULT_REGION = "us-east-1"
+
+        REPO_NAME = "wafer_raw_pred_data_validation"
       }
 
       when {
@@ -316,11 +339,11 @@ pipeline {
       steps {
         sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t wafer-raw_pred_data_validation raw_pred_data_validation/'
+        sh 'docker build -t $REPO_NAME raw_pred_data_validation/'
 
-        sh 'docker tag wafer-raw_pred_data_validation:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-raw_pred_data_validation:${BUILD_NUMBER}'
+        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-raw_pred_data_validation:${BUILD_NUMBER}'
+        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
       }
 
     }
@@ -332,6 +355,8 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
 
         AWS_DEFAULT_REGION = "us-east-1"
+
+        REPO_NAME = "wafer_raw_train_data_validation"
       }
 
       when {
@@ -341,11 +366,11 @@ pipeline {
       steps {
         sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t wafer-raw_train_data_validation raw_train_data_validation/'
+        sh 'docker build -t $REPO_NAME raw_train_data_validation/'
 
-        sh 'docker tag wafer-raw_train_data_validation:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-raw_train_data_validation:${BUILD_NUMBER}'
+        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wafer-raw_train_data_validation:${BUILD_NUMBER}'
+        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
       }
     }
 
@@ -366,12 +391,6 @@ pipeline {
         sh 'cd infrastructure'
 
         sh 'terraform init'
-
-        sh 'terraform fmt'
-
-        sh 'terraform validate'
-
-        sh 'terraform plan'
 
         sh 'terraform apply --auto-approve'
       }
