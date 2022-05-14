@@ -97,6 +97,7 @@ resource "aws_eks_node_group" "wafer" {
   cluster_name    = aws_eks_cluster.wafer.name
   node_group_name = var.eks_node_group_name
   node_role_arn   = aws_iam_role.wafer-node.arn
+  instance_types = [var.clutser_instance_type]
   subnet_ids      = aws_subnet.wafer[*].id
 
   scaling_config {

@@ -8,6 +8,11 @@ variable "cluster-name" {
   type    = string
 }
 
+variable "clutser_instance_type" {
+  default = "t2.small"
+  type = string
+}
+
 variable "wafer_sg_group_name" {
   default = "terraform-eks-wafer-cluster"
   type    = string
