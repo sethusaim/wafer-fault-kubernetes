@@ -96,4 +96,6 @@ Since we are following GitOps principles and Microservices architecture to solve
 
 Once the repositories are created, in the CI repository, clone this repository using this command
 
-'''bash git clone https://github.com/sethusaim/Wafer-Fault-Kubernetes.git'''
+'''bash 
+git clone https://github.com/sethusaim/Wafer-Fault-Kubernetes.git
+'''

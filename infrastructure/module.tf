@@ -1,14 +1,14 @@
-# module "jenkins_instance" {
-#   source = "./wafer_jenkins_instance"
-# }
+module "jenkins_instance" {
+  source = "./wafer_jenkins_instance"
+}
 
 # module "mlflow_instance" {
 #   source = "./wafer_mlflow_instance"
 # }
 
-module "eks_cluster" {
-  source = "./wafer_eks_cluster"
-}
+# module "eks_cluster" {
+#   source = "./wafer_eks_cluster"
+# }
 
 module "feature_store_bucket" {
   source = "./wafer_feature_store_bucket"
