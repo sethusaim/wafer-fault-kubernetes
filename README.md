@@ -133,32 +133,34 @@ terraform apply
 ```
 Once the instance provisioning is done, SSH into the instance using any SSH tool like Putty, Mobaxterm,etc and execute the following commands
 
-Basically updates the os packages
 ```bash
-sudo yum update
+sudo apt update
+```
+```bash
+sudo apt-get update
 ```
 
-Add the Jenkins repo using the following command
+Add Repository Key
 ```bash
-sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
 ```
 
-Import a key file from Jenkins-CI to enable installation from the package:
+Add Package Repository
 ```bash
-sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
 ```
 
 ```bash
-sudo yum upgrade
-```
-Install Java
-```bash
-sudo amazon-linux-extras install java-openjdk11 -y
+sudo apt update
 ```
 
-Install Jenkins
+Install Jenkins Dependencies
 ```bash
-sudo yum install jenkins -y
+sudo apt install openjdk-8-jre -y
+```
+
+```bash
+sudo apt install jenkins -y
 ```
 
 Enable the Jenkins service to start at boot:
@@ -187,3 +189,48 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 Copy the password and login to Jenkins server. Next click on the install suggested plugins and wait for installation to complete. Create a username and password for jenkins authentication.
 
 Finally you can access the Jenkins Dashboard in ec2 instance.
+
+Before we configure Jenkins for our usage, we have install awscli,docker and terraform in ec2 instance
+
+Install Docker
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+```
+
+```bash
+sudo chmod 666 /var/run/docker.sock
+```
+
+Install AWS cli
+```bash
+sudo apt install awscli
+```
+
+Install Terraform 
+
+```bash
+sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+```
+
+```bash
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+```
+
+```bash
+sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+```
+
+```bash
+sudo apt-get update && sudo apt-get install terraform
+```
+
+Now we have to configure our aws creds to Jenkins for image builds and push to AWS ECR.
+
+For that click on Manage Jenkins, and then Manage Credentials and then Jenkins and Global credentials and add credentials and select type as secret text and add AWS AWS_ACCESS_KEY_ID and repeat the same for other credentials
+
+For GitHub creds, select type as username with password, with username as your_repo_user_name and id as github and password as Github token. 
+To generate the github token, go to your github account and under profile, click settings under that click developer settings, next personal access token, click generate personal access token. Give a token id as Jenkins and scopes to be repo,admin:repo_hook and notifications, next click on generate token and then copy the token and put it in jenkins.
+
+For running builds in Jenkins, we have to create a pipeline job in jenkins which will get the Jenkinsfile from GitHub and run builds. For that click on new item, give item name buildimage and select pipeline then ok. Next go to pipeline definition select pipeline script from scm and select scm as git and give CI repo url and rename branch from master to main. This sets main Jenkins pipeline which will detect code changes and build image. 
+
+Now we have to update manifest jobs CD pipeline, for that we shall go to dashboard and click on new item and give item name as updatemanifest and select pipeline and click ok then select "This project is parameterized" and add string parameter. and start giving string parameters like DOCKERTAG with default as latest, REPO_NAME with default as test, COMP_FILE with default as test.yaml. In pipeline definition, select pipeline script from SCM and select scm as git and give repo url of CD repo with branch as main.
