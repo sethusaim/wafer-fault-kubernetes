@@ -53,6 +53,8 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_clustering"
+
+        COMP_FILE = "wafer_clustering.yaml"
       }
 
       when {
@@ -83,6 +85,8 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_data_transform_pred"
+
+        COMP_FILE = "wafer_data_transform_pred.yaml"
       }
 
       when {
@@ -113,6 +117,8 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_data_transform_train"
+
+        COMP_FILE = "wafer_data_transform_train.yaml"
       }
 
       when {
@@ -146,6 +152,8 @@ pipeline {
         MONGODB_URL = credentials('MONGODB_URL')
 
         REPO_NAME = "wafer_db_operation_pred"
+
+        COMP_FILE = "wafer_db_operation_pred.yaml"
       }
 
       when {
@@ -161,11 +169,9 @@ pipeline {
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
           sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
-
         }
 
         build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
-
       }
     }
 
@@ -179,7 +185,9 @@ pipeline {
 
         MONGODB_URL = credentials('MONGODB_URL')
 
-        REPO_NAME = "wafer_db_operation_trains"
+        REPO_NAME = "wafer_db_operation_train"
+
+        COMP_FILE = "wafer_db_operation_train.yaml"
       }
 
       when {
@@ -211,6 +219,8 @@ pipeline {
         MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
 
         REPO_NAME = "wafer_load_prod_model"
+
+        COMP_FILE = "wafer_load_prod_model.yaml"
       }
 
       when {
@@ -250,6 +260,8 @@ pipeline {
         MLFLOW_TRACKING_PASSWORD = credentials('MLFLOW_TRACKING_PASSWORD')
 
         REPO_NAME = "wafer_model_prediction"
+
+        COMP_FILE = "wafer_load_prod_model.yaml"
       }
 
       when {
@@ -283,6 +295,8 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_model_training"
+
+        COMP_FILE = "wafer_model_training.yaml"
       }
 
       when {
@@ -314,6 +328,8 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_preprocessing_pred"
+
+        COMP_FILE = "wafer_preprocessing_pred.yaml"
       }
 
       when {
@@ -346,6 +362,8 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_preprocessing_train"
+
+        COMP_FILE = "wafer_preprocessing_train.yaml"
       }
 
       when {
@@ -364,9 +382,7 @@ pipeline {
         }
 
         build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
-
       }
-
     }
 
     stage('Build and Push Raw Prediction Data Validation Service') {
@@ -378,6 +394,8 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_raw_pred_data_validation"
+
+        COMP_FILE = "wafer_raw_pred_data_validation.yaml"
       }
 
       when {
@@ -410,6 +428,8 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_raw_train_data_validation"
+
+        COMP_FILE = "wafer_raw_train_data_validation.yaml"
       }
 
       when {
@@ -425,11 +445,9 @@ pipeline {
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
           sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
-
         }
 
         build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
-
       }
     }
 
