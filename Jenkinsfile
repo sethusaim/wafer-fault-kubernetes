@@ -21,7 +21,7 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_application"
-
+        
         COMP_FILE = "wafer_application.yaml"
       }
 

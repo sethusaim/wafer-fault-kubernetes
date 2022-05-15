@@ -198,6 +198,10 @@ curl -fsSL https://get.docker.com -o get-docker.sh
 ```
 
 ```bash
+sudo sh get-docker.sh
+```
+
+```bash
 sudo groupadd docker
 ```
 

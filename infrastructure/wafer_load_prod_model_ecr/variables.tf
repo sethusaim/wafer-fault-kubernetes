@@ -1,5 +1,5 @@
 variable "wafer_load_prod_model_ecr_name" {
-  default = "wafer_load_prod_models"
+  default = "wafer_load_prod_model"
   type    = string
 }
 
