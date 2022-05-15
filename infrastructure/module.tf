@@ -82,6 +82,10 @@ module "model_training_ecr_repo" {
   source = "./wafer_model_training_ecr"
 }
 
+module "load_prod_model_ecr_repo" {
+  source = "./wafer_load_prod_model_ecr"
+}
+
 module "preprocessing_pred_ecr_repo" {
   source = "./wafer_preprocessing_pred_ecr"
 }
