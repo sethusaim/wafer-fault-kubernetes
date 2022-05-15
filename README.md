@@ -247,9 +247,7 @@ For that click on Manage Jenkins, and then Manage Credentials and then Jenkins a
 For GitHub creds, select type as username with password, with username as your_repo_user_name and id as github and password as Github token. 
 To generate the github token, go to your github account and under profile, click settings under that click developer settings, next personal access token, click generate personal access token. Give a token id as Jenkins and scopes to be repo,admin:repo_hook and notifications, next click on generate token and then copy the token and put it in jenkins.
 
+### Creating Build image and update manifest jobs in Jenkins
 For running builds in Jenkins, we have to create a pipeline job in jenkins which will get the Jenkinsfile from GitHub and run builds. For that click on new item, give item name buildimage and select pipeline then ok. Next go to pipeline definition select pipeline script from scm and select scm as git and give CI repo url and rename branch from master to main. This sets main Jenkins pipeline which will detect code changes and build image. 
 
 Now we have to update manifest jobs CD pipeline, for that we shall go to dashboard and click on new item and give item name as updatemanifest and select pipeline and click ok then select "This project is parameterized" and add string parameter. and start giving string parameters like DOCKERTAG with default as latest, REPO_NAME with default as test, COMP_FILE with default as test.yaml. In pipeline definition, select pipeline script from SCM and select scm as git and give repo url of CD repo with branch as main.
-
-### Creating Build image and update manifest jobs in Jenkins
-To create a jenkins build image pipeline, click on new item and 
