@@ -251,3 +251,15 @@ To generate the github token, go to your github account and under profile, click
 For running builds in Jenkins, we have to create a pipeline job in jenkins which will get the Jenkinsfile from GitHub and run builds. For that click on new item, give item name buildimage and select pipeline then ok. Next go to pipeline definition select pipeline script from scm and select scm as git and give CI repo url and rename branch from master to main. This sets main Jenkins pipeline which will detect code changes and build image. 
 
 Now we have to update manifest jobs CD pipeline, for that we shall go to dashboard and click on new item and give item name as updatemanifest and select pipeline and click ok then select "This project is parameterized" and add string parameter. and start giving string parameters like DOCKERTAG with default as latest, REPO_NAME with default as test, COMP_FILE with default as test.yaml. In pipeline definition, select pipeline script from SCM and select scm as git and give repo url of CD repo with branch as main.
+
+### Setup GitHub Webhook trigger for Jenkins for automatic CI builds
+For github hook, we need to get the url of jenkins instance and go to the CI repository and then click on settings and select webhook and add webhook and in payload url give the value as http://public_ip:8080/github-webhook/ (put your own public ip) and content type as application/json and select just the push event and click on add webhook.Now go to jenkins buildimage job and click configure and under build triggers select Github hook triggers for Gitscm polling and save.
+
+
+### MLFlow setup in EC2 instance
+
+### EKS cluster setup
+
+### Kubeflow setup
+
+### ArgoCD setup
