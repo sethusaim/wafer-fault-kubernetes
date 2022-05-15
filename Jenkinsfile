@@ -16,7 +16,7 @@ pipeline {
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
 
-        KFP_HOST = credentials('KFP_HOST')
+        // KFP_HOST = credentials('KFP_HOST')
 
         AWS_DEFAULT_REGION = "us-east-1"
 
@@ -149,7 +149,7 @@ pipeline {
 
         AWS_DEFAULT_REGION = "us-east-1"
 
-        MONGODB_URL = credentials('MONGODB_URL')
+        // MONGODB_URL = credentials('MONGODB_URL')
 
         REPO_NAME = "wafer_db_operation_pred"
 
@@ -183,7 +183,7 @@ pipeline {
 
         AWS_DEFAULT_REGION = "us-east-1"
 
-        MONGODB_URL = credentials('MONGODB_URL')
+        // MONGODB_URL = credentials('MONGODB_URL')
 
         REPO_NAME = "wafer_db_operation_train"
 
@@ -216,7 +216,7 @@ pipeline {
 
         AWS_DEFAULT_REGION = "us-east-1"
 
-        MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
+        // MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
 
         REPO_NAME = "wafer_load_prod_model"
 
@@ -252,11 +252,11 @@ pipeline {
 
         AWS_DEFAULT_REGION = "us-east-1"
 
-        MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
+        // MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
 
-        MLFLOW_TRACKING_USERNAME = credentials('MLFLOW_TRACKING_USERNAME')
+        // MLFLOW_TRACKING_USERNAME = credentials('MLFLOW_TRACKING_USERNAME')
 
-        MLFLOW_TRACKING_PASSWORD = credentials('MLFLOW_TRACKING_PASSWORD')
+        // MLFLOW_TRACKING_PASSWORD = credentials('MLFLOW_TRACKING_PASSWORD')
 
         REPO_NAME = "wafer_model_prediction"
 
