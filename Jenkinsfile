@@ -21,6 +21,8 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_application"
+
+        COMP_FILE = "wafer-application.yaml"
       }
 
       when {
@@ -37,6 +39,8 @@ pipeline {
 
           sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
         }
+
+        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
       }
     }
 
@@ -65,6 +69,8 @@ pipeline {
 
           sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
         }
+
+        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
       }
     }
 
@@ -93,6 +99,8 @@ pipeline {
 
           sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
         }
+
+        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
       }
     }
 
@@ -112,13 +120,18 @@ pipeline {
       }
 
       steps {
-        sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
+        script {
+          sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t $REPO_NAME data_transform_train/'
+          sh 'docker build -t $REPO_NAME data_transform_train/'
 
-        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+        }
+
+        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
+
       }
     }
 
@@ -140,13 +153,19 @@ pipeline {
       }
 
       steps {
-        sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
+        script {
+          sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t $REPO_NAME db_operation_pred/'
+          sh 'docker build -t $REPO_NAME db_operation_pred/'
 
-        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+
+        }
+
+        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
+
       }
     }
 
@@ -168,13 +187,16 @@ pipeline {
       }
 
       steps {
-        sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
+        script {
+          sh 'docker build -t $REPO_NAME db_operation_train/'
 
-        sh 'docker build -t $REPO_NAME db_operation_train/'
+          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+        }
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
+
       }
     }
 
@@ -196,13 +218,19 @@ pipeline {
       }
 
       steps {
-        sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t $REPO_NAME load_prod_model/'
+        script {
+          sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker build -t $REPO_NAME load_prod_model/'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+
+          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+        }
+
+        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
+
       }
 
     }
@@ -229,13 +257,19 @@ pipeline {
       }
 
       steps {
-        sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
+        script {
+          sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t $REPO_NAME model_prediction/'
+          sh 'docker build -t $REPO_NAME model_prediction/'
 
-        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+
+        }
+
+        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
+
       }
 
     }
@@ -256,15 +290,19 @@ pipeline {
       }
 
       steps {
-        sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
+        script {
+          sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t $REPO_NAME model_training/'
+          sh 'docker build -t $REPO_NAME model_training/'
 
-        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+        }
+
+        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
+
       }
-
     }
 
     stage("Build and Push Preprocessing Prediction Service") {
@@ -283,13 +321,18 @@ pipeline {
       }
 
       steps {
-        sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
+        script {
+          sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t $REPO_NAME preprocessing_pred/'
+          sh 'docker build -t $REPO_NAME preprocessing_pred/'
 
-        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+        }
+
+        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
+
       }
 
     }
@@ -310,13 +353,18 @@ pipeline {
       }
 
       steps {
-        sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
+        script {
+          sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t $REPO_NAME preprocessing_train/'
+          sh 'docker build -t $REPO_NAME preprocessing_train/'
 
-        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+        }
+
+        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
+
       }
 
     }
@@ -337,13 +385,18 @@ pipeline {
       }
 
       steps {
-        sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
+        script {
+          sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t $REPO_NAME raw_pred_data_validation/'
+          sh 'docker build -t $REPO_NAME raw_pred_data_validation/'
 
-        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+        }
+
+        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
+
       }
 
     }
@@ -364,13 +417,19 @@ pipeline {
       }
 
       steps {
-        sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
+        script {
+          sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-        sh 'docker build -t $REPO_NAME raw_train_data_validation/'
+          sh 'docker build -t $REPO_NAME raw_train_data_validation/'
 
-        sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
-        sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+
+        }
+
+        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: "COMP_FILE", value: env.COMP_FILE)]
+
       }
     }
 
@@ -388,11 +447,13 @@ pipeline {
       }
 
       steps {
-        sh 'cd infrastructure'
+        script {
+          sh 'cd infrastructure'
 
-        sh 'terraform init'
+          sh 'terraform init'
 
-        sh 'terraform apply --auto-approve'
+          sh 'terraform apply --auto-approve'
+        }
       }
     }
   }

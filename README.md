@@ -99,3 +99,91 @@ Once the repositories are created, in the CI repository, clone this repository u
 ```bash 
 git clone https://github.com/sethusaim/Wafer-Fault-Kubernetes.git
 ```
+
+### Jenkins Setup in EC2 instance
+Previously install terraform in your local machine, be Linux,Mac or Windows. https://www.terraform.io/downloads
+
+Install awscli
+
+```bash
+pip install awscli
+```
+Configure aws creds
+
+```bash
+aws configure
+```
+
+Open your code editor in the infrastructure folder. In module.tf file comment all modules expect jenkins instance and execute the following commands.
+
+Before we proceed create a key pair in aws console by which you will connect to the ec2 instance
+
+Make sure to change the key pair name from sethu (which is mine) to your own key pair name.
+
+Then execute this command, which will initialize all backend required by terraform to function
+
+```bash
+terraform init 
+```
+
+This command applies the uncommented modules which are required by us 
+
+```bash
+terraform apply
+```
+Once the instance provisioning is done, SSH into the instance using any SSH tool like Putty, Mobaxterm,etc and execute the following commands
+
+Basically updates the os packages
+```bash
+sudo yum update
+```
+
+Add the Jenkins repo using the following command
+```bash
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+```
+
+Import a key file from Jenkins-CI to enable installation from the package:
+```bash
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+```
+
+```bash
+sudo yum upgrade
+```
+Install Java
+```bash
+sudo amazon-linux-extras install java-openjdk11 -y
+```
+
+Install Jenkins
+```bash
+sudo yum install jenkins -y
+```
+
+Enable the Jenkins service to start at boot:
+```bash
+sudo systemctl enable jenkins
+```
+
+Start Jenkins as a service
+```bash
+sudo systemctl start jenkins
+```
+
+You can check the status of the Jenkins service using the command
+```bash
+sudo systemctl status jenkins
+```
+
+Now that Jenkins is setup in this ec2 instance use public ip of the ec2 instance with port 8080, and click enter. (public_ip:8080)
+
+On successfull login, we shall see jenkins should be unlocked using the initial password which can accessed using 
+
+```bash
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+
+Copy the password and login to Jenkins server. Next click on the install suggested plugins and wait for installation to complete. Create a username and password for jenkins authentication.
+
+Finally you can access the Jenkins Dashboard in ec2 instance.
