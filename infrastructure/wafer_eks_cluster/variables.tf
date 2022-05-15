@@ -10,7 +10,7 @@ variable "cluster-name" {
 
 variable "clutser_instance_type" {
   default = "t2.medium"
-  type = string
+  type    = string
 }
 
 variable "wafer_sg_group_name" {
