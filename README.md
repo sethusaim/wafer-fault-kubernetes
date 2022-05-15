@@ -198,7 +198,19 @@ curl -fsSL https://get.docker.com -o get-docker.sh
 ```
 
 ```bash
-sudo chmod 666 /var/run/docker.sock
+sudo groupadd docker
+```
+
+```bash
+sudo usermod -aG docker $USER
+```
+
+```bash
+sudo usermod -aG docker jenkins
+```
+
+```bash
+newgrp docker
 ```
 
 Install AWS cli
