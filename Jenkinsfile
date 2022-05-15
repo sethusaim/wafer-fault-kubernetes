@@ -22,7 +22,7 @@ pipeline {
 
         REPO_NAME = "wafer_application"
 
-        COMP_FILE = "wafer-application.yaml"
+        COMP_FILE = "wafer_application.yaml"
       }
 
       // when {
