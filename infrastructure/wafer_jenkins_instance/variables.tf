@@ -6,7 +6,7 @@ variable "aws_region" {
 
 variable "jenkins_ami" {
   type    = string
-  default = "ami-0022f774911c1d690"
+  default = "ami-0c4f7023847b90238"
 }
 
 variable "jenkins_instance_type" {
