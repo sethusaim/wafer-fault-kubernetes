@@ -1,3 +1,11 @@
+terraform {
+  backend "s3" {
+    bucket = "wafer-tf-state"
+    key    = "tf_state"
+    region = "us-east-1"
+  }
+}
+
 module "jenkins_instance" {
   source = "./wafer_jenkins_instance"
 }
