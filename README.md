@@ -94,4 +94,6 @@ For creating and managing the infrastructure, we are using terraform intergrated
 ## How to Setup the Project
 Since we are following GitOps principles and Microservices architecture to solve the problem statement. Initially we have to create two repositories in GitHub, one for CI pipeline and other for CD pipeline.
 
-Once the repositories are created, in the CI repository,               
+Once the repositories are created, in the CI repository, clone this repository using this command
+
+'''bash git clone https://github.com/sethusaim/Wafer-Fault-Kubernetes.git'''
