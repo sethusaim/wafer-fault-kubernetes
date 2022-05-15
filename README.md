@@ -55,3 +55,43 @@ The solution application is exposed as API using FastAPI and application is dock
 
 ### Cloud Deployment 
 - CI-CD deployment to AWS EKS cluster using Jenkins and ArgoCD
+
+## Project Workflow
+To create machine learning workflow in microservices architecture, we need understand how microservices in non-AI projects are used. In 
+traditional microservices, every single component is created a service and deployed in kubernetes cluster for a choice. Generally,these 
+services are owned by small containers over well defined APIs which communicate with each other and information is shared.
+
+Now the question comes, how to implement the same architecture of ML workflows ??.
+
+To address the question we need to understand what all components does our ML workflow contains, for simplicity let us say we have data transformation component,preprocessing component, model training, etc. These components are essential to any ML workflow, but they do not have to be constantly up and running, as in traditional microservices like Web Application Microservices. ML Microservices are kind of different from other microservices, like there intented to some task, when a specific main task is triggered. Like for example, when I want to train my models based on new data, a series of microservices have be triggered, which will internally performed thier tasks and then reach the completion state. 
+
+So how to create ML microservices in the way similar to ML workflow ?
+
+This problem can be approached by creating by microservices to be service independent and stage dependent. The approach is simple, like each task, like let's say raw data validation component is independent from data transformation component, but the data transformation should execute after raw data validation only. So in order to achieve this each component is created as container service and for sequential execution we are using Kubeflow Pipelines, which is pipeline orchestrator running on kubernetes cluster. 
+
+Now the question comes, how to pass data between independent services, like dataframes and other data ?
+
+To approach this problem, we can store each container artifacts in S3 buckets, and then next container will reference it to that container.
+Like the output of one container will be input of other container, thereby maintaining service independency and stage dependency in kubeflow pipelines. 
+
+Once the kubeflow pipelines are set up, we have to create the CI pipeline, in which all the components are automatically built and pushed to container registry. For the CI pipeline builds, we are using Jenkins to automate our build process.
+
+Now the question comes why Jenkins ?
+Since we are working with microservices architecture, there is high possiblity that not all microservices are updated continuously, like there might be update in Database operation, ie database change from MongoDB to Cassandra just for example. When we commit these changes to the main branch, we want only database service to be updated, it is not neccessary that other services have to be updated, there might be a change or not. But traditional CI tools, the image is built when new code is merged to the main branch. This results in unnessacary image builds, and same images with same content are stored. We do not want that to happen. Jenkins allows us to execute conditional builds in our CI pipeline, like whenever there is code change in data trasformation train folder (We are keeping container services in folders) we shall trigger the build pipeline and updated container image with new tag and content. This results in efficient builds and reduces costs also.
+
+Coming to the pipeline orchestrator, we are using kubeflow pipelines the reason being simple it is easy to use and we define our custom pipelines with conditions and the way we want to run our pipelines like DAG workflows, without worrying about the underlying kubernetes yaml.
+
+CD pipeline follows GitOps principles and running our services on kubernetes we can use ArgoCD for CD pipeline, it makes our work easier by defining the application state in our git repository. ArgoCD looks for changes in the git repository periodically and reflects the changes automatically. 
+
+Now the question comes how to manange other components which are running on kubeflow pipelines, since in kubeflow pipelines we do not have to write kind of kubernetes yaml file ?
+
+Yes, it is true that kubeflow pipelines do not require us to write any kubernetes yaml file, but kubeflow expects us to write our services in the form of very simple yaml file defining container image name and image run command. We can update these yaml files in our CI pipeline and upload them CD git repository. But the problem is ArgoCD only looks for kubernetes yaml. So in order to resolve this and still follow GitOps principles, we can use a GitHub actions which will sync our files present in git repository to s3 buckets and loaded be for kubeflow pipelines to be executed based on route passed to application service.
+
+The same approach is followed for prediction pipeline also.
+
+For creating and managing the infrastructure, we are using terraform intergrated with Jenkins for GitOps type infrastructure provising and maintainence. 
+
+## How to Setup the Project
+Since we are following GitOps principles and Microservices architecture to solve the problem statement. Initially we have to create two repositories in GitHub, one for CI pipeline and other for CD pipeline.
+
+Once the repositories are created, in the CI repository,               
