@@ -11,6 +11,12 @@ resource "aws_instance" "jenkins_instance" {
     Name = var.tag_name
   }
 
+  root_block_device {
+    volume_size = var.jenkins_volume_size 
+    volume_type = var.jenkins_volume_type
+    encrypted   = var.jenkins_volume_encryption
+  }
+
   connection {
     type    = "ssh"
     host    = self.public_ip

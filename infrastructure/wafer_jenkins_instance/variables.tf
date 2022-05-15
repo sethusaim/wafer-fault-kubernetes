@@ -12,7 +12,6 @@ variable "jenkins_ami" {
 variable "jenkins_instance_type" {
   type    = string
   default = "t2.medium"
-
 }
 
 variable "jenkins_key_pair_name" {
@@ -65,4 +64,19 @@ variable "jenkins_egress_from_port" {
 variable "jenkins_egress_to_port" {
   type    = number
   default = 65535
+}
+
+variable "jenkins_volume_size" {
+  default = 30
+  type = number
+}
+
+variable "jenkins_volume_type" {
+  default = "gp2"
+  type = string
+}
+
+variable "jenkins_volume_encryption" {
+  default = true
+  type = bool
 }
