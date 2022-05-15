@@ -46,6 +46,8 @@ pipeline {
 
     stage('Build and Push Clustering Service') {
       environment {
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
+        
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
@@ -82,6 +84,8 @@ pipeline {
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
 
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
+
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_data_transform_pred"
@@ -113,6 +117,8 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
 
         AWS_DEFAULT_REGION = "us-east-1"
 
@@ -146,6 +152,8 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
 
         AWS_DEFAULT_REGION = "us-east-1"
 
@@ -181,6 +189,8 @@ pipeline {
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
 
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
+
         AWS_DEFAULT_REGION = "us-east-1"
 
         // MONGODB_URL = credentials('MONGODB_URL')
@@ -197,7 +207,7 @@ pipeline {
       steps {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
-          
+
           sh 'docker build -t $REPO_NAME db_operation_train/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
@@ -215,6 +225,8 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
 
         AWS_DEFAULT_REGION = "us-east-1"
 
@@ -251,6 +263,8 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
 
         AWS_DEFAULT_REGION = "us-east-1"
 
@@ -293,6 +307,8 @@ pipeline {
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
 
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
+
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_model_training"
@@ -325,6 +341,8 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
 
         AWS_DEFAULT_REGION = "us-east-1"
 
@@ -360,6 +378,8 @@ pipeline {
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
 
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
+
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_preprocessing_train"
@@ -391,6 +411,8 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
 
         AWS_DEFAULT_REGION = "us-east-1"
 
@@ -425,6 +447,8 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
 
         AWS_DEFAULT_REGION = "us-east-1"
 
