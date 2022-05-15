@@ -74,7 +74,7 @@ module "db_operation_train_ecr_repo" {
   source = "./wafer_db_operation_train_ecr"
 }
 
-module "model_predcition_ecr_repo" {
+module "model_prediction_ecr_repo" {
   source = "./wafer_model_prediction_ecr"
 }
 
