@@ -230,7 +230,7 @@ pipeline {
 
         AWS_DEFAULT_REGION = "us-east-1"
 
-        MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
+        // MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
 
         REPO_NAME = "wafer_load_prod_model"
 
