@@ -68,15 +68,15 @@ variable "jenkins_egress_to_port" {
 
 variable "jenkins_volume_size" {
   default = 30
-  type = number
+  type    = number
 }
 
 variable "jenkins_volume_type" {
   default = "gp2"
-  type = string
+  type    = string
 }
 
 variable "jenkins_volume_encryption" {
   default = true
-  type = bool
+  type    = bool
 }

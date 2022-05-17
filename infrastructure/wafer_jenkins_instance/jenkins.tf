@@ -12,7 +12,7 @@ resource "aws_instance" "jenkins_instance" {
   }
 
   root_block_device {
-    volume_size = var.jenkins_volume_size 
+    volume_size = var.jenkins_volume_size
     volume_type = var.jenkins_volume_type
     encrypted   = var.jenkins_volume_encryption
   }
