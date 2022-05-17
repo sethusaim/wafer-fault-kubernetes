@@ -217,7 +217,7 @@ sudo usermod -aG docker jenkins
 newgrp docker
 ```
 
-Install AWS cli
+Install AWS CLI
 ```bash
 sudo apt install awscli
 ```
