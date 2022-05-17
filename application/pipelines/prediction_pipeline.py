@@ -1,5 +1,4 @@
 from components.pred_components import Pred_Component
-from kfp.dsl import pipeline
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.pipeline_utils import Pipeline
@@ -24,7 +23,6 @@ class Pred_Pipeline:
 
         self.log_writer = App_Logger()
 
-    @pipeline("Pred Pipeline")
     def pred_pipeline(self):
         method_name = self.pred_pipeline.__name__
 
@@ -39,10 +37,6 @@ class Pred_Pipeline:
 
             raw_pred_data_val = self.pred_comp.raw_pred_data_validation_component()
 
-            raw_pred_data_val.execution_options.caching_strategy.max_cache_stalenes = (
-                "POD"
-            )
-
             self.log_writer.log(
                 "Executed raw pred data validation component", self.pred_pipeline_log
             )
@@ -55,10 +49,6 @@ class Pred_Pipeline:
                 raw_pred_data_val
             )
 
-            pred_data_trans.execution_options.caching_strategy.max_cache_stalenes = (
-                "POD"
-            )
-
             self.log_writer.log(
                 "Executed pred data transformation component", self.pred_pipeline_log
             )
@@ -68,8 +58,6 @@ class Pred_Pipeline:
             )
 
             pred_db_op = self.pred_comp.pred_db_op_component().after(pred_data_trans)
-
-            pred_db_op.execution_options.caching_strategy.max_cache_stalenes = "POD"
 
             self.log_writer.log(
                 "Executed pred database operation component", self.pred_pipeline_log
@@ -83,10 +71,6 @@ class Pred_Pipeline:
                 pred_db_op
             )
 
-            pred_preprocess.execution_options.caching_strategy.max_cache_stalenes = (
-                "POD"
-            )
-
             self.log_writer.log(
                 "Executed pred data preprocessing component", self.pred_pipeline_log
             )
@@ -98,8 +82,6 @@ class Pred_Pipeline:
             pred_model = self.pred_comp.model_prediction_component().after(
                 pred_preprocess
             )
-
-            pred_model.execution_options.caching_strategy.max_cache_stalenes = "POD"
 
             self.log_writer.log(
                 "Executed prediction model component", self.pred_pipeline_log

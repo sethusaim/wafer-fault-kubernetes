@@ -1,5 +1,4 @@
 from components.train_components import Train_Component
-from kfp.dsl import pipeline
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.pipeline_utils import Pipeline
@@ -24,7 +23,6 @@ class Train_Pipeline:
 
         self.log_writer = App_Logger()
 
-    @pipeline("Train Pipeline")
     def train_pipeline(self):
         method_name = self.train_pipeline.__name__
 
@@ -38,10 +36,6 @@ class Train_Pipeline:
             )
 
             raw_train_data_val = self.train_comp.raw_train_data_val_component()
-            
-            raw_train_data_val.execution_options.caching_strategy.max_cache_stalenes = (
-                "POD"
-            )
 
             self.log_writer.log(
                 "Executed raw train data validation component", self.train_pipeline_log
@@ -51,13 +45,9 @@ class Train_Pipeline:
                 "Executing train data transformation component", self.train_pipeline_log
             )
 
-            train_data_trans = self.train_comp.train_data_trans_component().after(
-                raw_train_data_val
-            )
+            train_data_trans = self.train_comp.train_data_trans_component()
 
-            train_data_trans.execution_options.caching_strategy.max_cache_stalenes = (
-                "POD"
-            )
+            train_data_trans.after(raw_train_data_val)
 
             self.log_writer.log(
                 "Executed train data transformation component", self.train_pipeline_log
