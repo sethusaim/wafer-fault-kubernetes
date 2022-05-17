@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket = "wafer-tf-state"
     key    = "tf_state"
-    region = var.region
+    region = "us-east-1"
   }
 }
 

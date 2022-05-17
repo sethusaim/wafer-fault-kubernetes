@@ -27,7 +27,7 @@ class Pipeline:
 
         try:
             self.kfp_compiler.compile(func, pkg_file)
-
+            
             self.log_writer.log(
                 f"Complied {func.__name__} pipeline func to {pkg_file}", self.log_file
             )

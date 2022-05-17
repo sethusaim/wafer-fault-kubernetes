@@ -20,7 +20,7 @@ class Train_Pipeline:
 
         self.s3 = S3_Operation()
 
-        self.pipe = Pipeline()
+        self.pipe = Pipeline(self.config["log"]["train_pipeline"])
 
         self.log_writer = App_Logger()
 
@@ -38,7 +38,7 @@ class Train_Pipeline:
             )
 
             raw_train_data_val = self.train_comp.raw_train_data_val_component()
-
+            
             raw_train_data_val.execution_options.caching_strategy.max_cache_stalenes = (
                 "POD"
             )
@@ -63,83 +63,83 @@ class Train_Pipeline:
                 "Executed train data transformation component", self.train_pipeline_log
             )
 
-            self.log_writer.log(
-                "Executing train data operation component", self.train_pipeline_log
-            )
+        #     self.log_writer.log(
+        #         "Executing train data operation component", self.train_pipeline_log
+        #     )
 
-            train_db_op = self.train_comp.train_db_op_component().after(
-                train_data_trans
-            )
+        #     train_db_op = self.train_comp.train_db_op_component().after(
+        #         train_data_trans
+        #     )
 
-            train_db_op.execution_options.caching_strategy.max_cache_stalenes = "POD"
+        #     train_db_op.execution_options.caching_strategy.max_cache_stalenes = "POD"
 
-            self.log_writer.log(
-                "Executed train database operation component", self.train_pipeline_log
-            )
+        #     self.log_writer.log(
+        #         "Executed train database operation component", self.train_pipeline_log
+        #     )
 
-            self.log_writer.log(
-                "Executing train data clustering component", self.train_pipeline_log
-            )
+        #     self.log_writer.log(
+        #         "Executing train data clustering component", self.train_pipeline_log
+        #     )
 
-            train_clustering = self.train_comp.clustering_component().after(train_db_op)
+        #     train_clustering = self.train_comp.clustering_component().after(train_db_op)
 
-            train_clustering.execution_options.caching_strategy.max_cache_stalenes = (
-                "POD"
-            )
+        #     train_clustering.execution_options.caching_strategy.max_cache_stalenes = (
+        #         "POD"
+        #     )
 
-            self.log_writer.log(
-                "Executed train data clustering component", self.train_pipeline_log
-            )
+        #     self.log_writer.log(
+        #         "Executed train data clustering component", self.train_pipeline_log
+        #     )
 
-            self.log_writer.log(
-                "Executing train data preprocessing component", self.train_pipeline_log
-            )
+        #     self.log_writer.log(
+        #         "Executing train data preprocessing component", self.train_pipeline_log
+        #     )
 
-            train_preprocess = self.train_comp.preprocessing_component().after(
-                train_clustering
-            )
+        #     train_preprocess = self.train_comp.preprocessing_component().after(
+        #         train_clustering
+        #     )
 
-            train_preprocess.execution_options.caching_strategy.max_cache_stalenes = (
-                "POD"
-            )
+        #     train_preprocess.execution_options.caching_strategy.max_cache_stalenes = (
+        #         "POD"
+        #     )
 
-            self.log_writer.log(
-                "Executed train data preprocessing component", self.train_pipeline_log
-            )
+        #     self.log_writer.log(
+        #         "Executed train data preprocessing component", self.train_pipeline_log
+        #     )
 
-            self.log_writer.log(
-                "Executing training model component", self.train_pipeline_log
-            )
+        #     self.log_writer.log(
+        #         "Executing training model component", self.train_pipeline_log
+        #     )
 
-            train_model = self.train_comp.training_model_component().after(
-                train_preprocess
-            )
+        #     train_model = self.train_comp.training_model_component().after(
+        #         train_preprocess
+        #     )
 
-            train_model.execution_options.caching_strategy.max_cache_stalenes = "POD"
+        #     train_model.execution_options.caching_strategy.max_cache_stalenes = "POD"
 
-            self.log_writer.log(
-                "Executed training model component", self.train_pipeline_log
-            )
+        #     self.log_writer.log(
+        #         "Executed training model component", self.train_pipeline_log
+        #     )
 
-            self.log_writer.log(
-                "Executing load prod model component", self.train_pipeline_log
-            )
+        #     self.log_writer.log(
+        #         "Executing load prod model component", self.train_pipeline_log
+        #     )
 
-            load_prod_model = self.train_comp.load_prod_model_component().after(
-                train_model
-            )
+        #     load_prod_model = self.train_comp.load_prod_model_component().after(
+        #         train_model
+        #     )
 
-            load_prod_model.execution_options.caching_strategy.max_cache_stalenes = (
-                "POD"
-            )
+        #     load_prod_model.execution_options.caching_strategy.max_cache_stalenes = (
+        #         "POD"
+        #     )
 
-            self.log_writer.log(
-                "Executed load prod model component", self.train_pipeline_log
-            )
+        #     self.log_writer.log(
+        #         "Executed load prod model component", self.train_pipeline_log
+        #     )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.train_pipeline_log
-            )
+        #     self.log_writer.start_log(
+        #         "exit", self.class_name, method_name, self.train_pipeline_log
+        #     )
 
         except Exception as e:
             self.log_writer.exception_log(

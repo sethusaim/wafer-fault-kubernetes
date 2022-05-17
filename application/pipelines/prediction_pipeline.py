@@ -20,7 +20,7 @@ class Pred_Pipeline:
 
         self.s3 = S3_Operation()
 
-        self.pipe = Pipeline()
+        self.pipe = Pipeline(self.config["log"]["pred_pipeline"])
 
         self.log_writer = App_Logger()
 
