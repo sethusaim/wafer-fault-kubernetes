@@ -16,7 +16,7 @@ pipeline {
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
 
-        // KFP_HOST = credentials('KFP_HOST')
+        KFP_HOST = credentials('KFP_HOST')
 
         AWS_DEFAULT_REGION = "us-east-1"
 
@@ -25,9 +25,9 @@ pipeline {
         COMP_FILE = "wafer_application.yaml"
       }
 
-      // when {
-      //   changeset 'application/*'
-      // }
+      when {
+        changeset 'application/*'
+      }
 
       steps {
         script {
@@ -59,9 +59,9 @@ pipeline {
         COMP_FILE = "wafer_clustering.yaml"
       }
 
-      // when {
-      //   changeset 'clustering/*'
-      // }
+      when {
+        changeset 'clustering/*'
+      }
 
       steps {
         script {
@@ -93,9 +93,9 @@ pipeline {
         COMP_FILE = "wafer_data_transform_pred.yaml"
       }
 
-      // when {
-      //   changeset 'data_transform_pred/*'
-      // }
+      when {
+        changeset 'data_transform_pred/*'
+      }
 
       steps {
         script {
@@ -127,9 +127,9 @@ pipeline {
         COMP_FILE = "wafer_data_transform_train.yaml"
       }
 
-      // when {
-      //   changeset 'data_transform_train/*'
-      // }
+      when {
+        changeset 'data_transform_train/*'
+      }
 
       steps {
         script {
@@ -164,9 +164,9 @@ pipeline {
         COMP_FILE = "wafer_db_operation_pred.yaml"
       }
 
-      // when {
-      //   changeset 'db_operation_pred/*'
-      // }
+      when {
+        changeset 'db_operation_pred/*'
+      }
 
       steps {
         script {
@@ -193,16 +193,16 @@ pipeline {
 
         AWS_DEFAULT_REGION = "us-east-1"
 
-        // MONGODB_URL = credentials('MONGODB_URL')
+        MONGODB_URL = credentials('MONGODB_URL')
 
         REPO_NAME = "wafer_db_operation_train"
 
         COMP_FILE = "wafer_db_operation_train.yaml"
       }
 
-      // when {
-      //   changeset 'db_operation_train/*'
-      // }
+      when {
+        changeset 'db_operation_train/*'
+      }
 
       steps {
         script {
@@ -230,16 +230,16 @@ pipeline {
 
         AWS_DEFAULT_REGION = "us-east-1"
 
-        // MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
+        MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
 
         REPO_NAME = "wafer_load_prod_model"
 
         COMP_FILE = "wafer_load_prod_model.yaml"
       }
 
-      // when {
-      //   changeset 'load_prod_model/*'
-      // }
+      when {
+        changeset 'load_prod_model/*'
+      }
 
       steps {
         script {
@@ -268,20 +268,20 @@ pipeline {
 
         AWS_DEFAULT_REGION = "us-east-1"
 
-        // MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
+        MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
 
-        // MLFLOW_TRACKING_USERNAME = credentials('MLFLOW_TRACKING_USERNAME')
+        MLFLOW_TRACKING_USERNAME = credentials('MLFLOW_TRACKING_USERNAME')
 
-        // MLFLOW_TRACKING_PASSWORD = credentials('MLFLOW_TRACKING_PASSWORD')
+        MLFLOW_TRACKING_PASSWORD = credentials('MLFLOW_TRACKING_PASSWORD')
 
         REPO_NAME = "wafer_model_prediction"
 
         COMP_FILE = "wafer_load_prod_model.yaml"
       }
 
-      // when {
-      //   changeset 'model_prediction/*'
-      // }
+      when {
+        changeset 'model_prediction/*'
+      }
 
       steps {
         script {
@@ -316,9 +316,9 @@ pipeline {
         COMP_FILE = "wafer_model_training.yaml"
       }
 
-      // when {
-      //   changeset 'model_training/*'
-      // }
+      when {
+        changeset 'model_training/*'
+      }
 
       steps {
         script {
@@ -351,9 +351,9 @@ pipeline {
         COMP_FILE = "wafer_preprocessing_pred.yaml"
       }
 
-      // when {
-      //   changeset 'preprocessing_pred/*'
-      // }
+      when {
+        changeset 'preprocessing_pred/*'
+      }
 
       steps {
         script {
@@ -387,9 +387,9 @@ pipeline {
         COMP_FILE = "wafer_preprocessing_train.yaml"
       }
 
-      // when {
-      //   changeset 'preprocessing_train/*'
-      // }
+      when {
+        changeset 'preprocessing_train/*'
+      }
 
       steps {
         script {
@@ -421,9 +421,9 @@ pipeline {
         COMP_FILE = "wafer_raw_pred_data_validation.yaml"
       }
 
-      // when {
-      //   changeset 'raw_pred_data_validation/*'
-      // }
+      when {
+        changeset 'raw_pred_data_validation/*'
+      }
 
       steps {
         script {
@@ -457,9 +457,9 @@ pipeline {
         COMP_FILE = "wafer_raw_train_data_validation.yaml"
       }
 
-      // when {
-      //   changeset 'raw_train_data_validation/*'
-      // }
+      when {
+        changeset 'raw_train_data_validation/*'
+      }
 
       steps {
         script {
@@ -485,9 +485,9 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
       }
 
-      // when {
-      //   changeset 'infrastructure/*'
-      // }
+      when {
+        changeset 'infrastructure/*'
+      }
 
       steps {
         script {

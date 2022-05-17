@@ -54,17 +54,17 @@ variable "eks_node_group_name" {
 }
 
 variable "desired_node_size" {
-  default = 4
+  default = 5
   type    = number
 }
 
 variable "min_node_size" {
-  default = 4
+  default = 5
   type    = number
 }
 
 variable "max_node_size" {
-  default = 5
+  default = 6
   type    = number
 }
 
