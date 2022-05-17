@@ -11,6 +11,12 @@ resource "aws_instance" "eks_master_instance" {
     Name = var.eks_master_tag_name
   }
 
+  root_block_device {
+    volume_size = var.eks_master_volume_size
+    volume_type = var.eks_master_volume_type
+    encrypted   = var.eks_master_volume_encryption
+  }
+
   connection {
     type    = "ssh"
     host    = self.public_ip

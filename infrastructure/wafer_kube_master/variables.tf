@@ -66,3 +66,18 @@ variable "eks_master_egress_to_port" {
   type    = number
   default = 65535
 }
+
+variable "eks_master_volume_size" {
+  default = 30
+  type    = number
+}
+
+variable "eks_master_volume_type" {
+  default = "gp2"
+  type    = string
+}
+
+variable "eks_master_volume_encryption" {
+  default = true
+  type    = bool
+}

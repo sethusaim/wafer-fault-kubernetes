@@ -11,6 +11,12 @@ resource "aws_instance" "mlflow_instance" {
     Name = var.mlflow_tag_name
   }
 
+  root_block_device {
+    volume_size = var.mlflow_volume_size
+    volume_type = var.mlflow_volume_type
+    encrypted   = var.mlflow_volume_encryption
+  }
+
   connection {
     type    = "ssh"
     host    = self.public_ip

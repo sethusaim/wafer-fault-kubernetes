@@ -65,3 +65,18 @@ variable "mlflow_egress_to_port" {
   type    = number
   default = 65535
 }
+
+variable "mlflow_volume_size" {
+  default = 30
+  type    = number
+}
+
+variable "mlflow_volume_type" {
+  default = "gp2"
+  type    = string
+}
+
+variable "mlflow_volume_encryption" {
+  default = true
+  type    = bool
+}
