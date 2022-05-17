@@ -10,10 +10,10 @@ log:
 log_dir: app_logs
 
 pipeline_path:
-  pred: wafer-pred.zip
-  train: wafer-train.zip
+  pred: wafer_pred.zip
+  train: wafer_train.zip
 
-run_name: wafer-run
+run_name: wafer_run
 
 s3_bucket:
   components: wafer-kubeflow-components-4efdbdc
@@ -25,18 +25,18 @@ templates:
   index: index.html
 
 train_components:
-  clustering: wafer-clustering.yaml
-  preprocessing: wafer-preprocess-train.yaml
-  load_prod: wafer-prod.yaml
-  raw_data_val: wafer-raw-data-val.yaml
-  data_trans: wafer-train-data-transform.yaml
-  db_operation: wafer-train-db.yaml
-  model: wafer-train.yaml
+  clustering: wafer_clustering.yaml
+  preprocessing: wafer_preprocess-train.yaml
+  load_prod: wafer_prod.yaml
+  raw_data_val: wafer_raw-data-val.yaml
+  data_trans: wafer_train-data-transform.yaml
+  db_operation: wafer_train-db.yaml
+  model: wafer_train.yaml
 
 
 pred_components:
-  pred_data_trans: wafer-pred-data-transform.yaml
-  pred_db_op: wafer-pred-db.yaml
-  model: wafer-prediction.yaml
-  preprocessing: wafer-preprocess-pred.yaml
-  raw_data_val: wafer-raw-data-val.yaml
+  pred_data_trans: wafer_pred-data-transform.yaml
+  pred_db_op: wafer_pred-db.yaml
+  model: wafer_prediction.yaml
+  preprocessing: wafer_preprocess-pred.yaml
+  raw_data_val: wafer_raw_data_val.yaml
