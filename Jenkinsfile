@@ -21,7 +21,7 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
 
         REPO_NAME = "wafer_application"
-        
+
         COMP_FILE = "wafer_application.yaml"
       }
 
@@ -47,7 +47,7 @@ pipeline {
     stage('Build and Push Clustering Service') {
       environment {
         AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
-        
+
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
