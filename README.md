@@ -255,11 +255,270 @@ Now we have to update manifest jobs CD pipeline, for that we shall go to dashboa
 ### Setup GitHub Webhook trigger for Jenkins for automatic CI builds
 For github hook, we need to get the url of jenkins instance and go to the CI repository and then click on settings and select webhook and add webhook and in payload url give the value as http://public_ip:8080/github-webhook/ (put your own public ip) and content type as application/json and select just the push event and click on add webhook.Now go to jenkins buildimage job and click configure and under build triggers select Github hook triggers for Gitscm polling and save.
 
-
 ### MLFlow setup in EC2 instance
+For setting up mlflow in ec2 instance, open your code editor in the infrastructure folder and uncomment the mlflow_instance module, and then execute the following commands,
+
+```bash
+terraform init
+```
+
+```bash
+terraform apply
+```
+These commands will launch, t2.small instance with neccessary security groups. After some time, the mlflow instance will be up and running. Connect to the ec2 instance using key pair. On successfull login, execute the following commands,
+
+```bash
+sudo apt update
+```
+
+```bash
+sudo apt-get update
+```
+
+#### Install Anaconda in ec2 instance and create a env for mlflow
+```bash
+wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
+```
+
+```bash
+bash Anaconda3-2022.05-Linux-x86_64.sh
+```
+When prompted type yes and press enter to confirm the location of anaconda3. This process might take a few minutes of time. Once done execute the following commands.
+
+```bash
+export PATH=~/anaconda3/bin:$PATH
+```
+
+```bash
+conda init bash
+```
+Now close the connection made via ssh and reconnect via ssh to see the changes in ec2 instance, we can see that deafult env is to set bsse which indicates that anaconda is successfully installed.
+
+#### Create MLFLow as service in ec2 instance
+Now that anaconda is setup in ec2 instance, we shall create a conda env named mlflow and install the required packages. In order to do that execute the following commands.
+
+```bash
+conda create -n mlflow python=3.7.6 -y
+```
+
+```bash
+conda activate mlflow
+```
+
+```bash
+pip3 install mlflow
+```
+
+```bash
+sudo apt install -y nginx 
+```
+
+```bash
+sudo apt-get install -y apache2-utils
+```
+
+```bash
+cd /etc/nginx/sites-enabled
+```
+
+This command lets you create user profile for mlflow authentication, replace USERNAME with your username,(do remember it or keep a note of it since we will be requiring it for model training service). Once the command is executed, it prompts you to give a new password, fill the details (remember the password or make note of it, we will be requiring it for model training service).  
+```bash
+sudo htpasswd -c /etc/nginx/.htpasswd USERNAME
+```
+
+Now that the username and password are created, we have to create a mlflow nginx configuration file, to tell nginx to listen to our public ip, with our username and password details, like a nginx reverse proxy for HTTP authentication for API calls made by user to MLFlow server. In order to do that, execute the following commands
+
+```bash
+sudo nano mlflow
+```
+```bash
+server {
+    listen 8080;
+    server_name YOUR_IP_OR_DOMAIN;
+    auth_basic “Administrator-Area”;
+    auth_basic_user_file /etc/nginx/.htpasswd; 
+
+    location / {
+        proxy_pass http://localhost:8000;
+        include /etc/nginx/proxy_params;
+        proxy_redirect off;
+    }
+}
+```
+We have successfully created mlflow nginx configuration file. Now we have apply those changes, in order to do so, execute the following commands
+
+```bash
+sudo service nginx start
+```
+If above command does not return any error, it means that you have successfully configured nginx. 
+
+##### Expose mlflow server as a service in ec2 instance
+Now we have to expose mlflow server as a service in ec2 instance. In order to do so, execute the following commands
+
+```bash
+cd /home/ubuntu
+```
+
+```bash
+cd  /etc/systemd/system
+```
+
+```bash
+sudo nano mlflow-tracking.service
+```
+
+```bash
+[Unit]
+Description=MLflow tracking server
+After=network.target
+
+[Service]
+Restart=on-failure
+RestartSec=30
+
+ExecStart=/bin/bash -c 'PATH=/home/ubuntu/anaconda3/envs/CREATED_ENV/bin/:$PATH exec mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root s3://WAFER_MLFLOW_BUCKET_NAME/ --host 0.0.0.0 -p 8000'
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Now that we have added a service file for mlflow, we have to reload the daemon and start the mlflow service
+
+```bash
+cd /home/ubuntu
+```
+
+```bash
+sudo systemctl daemon-reload
+```
+
+```bash
+sudo systemctl enable mlflow-tracking 
+```
+
+```bash
+sudo systemctl start mlflow-tracking
+```
+If these commands do not return any error that means mlflow service is setup in ec2 instance, and can be accessed via public ip on ports 8000 or 8080. Go to the browser, and paste PUBLIC_IP:8080 or PUBLIC_IP:8000.
+
+If everything is done properly, we should then see the mlflow dashboard in our browser.Sometimes, you might be prompted to give your username and password for login, remember that username and password is the same which have configured for nginx. The public ip with port, mlflow username and mlflow password acts as a environment variables when using model training service. 
 
 ### EKS cluster setup
+Since we are using microservices architecture, kubernetes plays an important role in microservices architecture by orchestrating and managing our containters/microservices in the cloud. In AWS cloud, there is managed serviced called Elastic Kubernetes Service which allows us to create kubernetes cluster on AWS cloud. In order to create a kubernetes, open code editor in infrastructure folder, and uncomment two modules one is eks_cluster and kube_master modules. The main purpose kube_master module, to control the kubernetes cluster from an ec2 instance and not from local machine. 
+
+To create a kubernetes cluster, we have to execute the following commands,
+
+```bash
+terraform init
+```
+
+```bash
+terraform apply 
+```
+These commands will be initialize the backend required to run terraform and stores the state in s3 bucket. The terraform module includes the launch of 5 instances which are of type t2.medium, which approximately 20GB cluster node groups. 
+
+Now you might be why that much big cluster ??. The answer is we need to setup KubeFlow, ArgoCD and on top of that we need to run our microservices. So approximately we need might 20GB cluster. We can scale up and down by changing the cluster configuration in terraform files or by using autoscaler, or completely shift to serverless infrastructure. That option is left to end user itself. I have choosen provisioned cluster of 20GB which should be enough to run our applications.
+
+
+EKS cluster provisioning takes around 13min to 15min. After the provisioning of the EKS cluster along 5 node groups and Kube master ec2 instance is done. Connect to kube master via ssh and execute the following commands.
+
+```bash
+sudo apt update
+```
+
+```bash
+sudo apt-get update
+```
+
+```bash
+sudo apt install awscli
+```
+
+```bash
+aws configure
+```
+On prompt give your aws creds with default output as json. Once the install kubectl in ec2 instance
+
+```bash
+curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
+```
+
+```bash
+chmod +x ./kubectl
+```
+
+```bash
+sudo mv ./kubectl /usr/local/bin 
+```
+
+```bash
+kubectl version --short --client
+```
+
+```bash
+aws eks update-kubeconfig --name EKS_CLUSTER_NAME
+```
+To check whether kubeconfig is updated or not, run the following commnands, and you shall see that 5 nodes are shown in console
+
+```bash
+kubectl get nodes
+```
+This means that kubeconfig of cluster is updated in ec2 instance and can be accessed from ec2 instance as a master node.
 
 ### Kubeflow setup
+Since we are using kubeflow for pipeline orchestration, we need to setup kubeflow in eks cluster. Kubeflow can be set up in eks cluster, by looking in the docuementation of Kubeflow on AWS. The setup can be done by executing the following commands
+
+```bash
+export KUBEFLOW_RELEASE_VERSION="v1.4.1"
+```
+
+```bash
+export AWS_RELEASE_VERSION="v1.4.1-aws-b1.0.0"
+```
+
+```bash
+git clone https://github.com/awslabs/kubeflow-manifests.git && cd kubeflow-manifests
+```
+
+```bash
+git checkout ${AWS_RELEASE_VERSION}
+```
+
+```bash
+git clone --branch ${KUBEFLOW_RELEASE_VERSION} https://github.com/kubeflow/manifests.git upstream
+```
+If you refer the docuementation, we can see that they have given single line command to install kubeflow in eks cluster. Before we proceed we have install kustomize in the ec2 instance and to do so execute the following commands
+
+```bash
+sudo apt install snapd
+```
+
+```bash
+sudo snap install kustomize
+```
+
+```bash
+while ! kustomize build docs/deployment/vanilla | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
+```
+
+After few minutes, the installation will be completed and kubeflow will be setup in eks cluster. To verify that the kubeflow is running, execute the following command
+
+```bash
+kubectl -n kubeflow get all
+```
+You should see that status of all pods are in running, and kubeflow dashboard can accessed by exposing the service svc/istio-ingressgateway through a load balancer. In order to do so, execute the command
+
+```bash
+kubectl patch svc istio-ingressgateway -p '{"spec": {"ports": [{"port": 8080,"targetPort": 8080,"name": "http"}],"type": "LoadBalancer"}}' -n istio-system
+```
+After few minutes load balancer will be provisoned and kubeflow dashboard can be accessed by getting the loadbalancer address, by executing the command
+
+```bash
+kubectl -n istio-system get svc istio-ingressgateway 
+```
+Copy the external loadbalancer ip address and paste it in the browser and you shall see that dex login page where you have to login with username and password. The default username and password is user@example.com and 12341234. 
+
+On successfully login, you will be able to see the kubeflow dashboard in the browser. Get the loadbalancer url from browser and then export it as environment variable KFP_HOST to access the kubeflow dashboard by using kubeflow pipelines sdk.
+
 
 ### ArgoCD setup

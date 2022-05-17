@@ -5,6 +5,7 @@ app:
 log:
   train_comp: train_comp.txt
   train_pipeline: train_pipeline_log.txt
+  pred_pipeline: pred_pipeline_log.txt
   upload: upload_log.txt
 
 log_dir: app_logs

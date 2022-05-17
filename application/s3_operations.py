@@ -176,7 +176,7 @@ class S3_Operation:
 
             if delete is True:
                 self.log_writer.log(
-                    f"Option delete is set {delete}..deleting the file",
+                    f"Option delete is set {delete}..deleting the file", log_file
                 )
 
                 remove(from_fname)

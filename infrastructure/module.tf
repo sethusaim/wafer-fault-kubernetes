@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket = "wafer-tf-state"
     key    = "tf_state"
-    region = "us-east-1"
+    region = var.region
   }
 }
 
@@ -14,9 +14,9 @@ module "mlflow_instance" {
   source = "./wafer_mlflow_instance"
 }
 
-# module "eks_cluster" {
-#   source = "./wafer_eks_cluster"
-# }
+module "eks_cluster" {
+  source = "./wafer_eks_cluster"
+}
 
 module "feature_store_bucket" {
   source = "./wafer_feature_store_bucket"
@@ -26,9 +26,9 @@ module "io_files_bucket" {
   source = "./wafer_io_files_bucket"
 }
 
-# module "kube_master" {
-#   source = "./wafer_kube_master"
-# }
+module "kube_master" {
+  source = "./wafer_kube_master"
+}
 
 module "kubeflow_components_bucket" {
   source = "./wafer_kubeflow_components_bucket"

@@ -25,12 +25,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 def index(request: Request):
     return templates.TemplateResponse(
         config["templates"]["index"], {"request": request}
     )
-    
+
 
 @app.get("/train")
 def trainRouteClient():

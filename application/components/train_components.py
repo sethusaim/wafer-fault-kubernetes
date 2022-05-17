@@ -44,7 +44,7 @@ class Train_Component:
                 e, self.class_name, method_name, self.comp_log
             )
 
-    @component()
+    @component
     def load_prod_model_component(self):
         method_name = self.load_prod_model_component.__name__
 
