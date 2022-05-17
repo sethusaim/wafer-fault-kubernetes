@@ -491,11 +491,9 @@ pipeline {
 
       steps {
         script {
-          sh 'cd infrastructure'
+          sh 'terraform -chdir=infrastructure init'
 
-          sh 'terraform init'
-
-          sh 'terraform apply --auto-approve'
+          sh 'terraform -chdir=infrastructure apply --auto-approve'
         }
       }
     }
