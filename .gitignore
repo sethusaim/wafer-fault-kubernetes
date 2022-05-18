@@ -8,6 +8,10 @@ __pycache__/
 
 demotest.py
 
+demo
+
+components
+
 .terraform
 
 terraform.tfstate

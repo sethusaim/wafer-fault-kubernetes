@@ -1,8 +1,11 @@
-from components.train_components import Train_Component
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.pipeline_utils import Pipeline
 from utils.read_params import read_params
+
+from kfp.v2.dsl import pipeline
+
+from utils.component_utils import Component
 
 
 class Train_Pipeline:
@@ -15,14 +18,15 @@ class Train_Pipeline:
 
         self.bucket = self.config["s3_bucket"]
 
-        self.train_comp = Train_Component()
+        self.comp = Component(self.train_pipeline_log)
 
         self.s3 = S3_Operation()
 
-        self.pipe = Pipeline(self.config["log"]["train_pipeline"])
+        self.pipe = Pipeline(self.train_pipeline_log)
 
         self.log_writer = App_Logger()
 
+    @pipeline(name="Train Pipeline")
     def train_pipeline(self):
         method_name = self.train_pipeline.__name__
 
@@ -35,7 +39,7 @@ class Train_Pipeline:
                 "Executing raw train data validation component", self.train_pipeline_log
             )
 
-            raw_train_data_val = self.train_comp.raw_train_data_val_component()
+            raw_train_data_val = self.comp.load_kfp_train_component("raw_data_val")
 
             self.log_writer.log(
                 "Executed raw train data validation component", self.train_pipeline_log
@@ -45,9 +49,9 @@ class Train_Pipeline:
                 "Executing train data transformation component", self.train_pipeline_log
             )
 
-            train_data_trans = self.train_comp.train_data_trans_component()
-
-            train_data_trans.after(raw_train_data_val)
+            train_data_trans = self.comp.load_kfp_train_component("data_trans").after(
+                raw_train_data_val
+            )
 
             self.log_writer.log(
                 "Executed train data transformation component", self.train_pipeline_log

@@ -509,16 +509,17 @@ kubectl -n kubeflow get all
 You should see that status of all pods are in running, and kubeflow dashboard can accessed by exposing the service svc/istio-ingressgateway through a load balancer. In order to do so, execute the command
 
 ```bash
-kubectl patch svc istio-ingressgateway -p '{"spec": {"ports": [{"port": 8080,"targetPort": 8080,"name": "http"}],"type": "LoadBalancer"}}' -n istio-system
+kubectl patch svc istio-ingressgateway -n istio-system -p '{"spec":{"type":"LoadBalancer"}}'
 ```
+
 After few minutes load balancer will be provisoned and kubeflow dashboard can be accessed by getting the loadbalancer address, by executing the command
 
 ```bash
 kubectl -n istio-system get svc istio-ingressgateway 
 ```
+
 Copy the external loadbalancer ip address and paste it in the browser and you shall see that dex login page where you have to login with username and password. The default username and password is user@example.com and 12341234. 
 
 On successfully login, you will be able to see the kubeflow dashboard in the browser. Get the loadbalancer url from browser and then export it as environment variable KFP_HOST to access the kubeflow dashboard by using kubeflow pipelines sdk.
-
 
 ### ArgoCD setup

@@ -1,5 +1,6 @@
-from components.pred_components import Pred_Component
+from kfp.dsl import pipeline
 from s3_operations import S3_Operation
+from utils.component_utils import Component
 from utils.logger import App_Logger
 from utils.pipeline_utils import Pipeline
 from utils.read_params import read_params
@@ -15,14 +16,15 @@ class Pred_Pipeline:
 
         self.bucket = self.config["s3_bucket"]
 
-        self.pred_comp = Pred_Component()
+        self.comp = Component(self.pred_pipeline_log)
 
         self.s3 = S3_Operation()
 
-        self.pipe = Pipeline(self.config["log"]["pred_pipeline"])
+        self.pipe = Pipeline(self.pred_pipeline_log)
 
         self.log_writer = App_Logger()
 
+    @pipeline(name="Prediction Pipeline")
     def pred_pipeline(self):
         method_name = self.pred_pipeline.__name__
 
@@ -35,7 +37,7 @@ class Pred_Pipeline:
                 "Executing raw pred data validation component", self.pred_pipeline_log
             )
 
-            raw_pred_data_val = self.pred_comp.raw_pred_data_validation_component()
+            raw_pred_data_val = self.comp.load_kfp_pred_component("raw_data_val")
 
             self.log_writer.log(
                 "Executed raw pred data validation component", self.pred_pipeline_log
@@ -45,7 +47,7 @@ class Pred_Pipeline:
                 "Executing pred data transformation component", self.pred_pipeline_log
             )
 
-            pred_data_trans = self.pred_comp.pred_data_transform().after(
+            pred_data_trans = self.comp.load_kfp_pred_component("data_trans").after(
                 raw_pred_data_val
             )
 
@@ -57,7 +59,9 @@ class Pred_Pipeline:
                 "Executing pred data operation component", self.pred_pipeline_log
             )
 
-            pred_db_op = self.pred_comp.pred_db_op_component().after(pred_data_trans)
+            pred_db_op = self.comp.load_kfp_component("db_operation").after(
+                pred_data_trans
+            )
 
             self.log_writer.log(
                 "Executed pred database operation component", self.pred_pipeline_log
@@ -67,7 +71,7 @@ class Pred_Pipeline:
                 "Executing pred data preprocessing component", self.pred_pipeline_log
             )
 
-            pred_preprocess = self.pred_comp.preprocessing_pred_component().after(
+            pred_preprocess = self.comp.load_kfp_pred_component("preprocessing").after(
                 pred_db_op
             )
 
@@ -79,7 +83,7 @@ class Pred_Pipeline:
                 "Executing prediction model component", self.pred_pipeline_log
             )
 
-            pred_model = self.pred_comp.model_prediction_component().after(
+            pred_model = self.comp.load_kfp_pred_component("model").after(
                 pred_preprocess
             )
 

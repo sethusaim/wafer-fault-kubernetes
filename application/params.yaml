@@ -12,8 +12,8 @@ log:
 log_dir: app_logs
 
 pipeline_path:
-  pred: wafer_pred.zip
-  train: wafer_train.zip
+  pred: wafer_pred.yaml
+  train: wafer_train.yaml
 
 run_name: wafer_run
 
