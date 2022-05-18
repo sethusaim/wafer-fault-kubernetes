@@ -239,6 +239,7 @@ sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(l
 ```bash
 sudo apt-get update && sudo apt-get install terraform
 ```
+Restart the instance to make sure that the changes are reflected.
 
 Now we have to configure our aws creds to Jenkins for image builds and push to AWS ECR.
 
