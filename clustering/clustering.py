@@ -10,8 +10,7 @@ from utils.read_params import read_params
 class KMeans_Clustering:
     """
     Description :   This class shall be used to divide the data into clusters before training.
-    
-    Version     :   1.2
+Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
 
@@ -44,10 +43,8 @@ class KMeans_Clustering:
         """
         Method Name :   draw_elbow_plot
         Description :   This method saves the plot to s3 bucket and decides the optimum number of clusters to the file.
-        
         Output      :   An elbow plot figure saved to input files bucket
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   Moved to setup to cloud 
         """
@@ -105,10 +102,8 @@ class KMeans_Clustering:
         """
         Method Name :   create_clusters
         Description :   Create a new dataframe consisting of the cluster information.
-        
         Output      :   A dataframe with cluster column
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   Moved to setup to cloud 
         """

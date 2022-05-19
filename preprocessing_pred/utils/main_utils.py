@@ -73,7 +73,6 @@ class Main_Utils:
         Output      :   A correct model file is found 
         On Failure  :   Write an exception log and then raise an exception
         Version     :   1.2
-        
         Revisions   :   moved setup to cloud
         """
         method_name = self.find_correct_model_file.__name__
@@ -111,10 +110,8 @@ class Main_Utils:
         """
         Method Name :   delete_pred_file
         Description :   This method deletes the existing prediction file for the model prediction starts
-        
         Output      :   An existing prediction file is deleted
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

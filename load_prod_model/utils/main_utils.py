@@ -11,8 +11,7 @@ from utils.read_params import read_params
 class Main_Utils:
     """
     Description :   This class is used for main utility functions required in core functions of the service
-    Written by  :   iNeuron Intelligence
-    
+
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
@@ -40,10 +39,8 @@ class Main_Utils:
         """
         Method Name :   upload_logs
         Description :   This method uploads the logs to s3 bucket
-        
         Output      :   The logs are uploaded to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -84,10 +81,8 @@ class Main_Utils:
         """
         Method Name :   get_model_file
         Description :   This method get the model file name from s3 bucket 
-        
         Output      :   The model file is retrived from s3 bucket
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -116,7 +111,6 @@ class Main_Utils:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        
         Revisions   :   moved setup to cloud
         """
         method_name = self.create_prod_and_stag_dirs.__name__

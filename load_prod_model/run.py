@@ -8,8 +8,7 @@ from utils.read_params import read_params
 class Load_Prod_Model:
     """
     Description :   This class shall be used for loading the production model
-    
-    Version     :   1.2
+Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
 
@@ -106,8 +105,7 @@ class Load_Prod_Model:
 
             """ 
             Eg-output: For 3 clusters, 
-            
-            [
+                [
                 metrics.XGBoost0-best_score,
                 metrics.XGBoost1-best_score,
                 metrics.XGBoost2-best_score,
@@ -118,16 +116,13 @@ class Load_Prod_Model:
 
             Eg- runs_dataframe: I am only showing for 3 cols,actual runs dataframe will be different
                                 based on the number of clusters
-                
-                since for every run cluster values changes, rest two cols will be left as blank,
+                        since for every run cluster values changes, rest two cols will be left as blank,
                 so only we are taking the max value of each col, which is nothing but the value of the metric
                 
 
 run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics.XGBoost1-best_score
     0                   1                       0.5
-    1                                                                                   1                 
-    2                                                                           
-            """
+    1                                                                                   1             2                                                                               """
 
             best_metrics_names = [
                 max(

@@ -11,8 +11,7 @@ from utils.read_params import read_params
 class Pipeline:
     """
     Description :   This class is used for pipeline utility functions required in pipeline functions of the service
-    Written by  :   iNeuron Intelligence
-    
+
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
@@ -40,10 +39,8 @@ class Pipeline:
         """
         Method Name :   compile_pipeline
         Description :   This method complies the pipeline func to pipeline package
-        
         Output      :   The pipeline complies the pipeline func to pipeline package
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -71,10 +68,8 @@ class Pipeline:
         """
         Method Name :   run_pipeline
         Description :   This method runs the pipeline in kubeflow
-        
         Output      :   The pipelines successfully runs in kubeflow server
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -102,10 +97,8 @@ class Pipeline:
         """
         Method Name :   execute_pipeline
         Description :   This method combines runs the compile pipeline function and run pipeline function 
-        
         Output      :   The two functions are executed successfully in kubeflow server
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

@@ -8,8 +8,7 @@ from utils.read_params import read_params
 class Component:
     """
     Description :   This class is used for getting the component for pipelines
-    Written by  :   iNeuron Intelligence
-    
+
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
@@ -35,10 +34,8 @@ class Component:
         """
         Method Name :   load_kfp_component
         Description :   This method loads the kubeflow component based on the name and type of the component
-        
         Output      :   The kubeflow component is successfully loaded and returned for pipeline execution
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

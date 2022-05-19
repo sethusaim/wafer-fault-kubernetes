@@ -6,7 +6,7 @@ from utils.read_params import read_params
 class Data_Transform_Pred:
     """
     Description :   This class shall be used for transforming the good raw prediction data before loading it in database
-    Written by  :   iNeuron Intelligence
+    
 
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
@@ -33,10 +33,8 @@ class Data_Transform_Pred:
         """
         Method Name :   rename_column
         Description :   This method renames the column name from from_col to_col
-        
         Output      :   The column name is renamed 
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -88,10 +86,8 @@ class Data_Transform_Pred:
         """
         Method Name :   replace_missing_with_null
         Description :   This method replaces the missing values with null values
-        
         Output      :   The column name is renamed 
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

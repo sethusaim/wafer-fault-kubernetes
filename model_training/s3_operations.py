@@ -9,6 +9,12 @@ from utils.logger import App_Logger
 
 
 class S3_Operation:
+    """
+    Description :   This class shall be used for performing s3 operations used by the service
+Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.log_writer = App_Logger()
 
@@ -293,10 +299,8 @@ class S3_Operation:
         """
         Method Name :   read_csv_from_folder
         Description :   This method reads the csv files from folder
-        
         Output      :   A list of tuple of dataframe, along with absolute file name and file name is returned
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

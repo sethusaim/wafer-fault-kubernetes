@@ -10,8 +10,7 @@ from utils.read_params import read_params
 class Preprocessor:
     """
     Description :   This class shall be used to clean and transform the data before training
-    Written by  :   iNeuron Intelligence
-    Version     :   1.2
+Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
 
@@ -38,7 +37,6 @@ class Preprocessor:
         Description :   This method removes the given columns from a pandas dataframe
         Output      :   A pandas dataframe after the removing the specified columns
         On Failure  :   Write an exception log and then raise an exception
-        Written by  :   iNeuron Intelligence
         Version     :   1.2
         Revisions   :   Modified code based on the params.yaml file
         """
@@ -160,7 +158,7 @@ class Preprocessor:
         Desrciption :   This method  replaces all the missing values in th dataframe using KNN imputer
         Output      :   A dataframe which has all missing values imputed
         On Failure  :   Write an exception log and then raise an exception
-        Written by  :   iNeuron Intelligence
+        
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -195,11 +193,8 @@ class Preprocessor:
         """
         Method Name :   get_columns_with_zero_std_deviation
         Description :   This method replaces all the missing values in the dataframe using KNN imputer
-        
         Output      :   a dataframe which has all missing values imputed
         On Failure  :   Write an exception log and then raise an exception
-        
-        Written by  :   iNeuron Intelligence
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

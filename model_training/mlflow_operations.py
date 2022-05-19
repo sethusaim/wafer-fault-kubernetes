@@ -40,7 +40,6 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        
         Revisions   :   moved setup to cloud
         """
         method_name = self.set_mlflow_experiment.__name__
@@ -72,7 +71,6 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        
         Revisions   :   moved setup to cloud
         """
         method_name = self.set_mlflow_tracking_uri.__name__
@@ -102,7 +100,6 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        
         Revisions   :   moved setup to cloud
         """
         method_name = self.log_sklearn_model.__name__
@@ -137,7 +134,6 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        
         Revisions   :   moved setup to cloud
         """
         method_name = self.log_model_metric.__name__
@@ -168,8 +164,7 @@ class MLFlow_Operation:
         Output      :   A model param is logged to mlflow server
         On Failure  :   Write an exception log and then raise an exception
 
-        Version     :   1.2
-        
+        Version     :   1.2 
         Revisions   :   moved setup to cloud
         """
         method_name = self.log_model_param.__name__
@@ -201,7 +196,6 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        
         Revisions   :   moved setup to cloud
         """
         method_name = self.log_all_for_model.__name__

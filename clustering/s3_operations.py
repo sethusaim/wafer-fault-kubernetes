@@ -12,8 +12,7 @@ from utils.read_params import read_params
 class S3_Operation:
     """
     Description :   This method is used for all the S3 bucket operations
-    Written by  :   iNeuron Intelligence
-    
+
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
@@ -132,10 +131,8 @@ class S3_Operation:
         """
         Method Name :   upload_file
         Description :   This method uploades a file to s3 bucket with kwargs
-        
         Output      :   A file is uploaded to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -181,10 +178,8 @@ class S3_Operation:
         """
         Method Name :   save_model
         Description :   This method saves the model into particular model directory in s3 bucket with kwargs
-        
         Output      :   A pandas series object consisting of runs for the particular experiment id
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -237,10 +232,8 @@ class S3_Operation:
         """
         Method Name :   upload_df_as_csv
         Description :   This method uploades a dataframe as csv file to s3 bucket
-        
         Output      :   A dataframe is uploaded as csv file to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -266,10 +259,8 @@ class S3_Operation:
         """
         Method Name :   get_df_from_object
         Description :   This method gets dataframe from object 
-        
         Output      :   Dataframe is read from the object
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -295,10 +286,8 @@ class S3_Operation:
         """
         Method Name :   read_csv
         Description :   This method reads the csv data from s3 bucket
-        
         Output      :   A pandas series object consisting of runs for the particular experiment id
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

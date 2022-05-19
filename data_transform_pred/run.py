@@ -7,8 +7,7 @@ from utils.read_params import read_params
 class Run:
     """
     Description :   This class is used for running the data transformation prediction pipeline
-    Written by  :   iNeuron Intelligence
-    
+
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
@@ -30,10 +29,8 @@ class Run:
         """
         Method Name :   pred_data_transform
         Description :   This method performs the prediction data transformation and artifacts are stored in s3 buckets
-        
         Output      :   The data transformation is done on the prediction data and artifacts are stored in s3 buckets
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

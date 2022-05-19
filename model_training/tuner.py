@@ -12,8 +12,7 @@ from utils.read_params import read_params
 class Model_Finder:
     """
     Description :   This class shall  be used to find the model with best accuracy and AUC score.
-    Written by  :   iNeuron Intelligence
-    
+
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
@@ -54,12 +53,9 @@ class Model_Finder:
         Method Name :   get_rf_model
         Description :   get the parameters for Random Forest Algorithm which give the best accuracy.
                         Use Hyper Parameter Tuning.
-        
         Output      :   The model with the best parameters
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_rf_model.__name__
@@ -113,7 +109,6 @@ class Model_Finder:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_xgboost_model.__name__
@@ -161,12 +156,10 @@ class Model_Finder:
         """
         Method Name :   get_trained_models
         Description :   Find out the Model which has the best score.
-        
         Output      :   The best model name and the model object
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_trained_models.__name__

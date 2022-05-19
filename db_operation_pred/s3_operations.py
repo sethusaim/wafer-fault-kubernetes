@@ -10,8 +10,7 @@ from utils.logger import App_Logger
 class S3_Operation:
     """
     Description :   This class is used for all th s3 operations used by the service
-    Written by  :   iNeuron Intelligence
-    
+
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
@@ -295,10 +294,8 @@ class S3_Operation:
         """
         Method Name :   upload_file
         Description :   This method uploades a file to s3 bucket with kwargs
-        
         Output      :   A file is uploaded to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -348,10 +345,8 @@ class S3_Operation:
         """
         Method Name :   upload_df_as_csv
         Description :   This method uploades a dataframe as csv file to s3 bucket
-        
         Output      :   A dataframe is uploaded as csv file to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

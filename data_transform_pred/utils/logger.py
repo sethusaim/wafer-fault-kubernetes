@@ -8,8 +8,7 @@ from utils.read_params import read_params
 class App_Logger:
     """
     Description :   This class is used for logging the information to text files
-    Written by  :   iNeuron Intelligence
-    
+
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
@@ -27,10 +26,8 @@ class App_Logger:
         """
         Method Name :   write_info_to_file
         Description :   This method writes the logging information to text file
-        
         Output      :   The logging information is successfully written to text file.
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -47,10 +44,8 @@ class App_Logger:
         """
         Method Name :   log
         Description :   This method writes the log info using current date and time
-        
         Output      :   The logging information is written to file with current date and time
         On Failure  :   Write an exception log and then raise an exception
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

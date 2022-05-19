@@ -11,8 +11,7 @@ from utils.read_params import read_params
 class MongoDB_Operation:
     """
     Description :   This method is used for all mongodb operations
-    Written by  :   iNeuron Intelligence
-    
+
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
@@ -105,7 +104,6 @@ class MongoDB_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_collection_as_dataframe.__name__

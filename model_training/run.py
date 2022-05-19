@@ -9,6 +9,12 @@ from utils.read_params import read_params
 
 
 class Run:
+    """
+    Description :   This class shall be used for model training
+Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.class_name = self.__class__.__name__
 
@@ -35,6 +41,14 @@ class Run:
         self.mlflow_op = MLFlow_Operation(self.train_log["model_train"])
 
     def training_model(self):
+        """
+        Method Name :   training_model
+        Description :   This method is responsible for training models in existing data 
+        Output      :   The models are trained,logged and stored in s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.training_model.__name__
 
         self.log_writer.start_log(

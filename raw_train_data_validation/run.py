@@ -22,7 +22,6 @@ class Run:
         """
         Method Name :   raw_train_data_validation
         Description :   This method is used for validating the training batch files
-        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
