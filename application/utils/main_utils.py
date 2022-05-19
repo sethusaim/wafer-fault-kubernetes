@@ -35,8 +35,10 @@ class Main_Utils:
         """
         Method Name :   upload_logs
         Description :   This method uploads the logs to s3 bucket
+        
         Output      :   The logs are uploaded to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

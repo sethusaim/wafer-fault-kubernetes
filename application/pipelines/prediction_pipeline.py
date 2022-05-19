@@ -36,8 +36,10 @@ class Pred_Pipeline:
         """
         Method Name :   pred_pipeline
         Description :   This method defines the actual prediction pipeline which will run in kubeflow
+        
         Output      :   The prediction pipeline is successfully executed and predictions are stored in s3 buckets
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -121,8 +123,10 @@ class Pred_Pipeline:
         """
         Method Name :   run_pred_pipeline
         Description :   This method complies the prediction pipeline,runs it and uploades the prediction pipeline package to s3 bucket
+        
         Output      :   The prediction pipeline is successfully executed and prediction pipeline pipeline package is uploaded to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

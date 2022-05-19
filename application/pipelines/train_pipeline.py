@@ -36,8 +36,10 @@ class Train_Pipeline:
         """
         Method Name :   train_pipeline
         Description :   This method defines the actual training pipeline which will run in kubeflow
+        
         Output      :   The training pipeline is successfully executed and artifacts stored in s3 buckets
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -145,8 +147,10 @@ class Train_Pipeline:
         """
         Method Name :   run_train_pipeline
         Description :   This method complies the train pipeline,runs it and uploades the train pipeline package to s3 bucket
+        
         Output      :   The train pipeline is successfully executed and train pipeline pipeline package is uploaded to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

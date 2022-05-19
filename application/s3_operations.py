@@ -26,8 +26,10 @@ class S3_Operation:
         """
         Method Name :   get_bucket
         Description :   This method gets the bucket from s3 
+        
         Output      :   A s3 bucket name is returned based on the bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -51,8 +53,10 @@ class S3_Operation:
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
+        
         Output      :   A file object is returned
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -86,8 +90,10 @@ class S3_Operation:
         """
         Method Name :   read_object
         Description :   This method reads the object with kwargs
+        
         Output      :   A object is read with kwargs
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -121,8 +127,10 @@ class S3_Operation:
         """
         Method Name :   read_yaml
         Description :   This method reads the yaml file from bucket
+        
         Output      :   A yaml file is read 
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -152,8 +160,10 @@ class S3_Operation:
         """
         Method Name :   upload_file
         Description :   This method uploades a file to s3 bucket with kwargs
+        
         Output      :   A file is uploaded to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
