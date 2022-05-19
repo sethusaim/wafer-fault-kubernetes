@@ -33,7 +33,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t $REPO_NAME application/'
+          sh 'docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME application/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
@@ -67,7 +67,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t $REPO_NAME clustering/'
+          sh 'docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME clustering/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
@@ -101,7 +101,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t $REPO_NAME data_transform_pred/'
+          sh 'docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME data_transform_pred/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
@@ -135,7 +135,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t $REPO_NAME data_transform_train/'
+          sh 'docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME data_transform_train/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
@@ -172,7 +172,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t $REPO_NAME db_operation_pred/'
+          sh 'docker build --build-arg MONGODB_URL=${MONGODB_URL} --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME db_operation_pred/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
@@ -208,7 +208,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t $REPO_NAME db_operation_train/'
+          sh 'docker build --build-arg MONGODB_URL=${MONGODB_URL} --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME db_operation_train/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
@@ -245,7 +245,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t $REPO_NAME load_prod_model/'
+          sh 'docker build --build-arg MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI} --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} load_prod_model/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
@@ -268,12 +268,6 @@ pipeline {
 
         AWS_DEFAULT_REGION = "us-east-1"
 
-        // MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
-
-        // MLFLOW_TRACKING_USERNAME = credentials('MLFLOW_TRACKING_USERNAME')
-
-        // MLFLOW_TRACKING_PASSWORD = credentials('MLFLOW_TRACKING_PASSWORD')
-
         REPO_NAME = "wafer_model_prediction"
 
         COMP_FILE = "wafer_load_prod_model.yaml"
@@ -287,7 +281,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t $REPO_NAME model_prediction/'
+          sh 'docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME model_prediction/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
@@ -311,6 +305,12 @@ pipeline {
 
         AWS_DEFAULT_REGION = "us-east-1"
 
+        MLFLOW_TRACKING_URI = credentials("MLFLOW_TRACKING_URI")
+
+        MLFLOW_TRACKING_USERNAME = credentials("MLFLOW_TRACKING_USERNAME")
+
+        MLFLOW_TRACKING_PASSWORD = credentials("MLFLOW_TRACKING_PASSWORD")
+
         REPO_NAME = "wafer_model_training"
 
         COMP_FILE = "wafer_model_training.yaml"
@@ -324,7 +324,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t $REPO_NAME model_training/'
+          sh 'docker build --build-arg MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI} --build-arg MLFLOW_TRACKING_USERNAME=${MLFLOW_TRACKING_USERNAME} --build-arg MLFLOW_TRACKING_PASSWORD=${MLFLOW_TRACKING_PASSWORD} --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME model_training/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
@@ -359,7 +359,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t $REPO_NAME preprocessing_pred/'
+          sh 'docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME preprocessing_pred/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
@@ -395,7 +395,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t $REPO_NAME preprocessing_train/'
+          sh 'docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME preprocessing_train/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
@@ -429,7 +429,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t $REPO_NAME raw_pred_data_validation/'
+          sh 'docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME raw_pred_data_validation/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
@@ -465,7 +465,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build -t $REPO_NAME raw_train_data_validation/'
+          sh 'docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME raw_train_data_validation/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
