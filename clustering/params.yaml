@@ -14,7 +14,7 @@ log:
   clustering: train_clustering_log.txt
   upload: upload_train_cluster_log.txt
 
-log_dir: logs
+log_dir: clustering_logs
 
 base:
   random_state: 42
@@ -32,6 +32,3 @@ model_save_format: .sav
 knee:
   curve: convex
   direction: decreasing
-
-component: clustering_component.yaml
-

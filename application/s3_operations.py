@@ -9,7 +9,7 @@ from utils.logger import App_Logger
 
 class S3_Operation:
     """
-    Description :   This method is used for all the S3 bucket operations
+    Description :   This class is used for all the S3 bucket operations
     Written by  :   iNeuron Intelligence
     
     Version     :   1.2
@@ -27,8 +27,10 @@ class S3_Operation:
         """
         Method Name :   get_bucket
         Description :   This method gets the bucket from s3 
+        
         Output      :   A s3 bucket name is returned based on the bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -74,6 +76,8 @@ class S3_Operation:
 
             file_objs = func(lst_objs)
 
+            self.log_writer.log(f"Got {fname} from {bucket} bucket", log_file)
+
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return file_objs
@@ -87,8 +91,10 @@ class S3_Operation:
         """
         Method Name :   read_object
         Description :   This method reads the object with kwargs
+        
         Output      :   A object is read with kwargs
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -155,8 +161,10 @@ class S3_Operation:
         """
         Method Name :   upload_file
         Description :   This method uploades a file to s3 bucket with kwargs
+        
         Output      :   A file is uploaded to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

@@ -7,6 +7,14 @@ from utils.read_params import read_params
 
 
 class Pred_Pipeline:
+    """
+    Description :   This class is used for defining the prediction pipeline
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.class_name = self.__class__.__name__
 
@@ -26,6 +34,16 @@ class Pred_Pipeline:
 
     @pipeline(name="Prediction Pipeline")
     def pred_pipeline(self):
+        """
+        Method Name :   pred_pipeline
+        Description :   This method defines the actual prediction pipeline which will run in kubeflow
+        
+        Output      :   The prediction pipeline is successfully executed and predictions are stored in s3 buckets
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.pred_pipeline.__name__
 
         self.log_writer.start_log(
@@ -103,6 +121,16 @@ class Pred_Pipeline:
             )
 
     def run_pred_pipeline(self, pkg_file):
+        """
+        Method Name :   run_pred_pipeline
+        Description :   This method complies the prediction pipeline,runs it and uploades the prediction pipeline package to s3 bucket
+        
+        Output      :   The prediction pipeline is successfully executed and prediction pipeline pipeline package is uploaded to s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.run_pred_pipeline.__name__
 
         self.log_writer.start_log(

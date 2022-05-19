@@ -7,6 +7,14 @@ from utils.read_params import read_params
 
 
 class Train_Pipeline:
+    """
+    Description :   This class is used for defining the training pipeline
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.class_name = self.__class__.__name__
 
@@ -26,6 +34,16 @@ class Train_Pipeline:
 
     @pipeline(name="Train Pipeline")
     def train_pipeline(self):
+        """
+        Method Name :   train_pipeline
+        Description :   This method defines the actual training pipeline which will run in kubeflow
+        
+        Output      :   The training pipeline is successfully executed and artifacts stored in s3 buckets
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.train_pipeline.__name__
 
         self.log_writer.start_log(
@@ -127,6 +145,16 @@ class Train_Pipeline:
             )
 
     def run_train_pipeline(self, pkg_file):
+        """
+        Method Name :   run_train_pipeline
+        Description :   This method complies the train pipeline,runs it and uploades the train pipeline package to s3 bucket
+        
+        Output      :   The train pipeline is successfully executed and train pipeline pipeline package is uploaded to s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.run_train_pipeline.__name__
 
         self.log_writer.start_log(

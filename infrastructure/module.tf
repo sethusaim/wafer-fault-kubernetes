@@ -109,4 +109,3 @@ module "raw_pred_data_validation_ecr_repo" {
 module "raw_train_data_validation_ecr_repo" {
   source = "./wafer_raw_train_data_validation_ecr"
 }
-

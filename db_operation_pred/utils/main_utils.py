@@ -9,6 +9,14 @@ from utils.read_params import read_params
 
 
 class Main_Utils:
+    """
+    Description :   This class is used for main utility functions required in core functions of the service
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.s3 = S3_Operation()
 
@@ -18,13 +26,24 @@ class Main_Utils:
 
         self.bucket = self.config["s3_bucket"]
 
+        self.class_name = self.__class__.__name__
+
         self.log_file = self.config["log"]["upload"]
 
         self.log_dir = self.config["log_dir"]
 
-        self.class_name = self.__class__.__name__
-
     def upload_logs(self):
+        """
+        Method Name :   upload_logs
+        Description :   This method uploads the logs to s3 bucket
+        
+        Output      :   The logs are uploaded to s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+
         method_name = self.upload_logs.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
@@ -32,7 +51,7 @@ class Main_Utils:
         try:
             lst = listdir(self.log_dir)
 
-            self.log_writer.log("Got list of logs from pred_logs folder", self.log_file)
+            self.log_writer.log("Got list of logs from app_logs folder", self.log_file)
 
             for f in lst:
                 local_f = join(self.log_dir, f)

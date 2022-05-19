@@ -9,13 +9,13 @@ files:
 data_dir:
   train_good: good/train
 
-log_dir: logs
+log_dir: db_operation_train_logs
 
 log:
   db_insert: train_db_insert_log.txt
   export_csv: train_export_to_csv_log.txt
   db_main: training_main_log.txt
-  upload: upload_log.txt
+  upload: upload_db_operation_train_log.txt
 
 mongodb:
   db_name: wafer-data

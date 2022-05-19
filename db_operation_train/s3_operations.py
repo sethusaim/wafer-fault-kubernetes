@@ -8,6 +8,14 @@ from utils.logger import App_Logger
 
 
 class S3_Operation:
+    """
+    Description :   This method is used for all the S3 bucket operations
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.class_name = self.__class__.__name__
 

@@ -5,6 +5,14 @@ from utils.read_params import read_params
 
 
 class Run:
+    """
+    Description :   This class is used for running the data transformation training pipeline
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.config = read_params()
 
@@ -19,6 +27,16 @@ class Run:
         self.data_transform = Data_Transform_Train()
 
     def train_data_transform(self):
+        """
+        Method Name :   train_data_transform
+        Description :   This method performs the data transformation on the training data
+        
+        Output      :   The data transformation is performed on the training data
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.train_data_transform.__name__
 
         try:

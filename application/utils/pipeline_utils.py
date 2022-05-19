@@ -9,6 +9,14 @@ from utils.read_params import read_params
 
 
 class Pipeline:
+    """
+    Description :   This class is used for pipeline utility functions required in pipeline functions of the service
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self, log_file):
         self.class_name = self.__class__.__name__
 
@@ -29,6 +37,16 @@ class Pipeline:
         self.s3 = S3_Operation()
 
     def compile_pipeline(self, func, pkg_file):
+        """
+        Method Name :   compile_pipeline
+        Description :   This method complies the pipeline func to pipeline package
+        
+        Output      :   The pipeline complies the pipeline func to pipeline package
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.compile_pipeline.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
@@ -50,6 +68,16 @@ class Pipeline:
             )
 
     def run_pipeline(self, pipe_func):
+        """
+        Method Name :   run_pipeline
+        Description :   This method runs the pipeline in kubeflow
+        
+        Output      :   The pipelines successfully runs in kubeflow server
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.run_pipeline.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
@@ -71,6 +99,17 @@ class Pipeline:
             )
 
     def execute_pipeline(self, pipe_func, pkg_file):
+        """
+        Method Name :   execute_pipeline
+        Description :   This method combines runs the compile pipeline function and run pipeline function 
+        
+        Output      :   The two functions are executed successfully in kubeflow server
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+
         method_name = self.execute_pipeline.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
@@ -78,7 +117,7 @@ class Pipeline:
         try:
             self.compile_pipeline(pipe_func, pkg_file)
 
-            self.run_pipeline(pkg_file)
+            self.run_pipeline(pipe_func)
 
             self.log_writer.log(f"Executed pipeline from {pkg_file}", self.log_file)
 

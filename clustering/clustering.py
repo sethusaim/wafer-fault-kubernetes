@@ -22,8 +22,6 @@ class KMeans_Clustering:
 
         self.bucket = self.config["s3_bucket"]
 
-        self.random_state = self.config["base"]["random_state"]
-
         self.model_dir = self.config["model_dir"]
 
         self.kmeans_params = self.config["KMeans"]

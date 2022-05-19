@@ -370,9 +370,7 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def upload_df_as_csv(
-        self, data_frame: DataFrame, local_fname, bucket_fname, bucket, log_file,
-    ):
+    def upload_df_as_csv(self, data_frame, local_fname, bucket_fname, bucket, log_file):
         """
         Method Name :   upload_df_as_csv
         Description :   This method uploades a dataframe as csv file to s3 bucket

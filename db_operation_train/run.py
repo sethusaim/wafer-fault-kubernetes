@@ -5,6 +5,14 @@ from utils.read_params import read_params
 
 
 class Run:
+    """
+    Description :   This class is used for running the data transformation prediction pipeline
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.config = read_params()
 
@@ -19,6 +27,17 @@ class Run:
         self.db_operation = DB_Operation_Train()
 
     def train_data_type_valid(self):
+        """
+        Method Name :   train_data_type_valid
+        Description :   This method performs the database operations on the training data
+
+        Output      :   The database operations are performed on training data and artifacts are stored in s3 buckets
+        On Failure  :   Write an exception log and then raise an exception
+
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+
         method_name = self.train_data_type_valid.__name__
 
         self.log_writer.start_log(

@@ -6,6 +6,14 @@ from utils.read_params import read_params
 
 
 class Component:
+    """
+    Description :   This class is used for getting the component for pipelines
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self, log_file):
         self.log_writer = App_Logger()
 
@@ -24,6 +32,16 @@ class Component:
         self.pred_comp = self.config["pred_components"]
 
     def load_kfp_component(self, comp_name, comp_type, log_file):
+        """
+        Method Name :   load_kfp_component
+        Description :   This method loads the kubeflow component based on the name and type of the component
+        
+        Output      :   The kubeflow component is successfully loaded and returned for pipeline execution
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.load_kfp_component.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
