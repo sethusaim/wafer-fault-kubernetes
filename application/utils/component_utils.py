@@ -1,4 +1,4 @@
-from kfp.components import load_component_from_text
+from kfp.dsl import ContainerOp
 from s3_operations import S3_Operation
 
 from utils.logger import App_Logger
@@ -23,83 +23,41 @@ class Component:
 
         self.pred_comp = self.config["pred_components"]
 
-    def load_kfp_component(self, fname, bucket):
-        method_name = self.load_kfp_component.__name__
+    def load_component_from_s3(self, comp_name, comp_type, log_file):
+        method_name = self.load_component_from_s3.__name__
 
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            content = self.s3.read_yaml_as_str(fname, bucket, self.log_file)
+            bucket = self.bucket["components"]
+
+            if comp_type is "train":
+                fname = self.config["train_components"][comp_name]
+
+            if comp_type is "pred":
+                fname = self.config["pred_components"][comp_name]
+
+            else:
+                pass
+
+            content = self.s3.read_yaml(fname, bucket, log_file)
+
+            image_name = content["implementation"]["container"]["image"]
 
             self.log_writer.log(
-                f"Got {fname} train component from {bucket}", self.log_file
+                f"Got {image_name} from {fname} file in {bucket} bucket", log_file
             )
 
-            comp = load_component_from_text(content)
+            comp = ContainerOp(comp_name, image_name)
 
             self.log_writer.log(
-                f"Loaded {fname} train component from text", self.log_file
+                f"Created ContainerOp instance with {image_name} as image name and {comp_name} as component name",
+                log_file,
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return comp
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
-
-    def load_kfp_train_component(self, comp_name):
-        method_name = self.load_kfp_train_component.__name__
-
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
-
-        try:
-            comp = self.load_kfp_component(
-                self.train_comp[comp_name], self.bucket["components"]
-            )
-
-            self.log_writer.log(
-                f"Loaded {comp_name} from {self.bucket['components']} bucket",
-                self.log_file,
-            )
-
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file
-            )
-
-            return comp
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
-
-    def load_kfp_pred_component(self, comp_name):
-        method_name = self.load_kfp_pred_component.__name__
-
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
-
-        try:
-            comp = self.load_kfp_component(
-                self.pred_comp[comp_name], self.bucket["components"]
-            )
-
-            self.log_writer.log(
-                f"Loaded {comp_name} from { self.bucket['components']} bucket",
-                self.log_file,
-            )
-
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file
-            )
-
-            return comp
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)

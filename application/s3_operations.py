@@ -2,6 +2,7 @@ from io import StringIO
 from os import remove
 
 from boto3 import resource
+from yaml import safe_load
 
 from utils.logger import App_Logger
 
@@ -117,9 +118,9 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def read_yaml_as_str(self, fname, bucket, log_file):
+    def read_yaml(self, fname, bucket, log_file):
         """
-        Method Name :   read_yaml_as_str
+        Method Name :   read_yaml
         Description :   This method reads the yaml file from bucket
         
         Output      :   A yaml file is read 
@@ -128,7 +129,7 @@ class S3_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.read_yaml_as_str.__name__
+        method_name = self.read_yaml.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
@@ -137,13 +138,13 @@ class S3_Operation:
 
             content = self.read_object(yaml_obj, log_file)
 
-            self.log_writer.log(
-                f"Read {fname} from {bucket} bucket as string content", log_file
-            )
+            dic_content = safe_load(content)
+
+            self.log_writer.log(f"Read {fname} from {bucket} bucket", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
-            return content
+            return dic_content
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)

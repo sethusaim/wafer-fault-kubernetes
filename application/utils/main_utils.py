@@ -1,6 +1,5 @@
 from os import listdir
 from os.path import join
-
 from shutil import rmtree
 
 from s3_operations import S3_Operation

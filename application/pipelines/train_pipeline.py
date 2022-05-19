@@ -1,11 +1,9 @@
+from kfp.dsl import pipeline
 from s3_operations import S3_Operation
+from utils.component_utils import Component
 from utils.logger import App_Logger
 from utils.pipeline_utils import Pipeline
 from utils.read_params import read_params
-
-from kfp.v2.dsl import pipeline
-
-from utils.component_utils import Component
 
 
 class Train_Pipeline:
@@ -39,7 +37,9 @@ class Train_Pipeline:
                 "Executing raw train data validation component", self.train_pipeline_log
             )
 
-            raw_train_data_val = self.comp.load_kfp_train_component("raw_data_val")
+            raw_train_data_val = self.comp.load_component_from_s3(
+                "raw_data_val", "train", self.train_pipeline_log
+            )
 
             self.log_writer.log(
                 "Executed raw train data validation component", self.train_pipeline_log
@@ -49,91 +49,77 @@ class Train_Pipeline:
                 "Executing train data transformation component", self.train_pipeline_log
             )
 
-            train_data_trans = self.comp.load_kfp_train_component("data_trans").after(
-                raw_train_data_val
-            )
+            train_data_trans = self.comp.load_component_from_s3(
+                "data_trans", "train", self.train_pipeline_log
+            ).after(raw_train_data_val)
 
             self.log_writer.log(
                 "Executed train data transformation component", self.train_pipeline_log
             )
 
-        #     self.log_writer.log(
-        #         "Executing train data operation component", self.train_pipeline_log
-        #     )
+            self.log_writer.log(
+                "Executing train data operation component", self.train_pipeline_log
+            )
 
-        #     train_db_op = self.train_comp.train_db_op_component().after(
-        #         train_data_trans
-        #     )
+            train_db_op = self.comp.load_component_from_s3(
+                "db_operation", "train", self.train_pipeline_log
+            ).after(train_data_trans)
 
-        #     train_db_op.execution_options.caching_strategy.max_cache_stalenes = "POD"
+            self.log_writer.log(
+                "Executed train database operation component", self.train_pipeline_log
+            )
 
-        #     self.log_writer.log(
-        #         "Executed train database operation component", self.train_pipeline_log
-        #     )
+            self.log_writer.log(
+                "Executing train data clustering component", self.train_pipeline_log
+            )
 
-        #     self.log_writer.log(
-        #         "Executing train data clustering component", self.train_pipeline_log
-        #     )
+            train_clustering = self.comp.load_component_from_s3(
+                "clustering", "train", self.train_pipeline_log
+            ).after(train_db_op)
 
-        #     train_clustering = self.train_comp.clustering_component().after(train_db_op)
+            self.log_writer.log(
+                "Executed train data clustering component", self.train_pipeline_log
+            )
 
-        #     train_clustering.execution_options.caching_strategy.max_cache_stalenes = (
-        #         "POD"
-        #     )
+            self.log_writer.log(
+                "Executing train data preprocessing component", self.train_pipeline_log
+            )
 
-        #     self.log_writer.log(
-        #         "Executed train data clustering component", self.train_pipeline_log
-        #     )
+            train_preprocess = self.comp.load_component_from_s3(
+                "preprocessing", "train", self.train_pipeline_log
+            ).after(train_preprocess)
 
-        #     self.log_writer.log(
-        #         "Executing train data preprocessing component", self.train_pipeline_log
-        #     )
+            self.log_writer.log(
+                "Executed train data preprocessing component", self.train_pipeline_log
+            )
 
-        #     train_preprocess = self.train_comp.preprocessing_component().after(
-        #         train_clustering
-        #     )
+            self.log_writer.log(
+                "Executing training model component", self.train_pipeline_log
+            )
 
-        #     train_preprocess.execution_options.caching_strategy.max_cache_stalenes = (
-        #         "POD"
-        #     )
+            train_model = self.comp.load_component_from_s3(
+                "model", "train", self.train_pipeline_log
+            ).after(train_preprocess)
 
-        #     self.log_writer.log(
-        #         "Executed train data preprocessing component", self.train_pipeline_log
-        #     )
+            self.log_writer.log(
+                "Executed training model component", self.train_pipeline_log
+            )
 
-        #     self.log_writer.log(
-        #         "Executing training model component", self.train_pipeline_log
-        #     )
+            self.log_writer.log(
+                "Executing load prod model component", self.train_pipeline_log
+            )
 
-        #     train_model = self.train_comp.training_model_component().after(
-        #         train_preprocess
-        #     )
+            load_prod_model = self.comp.load_component_from_s3(
+                "load_prod", "train", self.train_pipeline_log
+            ).after(train_model)
 
-        #     train_model.execution_options.caching_strategy.max_cache_stalenes = "POD"
+            self.log_writer.log(
+                "Executed load prod model component", self.train_pipeline_log
+            )
 
-        #     self.log_writer.log(
-        #         "Executed training model component", self.train_pipeline_log
-        #     )
-
-        #     self.log_writer.log(
-        #         "Executing load prod model component", self.train_pipeline_log
-        #     )
-
-        #     load_prod_model = self.train_comp.load_prod_model_component().after(
-        #         train_model
-        #     )
-
-        #     load_prod_model.execution_options.caching_strategy.max_cache_stalenes = (
-        #         "POD"
-        #     )
-
-        #     self.log_writer.log(
-        #         "Executed load prod model component", self.train_pipeline_log
-        #     )
-
-        #     self.log_writer.start_log(
-        #         "exit", self.class_name, method_name, self.train_pipeline_log
-        #     )
+            self.log_writer.start_log(
+                "exit", self.class_name, method_name, self.train_pipeline_log
+            )
 
         except Exception as e:
             self.log_writer.exception_log(
