@@ -31,8 +31,10 @@ class S3_Operation:
         """
         Method Name :   create_folder
         Description :   This method creates a folder in s3 bucket
+        
         Output      :   A folder is created in s3 bucket 
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -160,8 +162,10 @@ class S3_Operation:
         """
         Method Name :   get_bucket
         Description :   This method gets the bucket from s3 
+        
         Output      :   A s3 bucket name is returned based on the bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -185,8 +189,10 @@ class S3_Operation:
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
+        
         Output      :   A file object is returned
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -216,8 +222,10 @@ class S3_Operation:
         """
         Method Name :   get_files_from_folder
         Description :   This method gets the files a folder in s3 bucket
+        
         Output      :   A list of files is returned
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

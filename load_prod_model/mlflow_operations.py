@@ -202,10 +202,11 @@ class MLFlow_Operation:
         """
         Method Name :   transition_mlflow_model
         Description :   This method transitions mlflow model from one stage to other stage, and does the same in s3 bucket
+        
         Output      :   A mlflow model is transitioned from one stage to another, and same is reflected in s3 bucket
         On Failure  :   Write an exception log and then raise an exception
-        Version     :   1.2
         
+        Version     :   1.2
         Revisions   :   moved setup to cloud
         """
         method_name = self.transition_mlflow_model.__name__

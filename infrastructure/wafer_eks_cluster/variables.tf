@@ -9,7 +9,7 @@ variable "cluster-name" {
 }
 
 variable "clutser_instance_type" {
-  default = "t2.small"
+  default = "t2.medium"
   type    = string
 }
 
@@ -54,17 +54,17 @@ variable "eks_node_group_name" {
 }
 
 variable "desired_node_size" {
-  default = 1
+  default = 5
   type    = number
 }
 
 variable "min_node_size" {
-  default = 1
+  default = 5
   type    = number
 }
 
 variable "max_node_size" {
-  default = 2
+  default = 6
   type    = number
 }
 
