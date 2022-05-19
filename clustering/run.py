@@ -8,7 +8,8 @@ from utils.read_params import read_params
 class Run:
     """
     Description :   This class shall be used to divide the data into clusters before training.
-Version     :   1.2
+    Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 
@@ -35,8 +36,10 @@ Version     :   1.2
         """
         Method Name :   run_clustering
         Description :   This method runs the clustering operation and uploads the artifacts to s3 buckets
+        
         Output      :   The clustering operation is performed to artifacts are stored in s3 buckets
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   Moved to setup to cloud 
         """
