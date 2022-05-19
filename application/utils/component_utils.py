@@ -23,8 +23,8 @@ class Component:
 
         self.pred_comp = self.config["pred_components"]
 
-    def load_component_from_s3(self, comp_name, comp_type, log_file):
-        method_name = self.load_component_from_s3.__name__
+    def load_kfp_component(self, comp_name, comp_type, log_file):
+        method_name = self.load_kfp_component.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 

@@ -37,7 +37,7 @@ class Pred_Pipeline:
                 "Executing raw pred data validation component", self.pred_pipeline_log
             )
 
-            raw_pred_data_val = self.comp.load_component_from_s3(
+            raw_pred_data_val = self.comp.load_kfp_component(
                 "raw_data_val", "pred", self.pred_pipeline_log
             )
 
@@ -49,7 +49,7 @@ class Pred_Pipeline:
                 "Executing pred data transformation component", self.pred_pipeline_log
             )
 
-            pred_data_trans = self.comp.load_component_from_s3(
+            pred_data_trans = self.comp.load_kfp_component(
                 "data_trans", "pred", self.pred_pipeline_log
             ).after(raw_pred_data_val)
 
@@ -61,7 +61,7 @@ class Pred_Pipeline:
                 "Executing pred data operation component", self.pred_pipeline_log
             )
 
-            pred_db_op = self.comp.load_component_from_s3(
+            pred_db_op = self.comp.load_kfp_component(
                 "db_operation", "pred", self.pred_pipeline_log
             ).after(pred_data_trans)
 
@@ -73,7 +73,7 @@ class Pred_Pipeline:
                 "Executing pred data preprocessing component", self.pred_pipeline_log
             )
 
-            pred_preprocess = self.comp.load_component_from_s3(
+            pred_preprocess = self.comp.load_kfp_component(
                 "preprocessing", "pred", self.pred_pipeline_log
             ).after(pred_db_op)
 
@@ -85,7 +85,7 @@ class Pred_Pipeline:
                 "Executing prediction model component", self.pred_pipeline_log
             )
 
-            pred_model = self.comp.load_component_from_s3(
+            pred_model = self.comp.load_kfp_component(
                 "model", "pred", self.pred_pipeline_log
             ).after(pred_preprocess)
 

@@ -37,7 +37,7 @@ class Train_Pipeline:
                 "Executing raw train data validation component", self.train_pipeline_log
             )
 
-            raw_train_data_val = self.comp.load_component_from_s3(
+            raw_train_data_val = self.comp.load_kfp_component(
                 "raw_data_val", "train", self.train_pipeline_log
             )
 
@@ -49,7 +49,7 @@ class Train_Pipeline:
                 "Executing train data transformation component", self.train_pipeline_log
             )
 
-            train_data_trans = self.comp.load_component_from_s3(
+            train_data_trans = self.comp.load_kfp_component(
                 "data_trans", "train", self.train_pipeline_log
             ).after(raw_train_data_val)
 
@@ -61,7 +61,7 @@ class Train_Pipeline:
                 "Executing train data operation component", self.train_pipeline_log
             )
 
-            train_db_op = self.comp.load_component_from_s3(
+            train_db_op = self.comp.load_kfp_component(
                 "db_operation", "train", self.train_pipeline_log
             ).after(train_data_trans)
 
@@ -73,7 +73,7 @@ class Train_Pipeline:
                 "Executing train data clustering component", self.train_pipeline_log
             )
 
-            train_clustering = self.comp.load_component_from_s3(
+            train_clustering = self.comp.load_kfp_component(
                 "clustering", "train", self.train_pipeline_log
             ).after(train_db_op)
 
@@ -85,7 +85,7 @@ class Train_Pipeline:
                 "Executing train data preprocessing component", self.train_pipeline_log
             )
 
-            train_preprocess = self.comp.load_component_from_s3(
+            train_preprocess = self.comp.load_kfp_component(
                 "preprocessing", "train", self.train_pipeline_log
             ).after(train_preprocess)
 
@@ -97,7 +97,7 @@ class Train_Pipeline:
                 "Executing training model component", self.train_pipeline_log
             )
 
-            train_model = self.comp.load_component_from_s3(
+            train_model = self.comp.load_kfp_component(
                 "model", "train", self.train_pipeline_log
             ).after(train_preprocess)
 
@@ -109,7 +109,7 @@ class Train_Pipeline:
                 "Executing load prod model component", self.train_pipeline_log
             )
 
-            load_prod_model = self.comp.load_component_from_s3(
+            load_prod_model = self.comp.load_kfp_component(
                 "load_prod", "train", self.train_pipeline_log
             ).after(train_model)
 

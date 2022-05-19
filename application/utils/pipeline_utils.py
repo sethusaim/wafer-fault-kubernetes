@@ -1,7 +1,7 @@
 from os import environ
 
 from kfp import Client
-from kfp.v2.compiler import Compiler
+from kfp.compiler import Compiler
 from s3_operations import S3_Operation
 
 from utils.logger import App_Logger
