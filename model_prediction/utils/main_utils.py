@@ -9,6 +9,14 @@ from utils.read_params import read_params
 
 
 class Main_Utils:
+    """
+    Description :   This class is used for main utility functions required in core functions of the service
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.s3 = S3_Operation()
 
@@ -64,10 +72,11 @@ class Main_Utils:
         """
         Method Name :   find_correct_model_file
         Description :   This method gets correct model file based on cluster number during prediction
+        
         Output      :   A correct model file is found 
         On Failure  :   Write an exception log and then raise an exception
-        Version     :   1.2
         
+        Version     :   1.2
         Revisions   :   moved setup to cloud
         """
         method_name = self.find_correct_model_file.__name__

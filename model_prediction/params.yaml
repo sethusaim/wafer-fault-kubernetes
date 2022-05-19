@@ -1,13 +1,13 @@
 log:
   pred: prediction_log.txt
-  upload: upload_log.txt
+  upload: upload_model_prediction_log.txt
 
 model_dir:
   prod: production
 
 save_format: ".sav"
 
-log_dir: logs
+log_dir: model_prediction_logs
 
 files:
   pred_input_file_preprocess: pred_input_file_preprocess.csv

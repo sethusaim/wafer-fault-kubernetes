@@ -33,8 +33,10 @@ class S3_Operation:
         """
         Method Name :   get_bucket
         Description :   This method gets the bucket from s3 
+        
         Output      :   A s3 bucket name is returned based on the bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -58,8 +60,10 @@ class S3_Operation:
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
+        
         Output      :   A file object is returned
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -89,8 +93,10 @@ class S3_Operation:
         """
         Method Name :   get_files_from_folder
         Description :   This method gets the files a folder in s3 bucket
+        
         Output      :   A list of files is returned
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -114,13 +120,15 @@ class S3_Operation:
 
     def load_model(self, model_name, bucket, log_file, format, model_dir=None):
         """
-            Method Name :   load_model
-            Description :   This method loads the model from s3 bucket
-            Output      :   A pandas series object consisting of runs for the particular experiment id
-            On Failure  :   Write an exception log and then raise an exception
-            Version     :   1.2
-            Revisions   :   moved setup to cloud
-            """
+        Method Name :   load_model
+        Description :   This method loads the model from s3 bucket
+            
+        Output      :   A pandas series object consisting of runs for the particular experiment id
+        On Failure  :   Write an exception log and then raise an exception
+            
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.load_model.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
@@ -155,8 +163,10 @@ class S3_Operation:
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
+        
         Output      :   A file object is returned
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -186,8 +196,10 @@ class S3_Operation:
         """
         Method Name :   read_object
         Description :   This method reads the object with kwargs
+        
         Output      :   A object is read with kwargs
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -221,8 +233,10 @@ class S3_Operation:
         """
         Method Name :   get_df_from_object
         Description :   This method gets dataframe from object 
+        
         Output      :   Dataframe is read from the object
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -246,8 +260,10 @@ class S3_Operation:
         """
         Method Name :   read_csv
         Description :   This method reads the csv data from s3 bucket
+        
         Output      :   A pandas series object consisting of runs for the particular experiment id
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -273,8 +289,10 @@ class S3_Operation:
         """
         Method Name :   upload_file
         Description :   This method uploades a file to s3 bucket with kwargs
+        
         Output      :   A file is uploaded to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -316,8 +334,10 @@ class S3_Operation:
         """
         Method Name :   upload_df_as_csv
         Description :   This method uploades a dataframe as csv file to s3 bucket
+        
         Output      :   A dataframe is uploaded as csv file to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

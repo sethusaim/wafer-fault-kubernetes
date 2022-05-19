@@ -7,6 +7,13 @@ from utils.read_params import read_params
 
 
 class Run:
+    """
+    Description :   This class shall be used to divide the data into clusters before training.
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.class_name = self.__class__.__name__
 
@@ -31,7 +38,11 @@ class Run:
     def predict_from_model(self):
         """
         Method Name :   predict_from_model
-        Description :   This method is used for loading from prod model dir of s3 bucket and use them for prediction
+        Description :   This method is responsible for doing prediction on the new data using existing models
+        
+        Output      :   The prediction is done and are stored in s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
