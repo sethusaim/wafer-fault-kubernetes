@@ -6,6 +6,10 @@ terraform {
   }
 }
 
+module "mongodb_database" {
+  source = "./wafer_database"
+}
+
 module "jenkins_instance" {
   source = "./wafer_jenkins_instance"
 }
