@@ -34,8 +34,8 @@ module "kube_master" {
   source = "./wafer_kube_master"
 }
 
-module "kubeflow_components_bucket" {
-  source = "./wafer_kubeflow_components_bucket"
+module "tekton_components" {
+  source = "./wafer_tekton_components_bucket"
 }
 
 module "logs_bucket" {

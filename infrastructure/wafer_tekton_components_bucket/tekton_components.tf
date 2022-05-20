@@ -1,10 +1,10 @@
-resource "aws_s3_bucket" "kubeflow_components" {
-  bucket = var.kubeflow_components
+resource "aws_s3_bucket" "tekton_components" {
+  bucket = var.tekton_components
 
 }
 
 resource "aws_s3_bucket_policy" "allow_full_access" {
-  bucket = aws_s3_bucket.kubeflow_components.id
+  bucket = aws_s3_bucket.tekton_components.id
   policy = data.aws_iam_policy_document.allow_full_access.json
 }
 
@@ -19,8 +19,8 @@ data "aws_iam_policy_document" "allow_full_access" {
     actions = ["s3:*"]
 
     resources = [
-      aws_s3_bucket.kubeflow_components.arn,
-      "${aws_s3_bucket.kubeflow_components.arn}/*",
+      aws_s3_bucket.tekton_components.arn,
+      "${aws_s3_bucket.tekton_components.arn}/*",
     ]
   }
 }

@@ -3,9 +3,9 @@ variable "aws_region" {
   default = "us-east-1"
 }
 
-variable "kubeflow_components" {
+variable "tekton_components" {
   type    = string
-  default = "wafer-kubeflow-components-4efdbdc"
+  default = "wafer-tekton-components-4efdbdc"
 }
 
 variable "aws_account_id" {
