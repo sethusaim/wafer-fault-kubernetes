@@ -22,4 +22,4 @@ ENV MLFLOW_TRACKING_URI $MLFLOW_TRACKING_URI
 
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-CMD ["python","run.py"]
+CMD ["python3","run.py"]

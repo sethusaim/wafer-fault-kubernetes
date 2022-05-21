@@ -18,4 +18,4 @@ ENV AWS_DEFAULT_REGION $AWS_DEFAULT_REGION
 
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-CMD ["python","main.py"]
+CMD ["python3","main.py"]
