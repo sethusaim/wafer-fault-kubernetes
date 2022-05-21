@@ -30,8 +30,8 @@ module "io_files_bucket" {
   source = "./wafer_io_files_bucket"
 }
 
-module "kube_master" {
-  source = "./wafer_kube_master"
+module "application_instance" {
+  source = "./wafer_application_instance"
 }
 
 module "tekton_components" {
