@@ -37,12 +37,6 @@ pipeline {
 
           sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
         }
-
-        sshagent(credentials: ['id_name_added_underManageCredential']) {
-
-          sh "ssh command"
-
-        }
       }
 
       stage('Build and Push Clustering Service') {
