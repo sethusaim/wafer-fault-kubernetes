@@ -34,10 +34,6 @@ module "application_instance" {
   source = "./wafer_application_instance"
 }
 
-module "tekton_components" {
-  source = "./wafer_tekton_components_bucket"
-}
-
 module "logs_bucket" {
   source = "./wafer_logs_bucket"
 }
