@@ -11,7 +11,7 @@ variable "application_ami" {
 
 variable "application_instance_type" {
   type    = string
-  default = "t2.micro"
+  default = "t2.medium"
 
 }
 
@@ -22,7 +22,7 @@ variable "application_key_pair_name" {
 
 variable "application_tag_name" {
   type    = string
-  default = "EKS Master Server"
+  default = "Application Server"
 }
 
 variable "application_eip_name" {
