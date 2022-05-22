@@ -197,7 +197,7 @@ Finally you can access the Jenkins Dashboard in ec2 instance.
 
 Before we configure Jenkins for our usage, we have install awscli,docker and terraform in ec2 instance
 
-Install Docker
+#### Install Docker
 ```bash
 curl -fsSL https://get.docker.com -o get-docker.sh
 ```
@@ -222,7 +222,7 @@ sudo usermod -aG docker jenkins
 newgrp docker
 ```
 
-Install AWS CLI
+#### Install AWS CLI
 ```bash
 sudo apt install awscli
 ```
@@ -260,6 +260,105 @@ Now we have to update manifest jobs CD pipeline, for that we shall go to dashboa
 
 ### Setup GitHub Webhook trigger for Jenkins for automatic CI builds
 For github hook, we need to get the url of jenkins instance and go to the CI repository and then click on settings and select webhook and add webhook and in payload url give the value as http://public_ip:8080/github-webhook/ (put your own public ip) and content type as application/json and select just the push event and click on add webhook.Now go to jenkins buildimage job and click configure and under build triggers select Github hook triggers for Gitscm polling and save.
+
+### Application setup in EC2 instance
+The application microservice is the important part of the project because it controls the train and prediction pipelines running in our cluster. To make things simplier, we are deploying the application microservice in the kubernetes master control which we have setup for controlling the cluster. 
+
+We shall require kubernetes config file for controlling the cluster, tekton cli to run pipelines, docker to run application microservice
+
+EKS cluster provisioning takes around 13min to 15min. After the provisioning of the EKS cluster along 3 node groups.Execute the following commands to add kubeconfig to application instance
+
+#### Updating the kubeconfig file
+```bash
+sudo apt update
+```
+
+```bash
+sudo apt-get update
+```
+
+```bash
+sudo apt install awscli
+```
+
+```bash
+aws configure
+```
+On prompt give your aws creds with default output as json. Once the install kubectl in ec2 instance
+
+```bash
+curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
+```
+
+```bash
+chmod +x ./kubectl
+```
+
+```bash
+sudo mv ./kubectl /usr/local/bin 
+```
+
+```bash
+kubectl version --short --client
+```
+
+```bash
+aws eks update-kubeconfig --name EKS_CLUSTER_NAME
+```
+To check whether kubeconfig is updated or not, run the following commnands, and you shall see that 5 nodes are shown in console
+
+```bash
+kubectl get nodes
+```
+This means that kubeconfig of cluster is updated in ec2 instance and can be accessed from ec2 instance as a master node.
+
+#### Installing Tekton CLI
+```bash
+sudo apt update
+```
+
+``bash
+sudo apt install -y gnupg
+```
+
+``bash
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3EFE0E0A2F2F60AA
+```
+
+```bash
+echo "deb http://ppa.launchpad.net/tektoncd/cli/ubuntu eoan main"|sudo tee /etc/apt/sources.list.d/tektoncd-ubuntu-cli.list
+```
+
+```bash
+sudo apt update && sudo apt install -y tektoncd-cli
+```
+
+These commands install the tekton cli, to verify the installation execute
+
+```bash
+tkn version
+```
+
+#### Installing Docker in EC2 instance
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+```
+
+```bash
+sudo sh get-docker.sh
+```
+
+```bash
+sudo groupadd docker
+```
+
+```bash
+sudo usermod -aG docker $USER
+```
+
+```bash
+newgrp docker
+```
 
 ### MLFlow setup in EC2 instance
 For setting up mlflow in ec2 instance, open your code editor in the infrastructure folder and uncomment the mlflow_instance module, and then execute the following commands,
@@ -425,107 +524,42 @@ These commands will be initialize the backend required to run terraform and stor
 
 Now you might be why that much big cluster ??. The answer is we need to setup tekton, ArgoCD and on top of that we need to run our microservices. So approximately we need might 20GB cluster. We can scale up and down by changing the cluster configuration in terraform files or by using autoscaler, or completely shift to serverless infrastructure. That option is left to end user itself. I have choosen provisioned cluster of 20GB which should be enough to run our applications.
 
+### Tekton Setup
+Since we are using tekton for pipeline orchestration, we need to setup tekton in eks cluster. tekton pipelines can be set up in eks cluster, by looking in the docuementation of Tekton. The setup can be done by executing the following commands
 
-EKS cluster provisioning takes around 13min to 15min. After the provisioning of the EKS cluster along 5 node groups and Kube master ec2 instance is done. Connect to kube master via ssh and execute the following commands.
+#### Installing Tekton pipelines
 
 ```bash
-sudo apt update
+kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
 ```
 
 ```bash
-sudo apt-get update
+kubectl get pods --namespace tekton-pipelines --watch
+```
+Once the pods reach running state, exit from watch mode.
+
+#### Accessing Tekton Dashboard
+
+```bash
+kubectl apply --filename https://github.com/tektoncd/dashboard/releases/latest/download/tekton-dashboard-release.yaml
 ```
 
 ```bash
-sudo apt install awscli
+kubectl get pods --namespace tekton-pipelines --watch
 ```
+
+Once the pods reached running state exit from watch mode. By default tekton-dashboard service will be of type ClusterIP, but in order to access it via browser, we need to setup LoadBalancer service, which can be achieved by executing the following commands.
 
 ```bash
-aws configure
+kubectl patch svc tekton-dashboard -n tekton-pipelines -p '{"spec":{"type":"LoadBalancer"}}'
 ```
-On prompt give your aws creds with default output as json. Once the install kubectl in ec2 instance
+
+After a few minutes, load balancer will be provisioned, and tekton dashboard can be accessed through the loadbalancer ip on port 9097. To get the load balancer ip address 
 
 ```bash
-curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
+kubectl -n tekton-pipelines get svc tekton-dashboard
 ```
 
-```bash
-chmod +x ./kubectl
-```
-
-```bash
-sudo mv ./kubectl /usr/local/bin 
-```
-
-```bash
-kubectl version --short --client
-```
-
-```bash
-aws eks update-kubeconfig --name EKS_CLUSTER_NAME
-```
-To check whether kubeconfig is updated or not, run the following commnands, and you shall see that 5 nodes are shown in console
-
-```bash
-kubectl get nodes
-```
-This means that kubeconfig of cluster is updated in ec2 instance and can be accessed from ec2 instance as a master node.
-
-### tekton setup
-Since we are using tekton for pipeline orchestration, we need to setup tekton in eks cluster. tekton can be set up in eks cluster, by looking in the docuementation of tekton on AWS. The setup can be done by executing the following commands
-
-```bash
-export tekton_RELEASE_VERSION="v1.4.1"
-```
-
-```bash
-export AWS_RELEASE_VERSION="v1.4.1-aws-b1.0.0"
-```
-
-```bash
-git clone https://github.com/awslabs/tekton-manifests.git && cd tekton-manifests
-```
-
-```bash
-git checkout ${AWS_RELEASE_VERSION}
-```
-
-```bash
-git clone --branch ${tekton_RELEASE_VERSION} https://github.com/tekton/manifests.git upstream
-```
-If you refer the docuementation, we can see that they have given single line command to install tekton in eks cluster. Before we proceed we have install kustomize in the ec2 instance and to do so execute the following commands
-
-```bash
-sudo apt install snapd
-```
-
-```bash
-sudo snap install kustomize
-```
-
-```bash
-while ! kustomize build docs/deployment/vanilla | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
-```
-
-After few minutes, the installation will be completed and tekton will be setup in eks cluster. To verify that the tekton is running, execute the following command
-
-```bash
-kubectl -n tekton get all
-```
-You should see that status of all pods are in running, and tekton dashboard can accessed by exposing the service svc/istio-ingressgateway through a load balancer. In order to do so, execute the command
-
-```bash
-kubectl patch svc istio-ingressgateway -n istio-system -p '{"spec":{"type":"LoadBalancer"}}'
-```
-
-After few minutes load balancer will be provisoned and tekton dashboard can be accessed by getting the loadbalancer address, by executing the command
-
-```bash
-kubectl -n istio-system get svc istio-ingressgateway 
-```
-
-Copy the external loadbalancer ip address and paste it in the browser and you shall see that dex login page where you have to login with username and password. The default username and password is user@example.com and 12341234. 
-
-On successfully login, you will be able to see the tekton dashboard in the browser. Get the loadbalancer url from browser and then export it as environment variable KFP_HOST to access the tekton dashboard by using tekton pipelines sdk.
+Copy the external loadbalancer ip address and paste it in the browser on successfully installation, you will be able to see the tekton dashboard in the browser. 
 
 ### ArgoCD setup
