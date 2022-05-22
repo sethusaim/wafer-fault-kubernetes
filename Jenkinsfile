@@ -39,6 +39,8 @@ pipeline {
         }
 
         build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: 'COMP_FILE', value: env.COMP_FILE)]
+
+        build job: 'deployapp', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME',value: env.REPO_NAME)]
       }
     }
 
@@ -107,6 +109,7 @@ pipeline {
           }
 
           build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: 'COMP_FILE', value: env.COMP_FILE)]
+
         }
       }
 
@@ -253,7 +256,6 @@ pipeline {
           build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: 'COMP_FILE', value: env.COMP_FILE)]
 
         }
-
       }
 
       stage('Build and Push Model Prediction Service') {
