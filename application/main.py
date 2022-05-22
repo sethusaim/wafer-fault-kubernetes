@@ -1,12 +1,11 @@
+from subprocess import run as run_cmd
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from fastapi.templating import Jinja2Templates
 from uvicorn import run as app_run
 
-from pipelines.prediction_pipeline import Pred_Pipeline
-from pipelines.train_pipeline import Train_Pipeline
-from utils.main_utils import Main_Utils
 from utils.read_params import read_params
 
 app = FastAPI()
@@ -36,9 +35,7 @@ def index(request: Request):
 @app.get("/train")
 def trainRouteClient():
     try:
-        pipeline = Train_Pipeline()
-
-        pipeline.run_train_pipeline(config["pipeline_path"]["train"])
+        run_cmd(f"tkn pipeline start {config['pipeline']['train']}")
 
         return Response("Training successfull!!")
 
@@ -49,9 +46,7 @@ def trainRouteClient():
 @app.get("/predict")
 def predictRouteClient():
     try:
-        pipeline = Pred_Pipeline()
-
-        pipeline.run_pred_pipeline(config["pipeline_path"]["pred"])
+        run_cmd(f"tkn pipeline start {config['pipeline']['pred']}")
 
         return Response("Prediction Successfull")
 
@@ -65,8 +60,3 @@ if __name__ == "__main__":
 
     except Exception as e:
         raise e
-
-    finally:
-        utils = Main_Utils()
-
-        utils.upload_logs()

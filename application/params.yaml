@@ -2,40 +2,10 @@ app:
   host: 0.0.0.0
   port: 8080
 
-log:
-  train_comp: train_comp_log.txt
-  pred_comp: pred_comp_log.txt
-  train_pipeline: train_pipeline_log.txt
-  pred_pipeline: pred_pipeline_log.txt
-  upload: upload_app_log.txt
-
-log_dir: app_logs
-
-pipeline_path:
-  pred: wafer_pred.yaml
-  train: wafer_train.yaml
-
-s3_bucket:
-  components: wafer-kubeflow-components-4efdbdc
-  io_files: wafer-io-files-03e0100
-  logs: wafer-logs-4e1f3bd
-
 templates:
   dir: templates
   index: index.html
 
-train_components:
-  clustering: wafer_clustering.yaml
-  preprocessing: wafer_preprocessing_train.yaml
-  load_prod: wafer_load_prod_model.yaml
-  raw_data_val: wafer_raw_train_data_validation.yaml
-  data_trans: wafer_data_transform_train.yaml
-  db_operation: wafer_db_operation_train.yaml
-  model: wafer_model_training.yaml
-
-pred_components:
-  pred_data_trans: wafer_data_transform_pred.yaml
-  pred_db_op: wafer_db_operation_pred.yaml
-  model: wafer_model_prediction.yaml
-  preprocessing: wafer_preprocessing_pred.yaml
-  raw_data_val: wafer_raw_pred_data_validation.yaml
+pipeline:
+  train: wafer-train-pipeline
+  pred: wafer-pred-pipeline
