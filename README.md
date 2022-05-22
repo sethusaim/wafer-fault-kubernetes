@@ -34,14 +34,15 @@ The solution application is exposed as API using FastAPI and application is dock
 - FastAPI for creating an web application
 - Machine Learning
 - MLFlow for experiment tracking,model versioning and model staging.
-- Kubeflow is used for pipeline orchestration.
+- Tekton is used for pipeline orchestration.
 - SQL-Lite as backend store for MLFlow server
 - AWS EC2 instances for deploying the MLFlow server
 - AWS S3 buckets for data storage
 - MongoDB Atlas for database operations
 - Docker Registry for storing the container images
 - AWS EKS cluster for managing the container
-- Podman is used for container builds 
+- Docker is used for container builds
+- Infrastructure is managed by using terraform  
 - Jenkins is used as CI tool 
 - Argo CD for continuous delivery tool
 
@@ -67,27 +68,31 @@ To address the question we need to understand what all components does our ML wo
 
 So how to create ML microservices in the way similar to ML workflow ?
 
-This problem can be approached by creating by microservices to be service independent and stage dependent. The approach is simple, like each task, like let's say raw data validation component is independent from data transformation component, but the data transformation should execute after raw data validation only. So in order to achieve this each component is created as container service and for sequential execution we are using Kubeflow Pipelines, which is pipeline orchestrator running on kubernetes cluster. 
+This problem can be approached by creating by microservices to be service independent and stage dependent. The approach is simple, like each task, like let's say raw data validation component is independent from data transformation component, but the data transformation should execute after raw data validation only. So in order to achieve this each component is created as container service and for sequential execution we are using Tekton Pipelines, which is pipeline orchestrator running on kubernetes cluster. 
 
 Now the question comes, how to pass data between independent services, like dataframes and other data ?
 
 To approach this problem, we can store each container artifacts in S3 buckets, and then next container will reference it to that container.
-Like the output of one container will be input of other container, thereby maintaining service independency and stage dependency in kubeflow pipelines. 
+Like the output of one container will be input of other container, thereby maintaining service independency and stage dependency in tekton pipelines. 
 
-Once the kubeflow pipelines are set up, we have to create the CI pipeline, in which all the components are automatically built and pushed to container registry. For the CI pipeline builds, we are using Jenkins to automate our build process.
+Once the tekton pipelines are set up, we have to create the CI pipeline, in which all the components are automatically built and pushed to container registry. For the CI pipeline builds, we are using Jenkins to automate our build process.
 
 Now the question comes why Jenkins ?
 Since we are working with microservices architecture, there is high possiblity that not all microservices are updated continuously, like there might be update in Database operation, ie database change from MongoDB to Cassandra just for example. When we commit these changes to the main branch, we want only database service to be updated, it is not neccessary that other services have to be updated, there might be a change or not. But traditional CI tools, the image is built when new code is merged to the main branch. This results in unnessacary image builds, and same images with same content are stored. We do not want that to happen. Jenkins allows us to execute conditional builds in our CI pipeline, like whenever there is code change in data trasformation train folder (We are keeping container services in folders) we shall trigger the build pipeline and updated container image with new tag and content. This results in efficient builds and reduces costs also.
 
-Coming to the pipeline orchestrator, we are using kubeflow pipelines the reason being simple it is easy to use and we define our custom pipelines with conditions and the way we want to run our pipelines like DAG workflows, without worrying about the underlying kubernetes yaml.
+Coming to the pipeline orchestrator, we are using tekton pipelines the reason being simple it is easy to use and we define our pipelines, in the most easiest way, and train and prediction pipelines are triggered when the user tells the application to do perform training or prediction. But, in the CD pipeline when ArgoCD detects changes the git repo, it automatically deploys the microservices to k8s cluster, this approach is good for dependent microservices like web microservices, not ml microservices where microservices are tasks to the main train or prediction pipeline, which are intended to run when triggered to do so. 
+
+So how to deploy ml microservices, and achieve automation in deployment ?
+
+To solve this issue we need to understand the kubernetes control plane functionality, it is designed in such as way that it makes sure that desired state of pod, service or any kubernetes object state is maintained no matter what happens. This is not so usefull to use, the solution is to deploy a static kubernetes pod in the cluster. But after searching the internet, I came to a conclusion that kubernetes cannot be made static. 
+
+But that is when tekton pipelines come to play. Tekton pipelines are similar to other workflow orchestrators like Argo Workflows, KubeFlow, Airflow, etc. Setting up kubeflow and working the kubeflow is challenging, I have tried that concluded that it is feasible for the use case, by default we need a big cluster of atleast 12GB RAM and 50GB memory, now that might be small of big companies who have a lot of data. But the POC, we do not need that much big cluster. Argo Workflows could not work in EKS cluster, and kubeflow interrnally uses argo workflows only. Airflow was not designed for kubernetes, but can be explored.
+
+Tekton pipelines are designed in such a way that each microservice can be defined as task, and group of tasks are called pipeline. This is common in other workflow orchestrators also, but the catch is when the workflow is deployed it automatically starts running, and we do not want to do that, and violates our preset condition. With tekton pipelines, there are two pipeline resources, pne is pipeline and pipelinerun, the difference is simple pipeline is a static kubernetes object and pipelinerun is the kubernetes object which references the pipeline object and then runs it. That means we can control our deployments through conditions, similar to our requirements.
+
+In the git repository, we store the pipeline yaml and not the pipelinerun yaml, so that ArgoCD can deploy the pipeline yaml, and our pipeline stays in kubernetes cluster waiting to be running. Using the tekton cli we can run pipelines whenever we want.
 
 CD pipeline follows GitOps principles and running our services on kubernetes we can use ArgoCD for CD pipeline, it makes our work easier by defining the application state in our git repository. ArgoCD looks for changes in the git repository periodically and reflects the changes automatically. 
-
-Now the question comes how to manange other components which are running on kubeflow pipelines, since in kubeflow pipelines we do not have to write kind of kubernetes yaml file ?
-
-Yes, it is true that kubeflow pipelines do not require us to write any kubernetes yaml file, but kubeflow expects us to write our services in the form of very simple yaml file defining container image name and image run command. We can update these yaml files in our CI pipeline and upload them CD git repository. But the problem is ArgoCD only looks for kubernetes yaml. So in order to resolve this and still follow GitOps principles, we can use a GitHub actions which will sync our files present in git repository to s3 buckets and loaded be for kubeflow pipelines to be executed based on route passed to application service.
-
-The same approach is followed for prediction pipeline also.
 
 For creating and managing the infrastructure, we are using terraform intergrated with Jenkins for GitOps type infrastructure provising and maintainence. 
 
@@ -418,7 +423,7 @@ terraform apply
 ```
 These commands will be initialize the backend required to run terraform and stores the state in s3 bucket. The terraform module includes the launch of 5 instances which are of type t2.medium, which approximately 20GB cluster node groups. 
 
-Now you might be why that much big cluster ??. The answer is we need to setup KubeFlow, ArgoCD and on top of that we need to run our microservices. So approximately we need might 20GB cluster. We can scale up and down by changing the cluster configuration in terraform files or by using autoscaler, or completely shift to serverless infrastructure. That option is left to end user itself. I have choosen provisioned cluster of 20GB which should be enough to run our applications.
+Now you might be why that much big cluster ??. The answer is we need to setup tekton, ArgoCD and on top of that we need to run our microservices. So approximately we need might 20GB cluster. We can scale up and down by changing the cluster configuration in terraform files or by using autoscaler, or completely shift to serverless infrastructure. That option is left to end user itself. I have choosen provisioned cluster of 20GB which should be enough to run our applications.
 
 
 EKS cluster provisioning takes around 13min to 15min. After the provisioning of the EKS cluster along 5 node groups and Kube master ec2 instance is done. Connect to kube master via ssh and execute the following commands.
@@ -466,11 +471,11 @@ kubectl get nodes
 ```
 This means that kubeconfig of cluster is updated in ec2 instance and can be accessed from ec2 instance as a master node.
 
-### Kubeflow setup
-Since we are using kubeflow for pipeline orchestration, we need to setup kubeflow in eks cluster. Kubeflow can be set up in eks cluster, by looking in the docuementation of Kubeflow on AWS. The setup can be done by executing the following commands
+### tekton setup
+Since we are using tekton for pipeline orchestration, we need to setup tekton in eks cluster. tekton can be set up in eks cluster, by looking in the docuementation of tekton on AWS. The setup can be done by executing the following commands
 
 ```bash
-export KUBEFLOW_RELEASE_VERSION="v1.4.1"
+export tekton_RELEASE_VERSION="v1.4.1"
 ```
 
 ```bash
@@ -478,7 +483,7 @@ export AWS_RELEASE_VERSION="v1.4.1-aws-b1.0.0"
 ```
 
 ```bash
-git clone https://github.com/awslabs/kubeflow-manifests.git && cd kubeflow-manifests
+git clone https://github.com/awslabs/tekton-manifests.git && cd tekton-manifests
 ```
 
 ```bash
@@ -486,9 +491,9 @@ git checkout ${AWS_RELEASE_VERSION}
 ```
 
 ```bash
-git clone --branch ${KUBEFLOW_RELEASE_VERSION} https://github.com/kubeflow/manifests.git upstream
+git clone --branch ${tekton_RELEASE_VERSION} https://github.com/tekton/manifests.git upstream
 ```
-If you refer the docuementation, we can see that they have given single line command to install kubeflow in eks cluster. Before we proceed we have install kustomize in the ec2 instance and to do so execute the following commands
+If you refer the docuementation, we can see that they have given single line command to install tekton in eks cluster. Before we proceed we have install kustomize in the ec2 instance and to do so execute the following commands
 
 ```bash
 sudo apt install snapd
@@ -502,18 +507,18 @@ sudo snap install kustomize
 while ! kustomize build docs/deployment/vanilla | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 ```
 
-After few minutes, the installation will be completed and kubeflow will be setup in eks cluster. To verify that the kubeflow is running, execute the following command
+After few minutes, the installation will be completed and tekton will be setup in eks cluster. To verify that the tekton is running, execute the following command
 
 ```bash
-kubectl -n kubeflow get all
+kubectl -n tekton get all
 ```
-You should see that status of all pods are in running, and kubeflow dashboard can accessed by exposing the service svc/istio-ingressgateway through a load balancer. In order to do so, execute the command
+You should see that status of all pods are in running, and tekton dashboard can accessed by exposing the service svc/istio-ingressgateway through a load balancer. In order to do so, execute the command
 
 ```bash
 kubectl patch svc istio-ingressgateway -n istio-system -p '{"spec":{"type":"LoadBalancer"}}'
 ```
 
-After few minutes load balancer will be provisoned and kubeflow dashboard can be accessed by getting the loadbalancer address, by executing the command
+After few minutes load balancer will be provisoned and tekton dashboard can be accessed by getting the loadbalancer address, by executing the command
 
 ```bash
 kubectl -n istio-system get svc istio-ingressgateway 
@@ -521,6 +526,6 @@ kubectl -n istio-system get svc istio-ingressgateway
 
 Copy the external loadbalancer ip address and paste it in the browser and you shall see that dex login page where you have to login with username and password. The default username and password is user@example.com and 12341234. 
 
-On successfully login, you will be able to see the kubeflow dashboard in the browser. Get the loadbalancer url from browser and then export it as environment variable KFP_HOST to access the kubeflow dashboard by using kubeflow pipelines sdk.
+On successfully login, you will be able to see the tekton dashboard in the browser. Get the loadbalancer url from browser and then export it as environment variable KFP_HOST to access the tekton dashboard by using tekton pipelines sdk.
 
 ### ArgoCD setup
