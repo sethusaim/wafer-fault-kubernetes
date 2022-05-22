@@ -1,6 +1,6 @@
 # Wafer Fault Prediction AWS System
 
-This is an end to end machine learning system for predicting the failure of the wafer sensors based on the training data. This entire solution is built using AWS Services like AWS S3 buckets (for storing the data), AWS DynamoDB (for logging and improvising the system performance), AWS Elastic Container Registry (for storing the container images), and AWS Elastic Container Service (for running the container image). Apart from AWS services, MLFlow was used for experiment tracking and model versioning and model staging with artifacts stored in AWS S3 bucket. Docker for containerization of application. 
+This is an end to end machine learning system for predicting the failure of the wafer sensors based on the training data. This entire solution is built using AWS Services like AWS S3 buckets (for storing the data), AWS Elastic Container Registry (for storing the container images), and AWS Elastic Kubernetes Service (for running the container image). Apart from AWS services, MLFlow was used for experiment tracking and model versioning and model staging with artifacts stored in AWS S3 bucket. Docker for containerization of application. Jenkins was used for CI builds. ArgoCD for CD deployments. Tekton pipelines for pipeline orchestration. Terraform for managing infrastructure as code. FastAPI as web server.MongoDB for data storage.
 
 ### Problem Statement 
 To build a classification methodology to predict the failure of wafer sensors on the basis of given training data. 
@@ -26,7 +26,7 @@ are saved in AWS S3 buckets.
 Once the models are trained,they are tested againist the test data and model score is found out.Now MLFlow is used for logging the parameters,metrics and models to the server. Once the logging of parameters,metrics and models is done. A load production model is triggered to which will get the top models based on metrics and then transitioned to production or staging depending on the condition.
 
 ### Post Model Training
-The solution application is exposed as API using FastAPI and application is dockerized using Docker. MLFlow setup is done in an AWS EC2 instance . CI-CD pipeline is created which will deploy the application to AWS Elastic Container Service, whenever new code is commmited to GitHub.
+The solution application is exposed as API using FastAPI and application is dockerized using Docker. MLFlow setup is done in an AWS EC2 instance . CI-CD pipeline is created which will deploy the application to AWS Elastic Kubernetes Service, whenever new code is commmited to GitHub.
 
 #### Technologies Used 
 - Python
@@ -37,10 +37,11 @@ The solution application is exposed as API using FastAPI and application is dock
 - Tekton is used for pipeline orchestration.
 - SQL-Lite as backend store for MLFlow server
 - AWS EC2 instances for deploying the MLFlow server
-- AWS S3 buckets for data storage
+- AWS EC2 instances for deploying Jenkins Server
+- AWS S3 buckets for data storage, feature store and artifacts store
 - MongoDB Atlas for database operations
-- Docker Registry for storing the container images
-- AWS EKS cluster for managing the container
+- AWS ECR for storing the container images
+- AWS EKS cluster for managing the microservices
 - Docker is used for container builds
 - Infrastructure is managed by using terraform  
 - Jenkins is used as CI tool 
@@ -55,7 +56,7 @@ The solution application is exposed as API using FastAPI and application is dock
 - ROC AUC score
 
 ### Cloud Deployment 
-- CI-CD deployment to AWS EKS cluster using Jenkins and ArgoCD
+- CI-CD deployment to AWS EKS cluster using Jenkins and ArgoCD using GitOps Principles
 
 ## Project Workflow
 To create machine learning workflow in microservices architecture, we need understand how microservices in non-AI projects are used. In 
