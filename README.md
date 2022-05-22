@@ -563,3 +563,97 @@ kubectl -n tekton-pipelines get svc tekton-dashboard
 Copy the external loadbalancer ip address and paste it in the browser on successfully installation, you will be able to see the tekton dashboard in the browser. 
 
 ### ArgoCD setup
+Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes.Application definitions, configurations, and environments should be declarative and version controlled. Application deployment and lifecycle management should be automated, auditable, and easy to understand.
+
+To setup ArgoCD in EKS cluster, execute the following steps, 
+
+```bash
+kubectl create namespace argocd
+```
+
+```bash
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
+
+```bash
+kubectl -n argocd get pods --watch
+```
+Once all the pods are in running state, exit from watch mode.
+
+```bash
+kubectl -n argocd get svc
+```
+By default, the argocd-server service is of type ClusterIP, we need to patch a load balancer to access it externally.
+
+```bash
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+```
+After few minutes load balancer get provisioned, access the load balancer ip by executing 
+
+```bash
+kubectl -n argocd get svc argocd-server
+```
+On successfull installation, we shall be able to see the login page of ArgoCD server, the initial username is admin and password can get retrived through executing this command
+
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+```
+
+Create a new namespace for tekton pipelines to run
+```bash
+kubectl create ns wafer
+```
+
+#### Install the ArgoCD CLI
+
+```bash
+wget https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+```
+
+```bash
+chmod +x argocd-linux-amd64
+```
+
+```bash
+sudo mv argocd-linux-amd64 /usr/local/bin/argocd
+```
+
+On successfull login we shall be able to access the ArgoCD dashboard. Now come to terminal and execute the following command
+
+```bash
+argocd login <ARGOCD_SERVER>
+```
+type "y" for insecure login, it is insecure because it runs on https. give username as admin and password retrived from running command
+
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+```
+
+Now we shall change the initial password to our own password, execute these commands
+
+```bash
+argocd account update-password
+```
+Give the initial password and new password, the username will be "admin". Now if we go the dashboard, we see that we have been logged out. Login again with the username as "admin" and password as the updated password. On successfull login, you shall be see that ArgoCD dashboard again.
+
+Now that ArgoCD is setup in EKS cluster, we have to tell ArgoCD will repository to monitor, and which resources to deploy. In order to do that go to dashboard, click on create application.
+
+Give any application name, it does not matter. Project to be default. Sync policy to be automatic. In the repository url give the url of the CD repository and path needs to be "./components" since our manifest files are stored in components folder. 
+
+In the cluster url, select default cluster we can use argocd to deploy to other cluster also. In the namespace section select the namespaces which was created to run tekton pipelines, and click on create and thats it ArgoCD now monitors the CD repo every 3 minutes to sync if they are any new changes in the git repo.
+
+### Destroy everything and clean up the resources in cloud
+Now that everthing is tested out and successfully executed, we destroy the resources created so that we do not incur more charges from AWS cloud. In order to do that run
+
+Before we destroy everthing, we have to EC2 dashboard and in there go to load balancers and delete the load balancers, because since the load balancer is managed by terraform it becomes difficult for terraform to destroy it. 
+
+Also, empty the data present s3 buckets, if you want them make a backup of it and then empty them. Once these things are done execute
+
+```bash
+terraform destroy --auto-approve
+```
+
+Sometimes even after deleting the load balancers, terraform takes time to delete the wafer resource, if that is the case stop the destroy and manually delete the vpc from vpc dashboard
+
+That is all from my side regarding this project. Thank you and hope you learnt from it.
+Feel free to contact me at sethusaim@gmail.com regarding any clarifactions or doubts regarding the project.
