@@ -318,11 +318,11 @@ This means that kubeconfig of cluster is updated in ec2 instance and can be acce
 sudo apt update
 ```
 
-``bash
+```bash
 sudo apt install -y gnupg
 ```
 
-``bash
+```bash
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3EFE0E0A2F2F60AA
 ```
 
