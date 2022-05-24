@@ -122,7 +122,7 @@ aws configure
 
 Open your code editor in the infrastructure folder. In module.tf file comment all modules expect jenkins instance and execute the following commands.
 
-Before we proceed create a key pair in aws console by which you will connect to the ec2 instance
+Before we proceed create a key pair in aws console by which you will connect to the EC2 instance
 
 Make sure to change the key pair name from sethu (which is mine) to your own key pair name.
 
@@ -184,7 +184,7 @@ You can check the status of the Jenkins service using the command
 sudo systemctl status jenkins
 ```
 
-Now that Jenkins is setup in this ec2 instance use public ip of the ec2 instance with port 8080, and click enter. (public_ip:8080)
+Now that Jenkins is setup in this EC2 instance use public ip of the EC2 instance with port 8080, and click enter. (public_ip:8080)
 
 On successfull login, we shall see jenkins should be unlocked using the initial password which can accessed using 
 
@@ -194,9 +194,9 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 
 Copy the password and login to Jenkins server. Next click on the install suggested plugins and wait for installation to complete. Create a username and password for jenkins authentication.
 
-Finally you can access the Jenkins Dashboard in ec2 instance.
+Finally you can access the Jenkins Dashboard in EC2 instance.
 
-Before we configure Jenkins for our usage, we have install awscli,docker and terraform in ec2 instance
+Before we configure Jenkins for our usage, we have install awscli,docker and terraform in EC2 instance
 
 #### Install Docker
 ```bash
@@ -285,7 +285,7 @@ sudo apt install awscli
 ```bash
 aws configure
 ```
-On prompt give your aws creds with default output as json. Once the install kubectl in ec2 instance
+On prompt give your aws creds with default output as json. Once the install kubectl in EC2 instance
 
 ```bash
 curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
@@ -311,7 +311,7 @@ To check whether kubeconfig is updated or not, run the following commnands, and 
 ```bash
 kubectl get nodes
 ```
-This means that kubeconfig of cluster is updated in ec2 instance and can be accessed from ec2 instance as a master node.
+This means that kubeconfig of cluster is updated in EC2 instance and can be accessed from EC2 instance as a master node.
 
 #### Installing Tekton CLI
 ```bash
@@ -362,7 +362,7 @@ newgrp docker
 ```
 
 ### MLFlow setup in EC2 instance
-For setting up mlflow in ec2 instance, open your code editor in the infrastructure folder and uncomment the mlflow_instance module, and then execute the following commands,
+For setting up mlflow in EC2 instance, open your code editor in the infrastructure folder and uncomment the mlflow_instance module, and then execute the following commands,
 
 ```bash
 terraform init
@@ -371,7 +371,7 @@ terraform init
 ```bash
 terraform apply
 ```
-These commands will launch, t2.small instance with neccessary security groups. After some time, the mlflow instance will be up and running. Connect to the ec2 instance using key pair. On successfull login, execute the following commands,
+These commands will launch, t2.small instance with neccessary security groups. After some time, the mlflow instance will be up and running. Connect to the EC2 instance using key pair. On successfull login, execute the following commands,
 
 ```bash
 sudo apt update
@@ -381,7 +381,7 @@ sudo apt update
 sudo apt-get update
 ```
 
-#### Install Anaconda in ec2 instance and create a env for mlflow
+#### Install Anaconda in EC2 instance and create a env for mlflow
 ```bash
 wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
 ```
@@ -398,10 +398,10 @@ export PATH=~/anaconda3/bin:$PATH
 ```bash
 conda init bash
 ```
-Now close the connection made via ssh and reconnect via ssh to see the changes in ec2 instance, we can see that deafult env is to set bsse which indicates that anaconda is successfully installed.
+Now close the connection made via ssh and reconnect via ssh to see the changes in EC2 instance, we can see that deafult env is to set bsse which indicates that anaconda is successfully installed.
 
-#### Create MLFLow as service in ec2 instance
-Now that anaconda is setup in ec2 instance, we shall create a conda env named mlflow and install the required packages. In order to do that execute the following commands.
+#### Create MLFLow as service in EC2 instance
+Now that anaconda is setup in EC2 instance, we shall create a conda env named mlflow and install the required packages. In order to do that execute the following commands.
 
 ```bash
 conda create -n mlflow python=3.7.6 -y
@@ -458,8 +458,8 @@ sudo service nginx start
 ```
 If above command does not return any error, it means that you have successfully configured nginx. 
 
-##### Expose mlflow server as a service in ec2 instance
-Now we have to expose mlflow server as a service in ec2 instance. In order to do so, execute the following commands
+##### Expose mlflow server as a service in EC2 instance
+Now we have to expose mlflow server as a service in EC2 instance. In order to do so, execute the following commands
 
 ```bash
 cd /home/ubuntu
@@ -505,12 +505,12 @@ sudo systemctl enable mlflow-tracking
 ```bash
 sudo systemctl start mlflow-tracking
 ```
-If these commands do not return any error that means mlflow service is setup in ec2 instance, and can be accessed via public ip on ports 8000 or 8080. Go to the browser, and paste PUBLIC_IP:8080 or PUBLIC_IP:8000.
+If these commands do not return any error that means mlflow service is setup in EC2 instance, and can be accessed via public ip on ports 8000 or 8080. Go to the browser, and paste PUBLIC_IP:8080 or PUBLIC_IP:8000.
 
 If everything is done properly, we should then see the mlflow dashboard in our browser.Sometimes, you might be prompted to give your username and password for login, remember that username and password is the same which have configured for nginx. The public ip with port, mlflow username and mlflow password acts as a environment variables when using model training service. 
 
 ### EKS cluster setup
-Since we are using microservices architecture, kubernetes plays an important role in microservices architecture by orchestrating and managing our containters/microservices in the cloud. In AWS cloud, there is managed serviced called Elastic Kubernetes Service which allows us to create kubernetes cluster on AWS cloud. In order to create a kubernetes, open code editor in infrastructure folder, and uncomment two modules one is eks_cluster and kube_master modules. The main purpose kube_master module, to control the kubernetes cluster from an ec2 instance and not from local machine. 
+Since we are using microservices architecture, kubernetes plays an important role in microservices architecture by orchestrating and managing our containters/microservices in the cloud. In AWS cloud, there is managed serviced called Elastic Kubernetes Service which allows us to create kubernetes cluster on AWS cloud. In order to create a kubernetes, open code editor in infrastructure folder, and uncomment two modules one is eks_cluster and kube_master modules. The main purpose kube_master module, to control the kubernetes cluster from an EC2 instance and not from local machine. 
 
 To create a kubernetes cluster, we have to execute the following commands,
 
