@@ -54,7 +54,7 @@ variable "application_protocol" {
 
 variable "application_ingress_to_port" {
   type    = list(number)
-  default = [22, 8080]
+  default = [22, 8080,80,8000]
 }
 
 variable "application_egress_from_port" {
