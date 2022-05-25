@@ -8,39 +8,17 @@ pipeline {
       }
     }
 
-    stage("Build and Push Application Service") {
-      environment {
-        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
-
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-
-        AWS_DEFAULT_REGION = "us-east-1"
-
-        REPO_NAME = "wafer_application"
-
-        COMP_FILE = "wafer_application.yaml"
-      }
-
+    stage("Install Application Service on EC2") {
       when {
         changeset 'application/*'
       }
 
       steps {
         script {
-          sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu EC2_APP_IP wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/application_cicd.sh'
 
-          sh 'docker build -t $REPO_NAME application/'
-
-          sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
-
-          sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu EC2_APP_IP bash application_cicd.sh'
         }
-
-        build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: 'COMP_FILE', value: env.COMP_FILE)]
-
-        build job: 'deploy_app', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME)]
       }
     }
 
