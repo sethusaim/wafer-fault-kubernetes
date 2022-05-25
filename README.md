@@ -1,6 +1,6 @@
 # Wafer Fault Prediction AWS Microservices System
 
-This is an end to end machine learning system for predicting the failure of the wafer sensors based on the training data. This entire solution is built using AWS Services like AWS S3 buckets (for storing the data), AWS Elastic Container Registry (for storing the container images), and AWS Elastic Kubernetes Service (for running the container image). Apart from AWS services, MLFlow was used for experiment tracking and model versioning and model staging with artifacts stored in AWS S3 bucket. Docker for containerization of application. Jenkins was used for CI builds. ArgoCD for CD deployments. Tekton pipelines for pipeline orchestration. Terraform for managing infrastructure as code. FastAPI as web server.MongoDB for data storage.
+This is an end to end machine learning system for predicting the failure of the wafer sensors based on the training data. This entire solution is built using AWS Services like AWS S3 buckets (for storing the data), AWS Elastic Container Registry (for storing the container images), and AWS Elastic Kubernetes Service (for running the container image). Apart from AWS services, MLFlow was used for experiment tracking and model versioning and model staging with artifacts stored in AWS S3 bucket. Docker for containerization of application. Jenkins was used for CI builds. ArgoCD for CD deployments. Tekton pipelines for pipeline orchestration. Terraform for managing infrastructure as code. Flask as web server.MongoDB for data storage.
 
 ### Problem Statement 
 To build a classification methodology to predict the failure of wafer sensors on the basis of given training data. 
@@ -26,12 +26,12 @@ are saved in AWS S3 buckets.
 Once the models are trained,they are tested againist the test data and model score is found out.Now MLFlow is used for logging the parameters,metrics and models to the server. Once the logging of parameters,metrics and models is done. A load production model is triggered to which will get the top models based on metrics and then transitioned to production or staging depending on the condition.
 
 ### Post Model Training
-The solution application is exposed as API using FastAPI and application is dockerized using Docker. MLFlow setup is done in an AWS EC2 instance . CI-CD pipeline is created which will deploy the application to AWS Elastic Kubernetes Service, whenever new code is commmited to GitHub.
+The solution application is exposed as API using Flask and application is dockerized using Docker. MLFlow setup is done in an AWS EC2 instance . CI-CD pipeline is created which will deploy the application to AWS Elastic Kubernetes Service, whenever new code is commmited to GitHub.
 
 #### Technologies Used 
 - Python
 - Sklearn for machine learning algorithms
-- FastAPI for creating an web application
+- Flask for creating an web application
 - Machine Learning
 - MLFlow for experiment tracking,model versioning and model staging.
 - Tekton is used for pipeline orchestration.
@@ -105,9 +105,6 @@ Once the repositories are created, in the CI repository, clone this repository u
 ```bash 
 git clone https://github.com/sethusaim/Wafer-Fault-Kubernetes.git
 ```
-
-### Main Application setup in EC2 instance
-
 
 ### Jenkins Setup in EC2 instance
 Previously install terraform in your local machine, be Linux,Mac or Windows. https://www.terraform.io/downloads
@@ -272,6 +269,17 @@ We shall require kubernetes config file for controlling the cluster, tekton cli 
 
 EKS cluster provisioning takes around 13min to 15min. After the provisioning of the EKS cluster along 3 node groups.Execute the following commands to add kubeconfig to application instance
 
+#### Launch the application instance
+Open code editor in infrastructure folder and execute the following commands.
+
+```bash
+terraform init
+```
+
+```bash
+terraform apply -target=module.application_instance
+```
+
 #### Updating the kubeconfig file
 ```bash
 sudo apt update
@@ -343,26 +351,200 @@ These commands install the tekton cli, to verify the installation execute
 tkn version
 ```
 
-#### Installing Docker in EC2 instance
+#### Setup application as service 
+We need to run the application in the EC2 instance continuously without us running the start or stop commands. So, how do we achieve this ?
+The approach is simple we need to run the application as service inside EC2 instance. In order to do so we need perform some operations and the commands to do so are
+
 ```bash
-curl -fsSL https://get.docker.com -o get-docker.sh
+sudo apt update
 ```
 
 ```bash
-sudo sh get-docker.sh
+sudo apt update
 ```
 
 ```bash
-sudo groupadd docker
+sudo apt install python3-pip -y
 ```
 
 ```bash
-sudo usermod -aG docker $USER
+git init 
 ```
 
 ```bash
-newgrp docker
+git remote add origin https://github.com/sethusaim/Wafer-Fault-Kubernetes.git
 ```
+
+Replace my repo url with your repo url
+
+```bash
+git fetch origin
+```
+
+```bash
+git checkout origin/main -- application
+```
+
+```bash
+cd application
+```
+
+```bash
+pip3 install -r requirements.txt
+```
+
+On installation of flask, you will get PATH warning, to prevent that add flask to PATH
+```bash
+sudo mv flask /usr/bin
+```
+
+```bash
+cd /home/ubuntu
+```
+
+```bash
+sudo apt-get install nginx -y
+```
+
+```bash
+pip3 install gunicorn
+```
+
+For authentication of web server
+```bash
+sudo apt-get install -y apache2-utils
+```
+
+You will be prompted to give password for USERNAME, input them and remember it for accessing the webserver
+```bash
+sudo htpasswd -c /etc/nginx/.htpasswd USERNAME
+```
+
+```bash
+cd /etc/nginx/sites-enabled
+```
+
+```bash
+sudo nano flaskapp
+```
+
+NGINX server configuration for authentication
+```bash
+server {
+    listen 8080;
+    server_name YOUR_IP_OR_DOMAIN;
+    auth_basic “Administrator-Area”;
+    auth_basic_user_file /etc/nginx/.htpasswd; 
+
+    location / {
+        proxy_pass http://localhost:8000;
+        include /etc/nginx/proxy_params;
+        proxy_redirect off;
+    }
+}
+```
+```bash
+sudo service nginx restart
+```
+On successfull setup, nginx will restart without any errors
+
+```bash
+cd /home/ubuntu/
+```
+
+Creating the application as service
+
+```bash
+cd  /etc/systemd/system
+```
+
+```bash
+sudo nano app.service
+```
+
+```bash
+[Unit]
+Description=Application Service
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/application
+Restart=on-failure
+RestartSec=30
+
+ExecStart=/usr/bin/gunicorn3 --workers 3 --bind unix:flaskapp.sock -m 007 app:app
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl daemon-reload
+```
+
+```bash
+sudo systemctl enable app
+```
+
+```bash
+sudo systemctl enable app
+```
+
+```bash
+sudo systemctl start app
+```
+Now that the application service is created, we need to tell nginx that use that flaskapp.sock file. Before we do that lets check if flaskapp.sock file is created or not
+
+```bash
+cd /home/ubuntu/application
+```
+
+In this directory we shall see that flaskapp.sock file is created and can be used. Coming to the nginx configuration, execute these commands
+
+```bash
+cd /etc/nginx/sites-enabled/
+```
+
+```bash
+sudo nano app
+```
+
+```bash
+server {
+    listen 8080;
+    server_name YOUR_IP_OR_DOMAIN;
+    auth_basic “Administrator-Area”;
+    auth_basic_user_file /etc/nginx/.htpasswd; 
+
+    location / {
+        proxy_pass http://unix:/home/ubuntu/application/flaskapp.sock;
+        include /etc/nginx/proxy_params;
+        proxy_redirect off;
+    }
+}
+```
+Replace the server configuration or edit the file accordingly
+
+```bash
+cd /home/ubuntu
+```
+
+```bash
+sudo service nginx restart
+```
+
+```bash
+sudo service app restart
+```
+
+On successfull restart of app and nginx, we can access the application on ec2 public ip with port as 8080, and that is it. Our application is set up as service in EC2 instance
+
+### How to perform CI CD for application microservice ??
+Now that the previous step we have created our flask app as a service. The question is how to patch any new changes made to application source code. In simple CI CD to flask application running as a service in EC2 instance. Well, the approach is very simple, we shall use Jenkins and Git to do so, the workflow is fairly simple, first new application code is merged to main branch, on the commiting to the main branch, Jenkins will perform a series of steps which include connecting to the EC2 instance and getting the application_cicd.sh bash file from the repo and executing it. The bash file consists of commands wchich will get the source from Github, and stops the service and installs requirements.txt file and restarts nginx and application service, and that is it we are able to achieve CI CD for application service running in the ec2 instance, since Jenkins runs this stage when there is application code change. 
+
+One thing to note that the filename "app.py" should be same, else the application might not work, since the initial setup was done using application "app.py" as filename. If we want change that to something else, make the neccessary changes to app.service file
 
 ### MLFlow setup in EC2 instance
 For setting up mlflow in EC2 instance, open your code editor in the infrastructure folder and uncomment the mlflow_instance module, and then execute the following commands,
