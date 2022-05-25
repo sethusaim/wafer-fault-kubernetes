@@ -106,6 +106,9 @@ Once the repositories are created, in the CI repository, clone this repository u
 git clone https://github.com/sethusaim/Wafer-Fault-Kubernetes.git
 ```
 
+### Main Application setup in EC2 instance
+
+
 ### Jenkins Setup in EC2 instance
 Previously install terraform in your local machine, be Linux,Mac or Windows. https://www.terraform.io/downloads
 
