@@ -9,6 +9,13 @@ from utils.read_params import read_params
 
 
 class Main_Utils:
+    """
+    Description :   This class is used for main utility functions required in core functions of the service
+    Version     :   1.2
+    
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.class_name = self.__class__.__name__
 
@@ -27,6 +34,16 @@ class Main_Utils:
         self.data_dir = self.config["data_dir"]
 
     def upload_logs(self):
+        """
+        Method Name :   upload_logs
+        Description :   This method uploads the logs to s3 bucket
+        
+        Output      :   The logs are uploaded to s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.upload_logs.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
@@ -61,6 +78,16 @@ class Main_Utils:
             )
 
     def get_pred_fname(self, key, fname, log_file):
+        """
+        Method Name :   get_pred_fname
+        Description :   This method gets the prediction file name based on the key
+        
+        Output      :   The logs are uploaded to s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.get_pred_fname.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)

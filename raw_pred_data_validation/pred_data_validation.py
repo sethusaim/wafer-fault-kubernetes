@@ -9,8 +9,8 @@ from utils.read_params import read_params
 class Raw_Pred_Data_Validation:
     """
     Description :   This method is used for validating the raw prediction data
-
     Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 
