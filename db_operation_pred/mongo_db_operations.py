@@ -11,8 +11,8 @@ from utils.read_params import read_params
 class MongoDB_Operation:
     """
     Description :   This method is used for all mongodb operations
-
     Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 
