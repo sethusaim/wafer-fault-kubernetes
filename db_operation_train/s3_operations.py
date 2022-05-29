@@ -2,7 +2,7 @@ from io import StringIO
 from os import remove
 
 from boto3 import resource
-from pandas import DataFrame, read_csv
+from pandas import read_csv
 
 from utils.logger import App_Logger
 
@@ -10,8 +10,8 @@ from utils.logger import App_Logger
 class S3_Operation:
     """
     Description :   This method is used for all the S3 bucket operations
-
     Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 
@@ -22,9 +22,7 @@ class S3_Operation:
 
         self.log_writer = App_Logger()
 
-    def read_object(
-        self, object, log_file, decode: bool = True, make_readable: bool = False,
-    ):
+    def read_object(self, object, log_file, decode=True, make_readable=False):
         """
         Method Name :   read_object
         Description :   This method reads the object with kwargs
@@ -289,13 +287,15 @@ class S3_Operation:
             )
 
     def upload_file(
-        self, from_fname, to_fname, bucket, log_file, delete: bool = True,
+        self, from_fname, to_fname, bucket, log_file, delete=True,
     ):
         """
         Method Name :   upload_file
         Description :   This method uploades a file to s3 bucket with kwargs
+        
         Output      :   A file is uploaded to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -339,14 +339,14 @@ class S3_Operation:
                 e, self.class_name, method_name, log_file,
             )
 
-    def upload_df_as_csv(
-        self, data_frame: DataFrame, local_fname, bucket_fname, bucket, log_file,
-    ):
+    def upload_df_as_csv(self, data_frame, local_fname, bucket_fname, bucket, log_file):
         """
         Method Name :   upload_df_as_csv
         Description :   This method uploades a dataframe as csv file to s3 bucket
+        
         Output      :   A dataframe is uploaded as csv file to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

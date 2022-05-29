@@ -7,8 +7,8 @@ from utils.read_params import read_params
 class Run:
     """
     Description :   This class is used for running the data transformation prediction pipeline
-
     Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 
