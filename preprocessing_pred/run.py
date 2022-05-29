@@ -40,7 +40,7 @@ class Run:
         Method Name :   run_preprocess
         Description :   This method applies the preprocessing functions on the prediction data.
         
-        Output      :   The data transformation is done on the prediction data and artifacts are stored in s3 buckets
+        Output      :   The preprocessing functions is applied on prediction data and artifacts are stored in s3 buckets
         On Failure  :   Write an exception log and then raise an exception
         
         Version     :   1.2
