@@ -12,8 +12,8 @@ from utils.logger import App_Logger
 class S3_Operation:
     """
     Description :   This method is used for all the S3 bucket operations
-
     Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 

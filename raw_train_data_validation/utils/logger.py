@@ -6,6 +6,13 @@ from utils.read_params import read_params
 
 
 class App_Logger:
+    """
+    Description :   This class is used for logging the information to text files
+    Version     :   1.2
+
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.class_name = self.__class__.__name__
 
@@ -16,6 +23,16 @@ class App_Logger:
         makedirs(self.log_dir, exist_ok=True)
 
     def write_info_to_file(self, log_info, log_file):
+        """
+        Method Name :   write_info_to_file
+        Description :   This method writes the logging information to text file
+        
+        Output      :   The logging information is successfully written to text file.
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         try:
             with open(log_file, "a+") as f:
                 f.write(log_info)
@@ -26,6 +43,16 @@ class App_Logger:
             raise e
 
     def log(self, log_info, log_file):
+        """
+        Method Name :   log
+        Description :   This method writes the log info using current date and time
+        
+        Output      :   The logging information is written to file with current date and time
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         try:
             self.now = datetime.now()
 
@@ -47,9 +74,9 @@ class App_Logger:
     def start_log(self, key, class_name, method_name, log_file):
         """
         Method Name :   start_log
-        Description :   This method creates an entry point log in DynamoDB
+        Description :   This method creates an entry point log in log file
 
-        Output      :   An entry point is created in DynamoDB
+        Output      :   An entry point log is created in log file
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
@@ -73,9 +100,9 @@ class App_Logger:
     def exception_log(self, exception, class_name, method_name, log_file):
         """
         Method Name :   exception_log
-        Description :   This method creates an exception log in DynamoDB and raises Exception
+        Description :   This method creates an exception log in log file and raises Exception
 
-        Output      :   A exception log is created in DynamoDB and expection is raised
+        Output      :   A exception log is created in log file and expection is raised
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2

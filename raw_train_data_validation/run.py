@@ -5,6 +5,13 @@ from utils.read_params import read_params
 
 
 class Run:
+    """
+    Description :   This class is used for running the raw train data validation pipeline
+    Version     :   1.2
+    
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.config = read_params()
 
@@ -22,6 +29,10 @@ class Run:
         """
         Method Name :   raw_train_data_validation
         Description :   This method is used for validating the training batch files
+        
+        Output      :   The raw data validation is done for prediction data and artifacts are stored in s3 buckets
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
