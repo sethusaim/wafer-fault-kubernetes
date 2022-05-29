@@ -12,8 +12,8 @@ from utils.read_params import read_params
 class Model_Finder:
     """
     Description :   This class shall be used to find the model with best accuracy and AUC score.
-
     Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 
@@ -53,6 +53,7 @@ class Model_Finder:
                         Use Hyper Parameter Tuning.
         Output      :   The model with the best parameters
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -154,6 +155,7 @@ class Model_Finder:
         """
         Method Name :   get_trained_models
         Description :   Find out the Model which has the best score.
+        
         Output      :   The best model name and the model object
         On Failure  :   Write an exception log and then raise an exception
 
@@ -217,6 +219,16 @@ class Model_Finder:
             )
 
     def train_and_log_models(self, X_data, Y_data, log_file, idx):
+        """
+        Method Name :   train_and_log_models
+        Description :   This methods trains all the models based on train data and used mlflow to log all the models
+        
+        Output      :   Models are trained based on training data,saved to s3 bucket, logged to mlflow and artifacts stored in s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.train_and_log_models.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)

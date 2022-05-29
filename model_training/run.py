@@ -11,7 +11,8 @@ from utils.read_params import read_params
 class Run:
     """
     Description :   This class shall be used for model training
-Version     :   1.2
+    Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 

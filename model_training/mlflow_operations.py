@@ -11,8 +11,8 @@ from utils.read_params import read_params
 class MLFlow_Operation:
     """
     Description :    This class shall be used for handling all the mlflow operations
-
     Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 

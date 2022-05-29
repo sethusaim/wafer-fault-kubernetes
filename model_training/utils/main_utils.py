@@ -9,6 +9,13 @@ from utils.read_params import read_params
 
 
 class Main_Utils:
+    """
+    Description :   This class is used for main utility functions required in core functions of the service
+    Version     :   1.2
+    
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.class_name = self.__class__.__name__
 
@@ -25,6 +32,16 @@ class Main_Utils:
         self.log_writer = App_Logger()
 
     def upload_logs(self):
+        """
+        Method Name :   upload_logs
+        Description :   This method uploads the logs to s3 bucket
+        
+        Output      :   The logs are uploaded to s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.upload_logs.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
@@ -59,6 +76,16 @@ class Main_Utils:
             )
 
     def get_cluster_fname(self, key, idx, log_file):
+        """
+        Method Name :   get_cluster_fname
+        Description :   This method gets the file name based on the cluster number
+        
+        Output      :   File name based on cluster number is returned
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.get_cluster_fname.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
@@ -76,6 +103,16 @@ class Main_Utils:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def get_targets_csv_as_numpy_array(self, fname, bucket, log_file):
+        """
+        Method Name :   get_targets_csv_as_numpy_array
+        Description :   This method gets the targets csv file present in s3 bucket as numpy array
+        
+        Output      :   The targets csv file is returned as numpy array
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.get_targets_csv_as_numpy_array.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
@@ -103,6 +140,16 @@ class Main_Utils:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def get_features_csv_as_numpy_array(self, fname, bucket, log_file):
+        """
+        Method Name :   get_features_csv_as_numpy_array
+        Description :   This method gets the features csv file present in s3 bucket as numpy array
+        
+        Output      :   The features csv file is returned as numpy array
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.get_features_csv_as_numpy_array.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)

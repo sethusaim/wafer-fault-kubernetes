@@ -11,8 +11,8 @@ from utils.logger import App_Logger
 class S3_Operation:
     """
     Description :   This class shall be used for performing s3 operations used by the service
-    
     Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 
@@ -83,9 +83,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def read_object(
-        self, object, log_file, decode=True, make_readable=False,
-    ):
+    def read_object(self, object, log_file, decode=True, make_readable=False):
         """
         Method Name :   read_object
         Description :   This method reads the object with kwargs
@@ -122,9 +120,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def copy_data(
-        self, from_fname, from_bucket, to_fname, to_bucket, log_file,
-    ):
+    def copy_data(self, from_fname, from_bucket, to_fname, to_bucket, log_file):
         """
         Method Name :   copy_data
         Description :   This method copies the data from one bucket to another bucket
@@ -332,6 +328,7 @@ class S3_Operation:
             lst = [
                 (self.read_csv(f, bucket, log_file), f, f.split("/")[-1],)
                 for f in files
+                if f.endswith(".csv")
             ]
 
             self.log_writer.log(
