@@ -2,7 +2,7 @@ from io import StringIO
 from os import remove
 
 from boto3 import resource
-from pandas import DataFrame, read_csv
+from pandas import read_csv
 
 from utils.logger import App_Logger
 
@@ -10,8 +10,8 @@ from utils.logger import App_Logger
 class S3_Operation:
     """
     Description :   This method is used for all the S3 bucket operations
-
     Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 

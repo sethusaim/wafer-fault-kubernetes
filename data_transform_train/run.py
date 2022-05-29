@@ -7,8 +7,8 @@ from utils.read_params import read_params
 class Run:
     """
     Description :   This class is used for running the data transformation training pipeline
-
     Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 
@@ -29,8 +29,10 @@ class Run:
         """
         Method Name :   train_data_transform
         Description :   This method performs the data transformation on the training data
+        
         Output      :   The data transformation is performed on the training data
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
