@@ -6,7 +6,8 @@ from utils.read_params import read_params
 class Data_Getter_Train:
     """
     Description :   This class shall be used for obtaining the df from the input files s3 bucket where the training file is present
-Version     :   1.2
+    Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 
@@ -29,8 +30,10 @@ Version     :   1.2
         """
         Method Name :   get_data
         Description :   This method reads the data from the input files s3 bucket where the training file is stored
+        
         Output      :   A pandas dataframe
         On Failure  :   Write an exception log and then raise exception    
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

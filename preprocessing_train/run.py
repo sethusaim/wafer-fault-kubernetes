@@ -7,6 +7,12 @@ from utils.read_params import read_params
 
 
 class Run:
+    """
+    Description :   This class is used for running the data transformation prediction pipeline
+    Version     :   1.2
+    
+    Revisions   :   Moved to setup to cloud 
+    """
     def __init__(self):
         self.config = read_params()
 
@@ -29,6 +35,16 @@ class Run:
         self.log_writer = App_Logger()
 
     def run_preprocess(self):
+        """
+        Method Name :   run_preprocess
+        Description :   This method applies the preprocessing functions on the training data 
+        
+        Output      :   The preprocessing functions is applied on training data and artifacts are stored in s3 buckets
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.run_preprocess.__name__
 
         self.log_writer.start_log(
