@@ -11,7 +11,8 @@ from utils.logger import App_Logger
 class S3_Operation:
     """
     Description :   This class shall be used for performing s3 operations used by the service
-Version     :   1.2
+    
+    Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
 
@@ -26,8 +27,10 @@ Version     :   1.2
         """
         Method Name :   get_bucket
         Description :   This method gets the bucket from s3 
+        
         Output      :   A s3 bucket name is returned based on the bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -51,8 +54,10 @@ Version     :   1.2
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
+        
         Output      :   A file object is returned
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -84,8 +89,10 @@ Version     :   1.2
         """
         Method Name :   read_object
         Description :   This method reads the object with kwargs
+        
         Output      :   A object is read with kwargs
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -121,8 +128,10 @@ Version     :   1.2
         """
         Method Name :   copy_data
         Description :   This method copies the data from one bucket to another bucket
+        
         Output      :   The data is copied from one bucket to another
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -148,8 +157,10 @@ Version     :   1.2
         """
         Method Name :   read_csv
         Description :   This method reads the csv data from s3 bucket
+        
         Output      :   A pandas series object consisting of runs for the particular experiment id
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -177,8 +188,10 @@ Version     :   1.2
         """
         Method Name :   save_model
         Description :   This method saves the model into particular model directory in s3 bucket with kwargs
+        
         Output      :   A pandas series object consisting of runs for the particular experiment id
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -229,8 +242,10 @@ Version     :   1.2
         """
         Method Name :   upload_file
         Description :   This method uploades a file to s3 bucket with kwargs
+        
         Output      :   A file is uploaded to s3 bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -272,8 +287,10 @@ Version     :   1.2
         """
         Method Name :   get_files_from_folder
         Description :   This method gets the files a folder in s3 bucket
+        
         Output      :   A list of files is returned
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -299,8 +316,10 @@ Version     :   1.2
         """
         Method Name :   read_csv_from_folder
         Description :   This method reads the csv files from folder
+        
         Output      :   A list of tuple of dataframe, along with absolute file name and file name is returned
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -331,8 +350,10 @@ Version     :   1.2
         """
         Method Name :   get_df_from_object
         Description :   This method gets dataframe from object 
+        
         Output      :   Dataframe is read from the object
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -358,8 +379,10 @@ Version     :   1.2
         """
         Method Name :   load_model
         Description :   This method loads the model from s3 bucket
+        
         Output      :   A pandas series object consisting of runs for the particular experiment id
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

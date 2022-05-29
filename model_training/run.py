@@ -44,8 +44,10 @@ Version     :   1.2
         """
         Method Name :   training_model
         Description :   This method is responsible for training models in existing data 
+        
         Output      :   The models are trained,logged and stored in s3 bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

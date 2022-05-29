@@ -11,7 +11,7 @@ from utils.read_params import read_params
 
 class Model_Finder:
     """
-    Description :   This class shall  be used to find the model with best accuracy and AUC score.
+    Description :   This class shall be used to find the model with best accuracy and AUC score.
 
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
@@ -29,8 +29,6 @@ class Model_Finder:
         self.model_dir = self.config["models_dir"]
 
         self.bucket = self.config["s3_bucket"]
-
-        self.mlflow_config = self.config["mlflow_config"]
 
         self.save_format = self.config["save_format"]
 

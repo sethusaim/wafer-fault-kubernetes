@@ -1,7 +1,6 @@
 from os import listdir
 from os.path import join
 from shutil import rmtree
-from tkinter import E
 
 from s3_operations import S3_Operation
 

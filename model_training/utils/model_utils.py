@@ -10,7 +10,8 @@ from utils.read_params import read_params
 class Model_Utils:
     """
     Description :   This class is used for all the model utils
-Version     :   1.2
+    Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 
