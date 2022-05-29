@@ -12,7 +12,8 @@ from utils.read_params import read_params
 class MLFlow_Operation:
     """
     Description :    This class shall be used for handling all the mlflow operations
-Version     :   1.2
+    Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 
@@ -41,8 +42,10 @@ Version     :   1.2
         """
         Method Name :   set_mlflow_tracking_uri
         Description :   This method sets the mlflow tracking uri in mlflow server 
+        
         Output      :   MLFLow server will set the particular uri to communicate with code 
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -68,8 +71,10 @@ Version     :   1.2
         """
         Method Name :   get_experiment_from_mlflow
         Description :   This method gets the experiment from mlflow server using the experiment name
+        
         Output      :   An experiment which was stored in mlflow server
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -97,8 +102,10 @@ Version     :   1.2
         """
         Method Name :   get_runs_from_mlflow
         Description :   This method gets the runs from the mlflow server for a particular experiment id
+        
         Output      :   A pandas series object consisting of runs for the particular experiment id
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -129,8 +136,10 @@ Version     :   1.2
         """
         Method Name :   get_mlflow_models
         Description :   This method gets the registered models in mlflow server
+        
         Output      :   A list of registered model names stored in mlflow server
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -158,8 +167,10 @@ Version     :   1.2
         """
         Method Name :   search_mlflow_models
         Description :   This method searches for registered models and returns them in the mentioned order
+        
         Output      :   A list of registered models in the mentioned order
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -191,8 +202,10 @@ Version     :   1.2
         """
         Method Name :   transition_mlflow_model
         Description :   This method transitions mlflow model from one stage to other stage, and does the same in s3 bucket
+        
         Output      :   A mlflow model is transitioned from one stage to another, and same is reflected in s3 bucket
         On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
