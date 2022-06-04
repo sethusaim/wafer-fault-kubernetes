@@ -21,17 +21,25 @@ def home():
 @cross_origin()
 @app.route("/train", methods=["GET"])
 def train_route():
-    run_cmd(f"tkn pipeline start {config['pipeline']['train']}")
+    try:
+        run_cmd(f"tkn pipeline start {config['pipeline']['train']}")
 
-    return jsonify("Training successfull")
+        return jsonify("Training successfull")
+
+    except Exception as e:
+        raise e
 
 
 @cross_origin()
 @app.route("/predict", methods=["GET"])
 def prediction_route():
-    run_cmd(f"tkn pipeline start {config['pipeline']['pred']}")
+    try:
+        run_cmd(f"tkn pipeline start {config['pipeline']['pred']}")
 
-    return jsonify("Prediction successfull")
+        return jsonify("Prediction successfull")
+
+    except Exception as e:
+        raise e
 
 
 if __name__ == "__main__":
