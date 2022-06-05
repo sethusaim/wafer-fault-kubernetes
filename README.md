@@ -810,11 +810,6 @@ On successfull installation, we shall be able to see the login page of ArgoCD se
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 ```
 
-Create a new namespace for tekton pipelines to run
-```bash
-kubectl create ns wafer
-```
-
 #### Install the ArgoCD CLI
 
 ```bash
