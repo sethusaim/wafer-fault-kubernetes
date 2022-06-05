@@ -547,6 +547,8 @@ sudo service app restart
 
 On successfull restart of app and nginx, we can access the application on ec2 public ip with port as 8080, and that is it. Our application is set up as service in EC2 instance
 
+On this is done, go to the jenkins dashsboard and click on "manage jenkins" and then click on "manage plugins" and in search bar type "ssh agent" and install the plugin. This plugin shall use private ssh key which will connect to application ec2 instance and perform CD of application code.
+
 ### How to perform CI CD for application microservice ??
 Now that the previous step we have created our flask app as a service. The question is how to patch any new changes made to application source code. In simple CI CD to flask application running as a service in EC2 instance. Well, the approach is very simple, we shall use Jenkins and Git to do so, the workflow is fairly simple, first new application code is merged to main branch, on the commiting to the main branch, Jenkins will perform a series of steps which include connecting to the EC2 instance and getting the application_cicd.sh bash file from the repo and executing it. The bash file consists of commands wchich will get the source from Github, and stops the service and installs requirements.txt file and restarts nginx and application service, and that is it we are able to achieve CI CD for application service running in the ec2 instance, since Jenkins runs this stage when there is application code change. 
 
