@@ -414,6 +414,11 @@ sudo apt-get install nginx -y
 ```bash
 pip3 install gunicorn
 ```
+or use
+
+```bash
+sudo apt install gunicorn
+```
 
 For authentication of web server
 ```bash
