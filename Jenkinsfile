@@ -172,7 +172,7 @@ pipeline {
 
         AWS_DEFAULT_REGION = "us-east-1"
 
-        // MONGODB_URL = credentials('MONGODB_URL')
+        MONGODB_URL = credentials('MONGODB_URL')
 
         REPO_NAME = "wafer_db_operation_train"
 
