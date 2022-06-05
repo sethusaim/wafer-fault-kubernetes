@@ -58,10 +58,6 @@ module "train_data_bucket" {
   source = "./wafer_train_data_bucket"
 }
 
-module "application_ecr_repo" {
-  source = "./wafer_app_ecr"
-}
-
 module "clustering_ecr_repo" {
   source = "./wafer_clustering_ecr"
 }
