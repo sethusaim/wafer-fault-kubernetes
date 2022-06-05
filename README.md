@@ -394,6 +394,11 @@ pip3 install -r requirements.txt
 ```
 
 On installation of flask, you will get PATH warning, to prevent that add flask to PATH
+
+```bash
+cd /home/ubuntu/.local/bin
+```
+
 ```bash
 sudo mv flask /usr/bin
 ```
