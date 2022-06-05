@@ -499,10 +499,6 @@ sudo systemctl enable app
 ```
 
 ```bash
-sudo systemctl enable app
-```
-
-```bash
 sudo systemctl start app
 ```
 Now that the application service is created, we need to tell nginx that use that flaskapp.sock file. Before we do that lets check if flaskapp.sock file is created or not
