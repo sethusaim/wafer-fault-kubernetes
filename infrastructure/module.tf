@@ -6,21 +6,21 @@ terraform {
   }
 }
 
-module "mongodb_database" {
-  source = "./wafer_database"
-}
+# module "mongodb_database" {
+#   source = "./wafer_database"
+# }
 
-module "jenkins_instance" {
-  source = "./wafer_jenkins_instance"
-}
+# module "jenkins_instance" {
+#   source = "./wafer_jenkins_instance"
+# }
 
-module "mlflow_instance" {
-  source = "./wafer_mlflow_instance"
-}
+# module "mlflow_instance" {
+#   source = "./wafer_mlflow_instance"
+# }
 
-module "eks_cluster" {
-  source = "./wafer_eks_cluster"
-}
+# module "eks_cluster" {
+#   source = "./wafer_eks_cluster"
+# }
 
 module "feature_store_bucket" {
   source = "./wafer_feature_store_bucket"
@@ -30,9 +30,9 @@ module "io_files_bucket" {
   source = "./wafer_io_files_bucket"
 }
 
-module "application_instance" {
-  source = "./wafer_application_instance"
-}
+# module "application_instance" {
+#   source = "./wafer_application_instance"
+# }
 
 module "logs_bucket" {
   source = "./wafer_logs_bucket"
