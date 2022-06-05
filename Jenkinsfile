@@ -9,15 +9,15 @@ pipeline {
     }
 
     stage("Install Application Service on EC2") {
-      when {
-        changeset 'application/*'
-      }
+      // when {
+      //   changeset 'application/*'
+      // }
 
       steps {
         script {
-          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu EC2_APP_IP wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/application_cicd.sh'
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 3.233.128.131 wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/application_cicd.sh'
 
-          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu EC2_APP_IP bash application_cicd.sh'
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 3.233.128.131 bash application_cicd.sh'
         }
       }
     }
