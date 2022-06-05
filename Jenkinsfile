@@ -216,9 +216,9 @@ pipeline {
         COMP_FILE = "wafer_load_prod_model.yaml"
       }
 
-      when {
-        changeset 'load_prod_model/*'
-      }
+      // when {
+      //   changeset 'load_prod_model/*'
+      // }
 
       steps {
         script {
