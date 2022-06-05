@@ -360,7 +360,7 @@ sudo apt update
 ```
 
 ```bash
-sudo apt update
+sudo apt-get update
 ```
 
 ```bash
