@@ -700,6 +700,23 @@ If these commands do not return any error that means mlflow service is setup in 
 
 If everything is done properly, we should then see the mlflow dashboard in our browser.Sometimes, you might be prompted to give your username and password for login, remember that username and password is the same which have configured for nginx. The public ip with port, mlflow username and mlflow password acts as a environment variables when using model training service. 
 
+### MongoDB Setup
+Since we are using MongoDB as the database. We are using MongoDB Altas and terraform to provision the db instance. Before we provision the instance we need to export some environment variables such mongodb public key and private key. These keys can be accessed from the mongodb altas website by going into organizaation access manager and click on API keys and then create an API key and store the public key and private key somewhere safe and export it environment variables
+
+```bash
+export MONGODB_ATLAS_PUBLIC_KEY="your_public_key"
+```
+
+```bash
+export MONGODB_ATLAS_PRIVATE_KEY="your_private_key"
+```
+To provision the mongodb altas database
+
+```bash
+terraform apply -target=module.mongodb_database
+```
+After the provisioning of database is done,store the database connection string in jenkins. 
+
 ### EKS cluster setup
 Since we are using microservices architecture, kubernetes plays an important role in microservices architecture by orchestrating and managing our containters/microservices in the cloud. In AWS cloud, there is managed serviced called Elastic Kubernetes Service which allows us to create kubernetes cluster on AWS cloud. In order to create a kubernetes, open code editor in infrastructure folder, and uncomment two modules one is eks_cluster and kube_master modules. The main purpose kube_master module, to control the kubernetes cluster from an EC2 instance and not from local machine. 
 
