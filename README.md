@@ -351,7 +351,7 @@ These commands install the tekton cli, to verify the installation execute
 tkn version
 ```
 
-#### Setup application as service 
+### Setup application as service 
 We need to run the application in the EC2 instance continuously without us running the start or stop commands. So, how do we achieve this ?
 The approach is simple we need to run the application as service inside EC2 instance. In order to do so we need perform some operations and the commands to do so are
 
