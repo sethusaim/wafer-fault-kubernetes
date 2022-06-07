@@ -435,9 +435,9 @@ pipeline {
         COMP_FILE = "wafer_raw_train_data_validation.yaml"
       }
 
-      when {
-        changeset 'raw_train_data_validation/*'
-      }
+      // when {
+      //   changeset 'raw_train_data_validation/*'
+      // }
 
       steps {
         script {
