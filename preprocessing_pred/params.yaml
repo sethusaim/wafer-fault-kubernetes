@@ -22,4 +22,4 @@ knn_imputer:
   n_neighbors: 3
   weights: uniform
 
-log_dir: logs
+log_dir: preprocess_pred_logs

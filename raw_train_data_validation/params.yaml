@@ -13,7 +13,7 @@ files:
   train_schema: wafer-schema_training.json
   regex: wafer-regex.txt
 
-log_dir: logs
+log_dir: raw_train_data_validation_logs
 
 log:
   upload: upload_log.txt
