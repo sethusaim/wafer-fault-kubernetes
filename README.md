@@ -851,7 +851,7 @@ In the cluster url, select default cluster we can use argocd to deploy to other 
 ### Destroy everything and clean up the resources in cloud
 Now that everthing is tested out and successfully executed, we destroy the resources created so that we do not incur more charges from AWS cloud. In order to do that run
 
-Before we destroy everthing, we have to EC2 dashboard and in there go to load balancers and delete the load balancers, because since the load balancer is managed by terraform it becomes difficult for terraform to destroy it. 
+Before we destroy everthing, we have to EC2 dashboard and in there go to load balancers and delete the load balancers, because since the load balancer is not managed by terraform it becomes difficult for terraform to destroy it. 
 
 Also, empty the data present s3 buckets, if you want them make a backup of it and then empty them. Once these things are done execute
 
@@ -859,7 +859,7 @@ Also, empty the data present s3 buckets, if you want them make a backup of it an
 terraform destroy --auto-approve
 ```
 
-Sometimes even after deleting the load balancers, terraform takes time to delete the wafer resource, if that is the case stop the destroy and manually delete the vpc from vpc dashboard
+Sometimes even after deleting the load balancers, terraform takes time to delete the VPC resources, if that is the case stop the destroy and manually delete the VPC from VPC dashboard, and then destroy the resources using terraform
 
 That is all from my side regarding this project. Thank you and hope you learnt from it.
 Feel free to contact me at sethusaim@gmail.com regarding any clarifactions or doubts regarding the project.
