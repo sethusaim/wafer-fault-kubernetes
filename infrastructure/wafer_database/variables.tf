@@ -64,12 +64,12 @@ variable "provider_name" {
 }
 
 variable "disk_size_gb" {
-  default = 10
+  default = 20
   type    = number
 }
 
 variable "provider_instance_size_name" {
-  default = "M10"
+  default = "M20"
   type    = string
 }
 
