@@ -1,5 +1,7 @@
 #!bin/bash
 
+rm -r application
+
 git init
 
 git remote remove origin
