@@ -22,7 +22,7 @@ def home():
 @app.route("/train", methods=["GET"])
 def train_route():
     try:
-        run_cmd(f"tkn pipeline start {config['pipeline']['train']}")
+        run_cmd(["tkn", "pipeline", "start", config["pipeline"]["train"]])
 
         return jsonify("Training successfull")
 
@@ -34,7 +34,7 @@ def train_route():
 @app.route("/predict", methods=["GET"])
 def prediction_route():
     try:
-        run_cmd(f"tkn pipeline start {config['pipeline']['pred']}")
+        run_cmd(["tkn", "pipeline", "start", config["pipeline"]["pred"]])
 
         return jsonify("Prediction successfull")
 
