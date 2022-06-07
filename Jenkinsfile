@@ -143,9 +143,9 @@ pipeline {
         COMP_FILE = "wafer_db_operation_pred.yaml"
       }
 
-      // when {
-      //   changeset 'db_operation_pred/*'
-      // }
+      when {
+        changeset 'db_operation_pred/*'
+      }
 
       steps {
         script {
@@ -179,9 +179,9 @@ pipeline {
         COMP_FILE = "wafer_db_operation_train.yaml"
       }
 
-      // when {
-      //   changeset 'db_operation_train/*'
-      // }
+      when {
+        changeset 'db_operation_train/*'
+      }
 
       steps {
         script {
