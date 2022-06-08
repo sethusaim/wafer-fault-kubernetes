@@ -91,8 +91,8 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            cluster_fname = "wafer_" + key + f"-{idx}.csv"
-
+            cluster_fname = "wafer_train_" + key + f"-{idx}.csv"
+            
             self.log_writer.log(f"Got the cluster file name for {key}", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
