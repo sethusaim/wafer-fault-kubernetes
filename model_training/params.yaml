@@ -18,7 +18,7 @@ mlflow_config:
 models_dir:
   train: trained
 
-file_pattern: wafer_features-
+file_pattern: wafer_train_features-
 
 log:
   model_train: model_training_log.txt
