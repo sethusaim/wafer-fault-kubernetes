@@ -211,6 +211,10 @@ pipeline {
 
         MLFLOW_TRACKING_URI = credentials('MLFLOW_TRACKING_URI')
 
+        MLFLOW_TRACKING_USERNAME = credentials("MLFLOW_TRACKING_USERNAME")
+
+        MLFLOW_TRACKING_PASSWORD = credentials("MLFLOW_TRACKING_PASSWORD")
+
         REPO_NAME = "wafer_load_prod_model"
 
         COMP_FILE = "wafer_load_prod_model.yaml"
@@ -224,7 +228,7 @@ pipeline {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
 
-          sh 'docker build --build-arg MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI} --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME load_prod_model/'
+          sh 'docker build --build-arg MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI} --build-arg MLFLOW_TRACKING_USERNAME=${MLFLOW_TRACKING_USERNAME} --build-arg MLFLOW_TRACKING_PASSWORD=${MLFLOW_TRACKING_PASSWORD} --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --build-arg AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -t $REPO_NAME load_prod_model/'
 
           sh 'docker tag $REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:${BUILD_NUMBER}'
 
