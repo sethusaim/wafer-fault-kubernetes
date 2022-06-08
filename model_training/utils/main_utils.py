@@ -92,7 +92,7 @@ class Main_Utils:
 
         try:
             cluster_fname = "wafer_train_" + key + f"-{idx}.csv"
-            
+
             self.log_writer.log(f"Got the cluster file name for {key}", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
@@ -129,6 +129,8 @@ class Main_Utils:
             self.log_writer.log("Got Labels col from dataframe", log_file)
 
             np_array = targets.to_numpy(dtype=int)
+
+            # np_array = targets.astype(int)
 
             self.log_writer.log("Converted targets dataframe to numpy array", log_file)
 
