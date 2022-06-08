@@ -294,9 +294,9 @@ pipeline {
         COMP_FILE = "wafer_model_training.yaml"
       }
 
-      when {
-        changeset 'model_training/*'
-      }
+      // when {
+      //   changeset 'model_training/*'
+      // }
 
       steps {
         script {
