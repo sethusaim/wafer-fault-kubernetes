@@ -4,8 +4,8 @@ s3_bucket:
   feature_store: wafer-feature-store-02126f6
 
 files:
-  wafer_features: wafer_features.csv
-  wafer_targets: wafer_targets.csv
+  wafer_features: wafer_train_features.csv
+  wafer_targets: wafer_train_targets.csv
   train_export: train_input_file.csv
   null_values: null_values.csv
 
@@ -13,7 +13,7 @@ target_col: Output
 
 log:
   preprocess: preprocess_log.txt
-  upload: upload_log.txt
+  upload: upload_preprocess_log.txt
 
 knn_imputer:
   n_neighbors: 3
