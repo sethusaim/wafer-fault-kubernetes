@@ -365,9 +365,9 @@ pipeline {
         COMP_FILE = "wafer_preprocessing_train.yaml"
       }
 
-      when {
-        changeset 'preprocessing_train/*'
-      }
+      // when {
+      //   changeset 'preprocessing_train/*'
+      // }
 
       steps {
         script {
