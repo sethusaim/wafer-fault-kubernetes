@@ -8,7 +8,7 @@ model_save_format: .sav
 mlflow_config:
   exp_name: wafer-ops
 
-feature_pattern: wafer_features-
+feature_pattern: wafer_train_features-
 
 s3_bucket:
   model: wafer-model-3e502a3
