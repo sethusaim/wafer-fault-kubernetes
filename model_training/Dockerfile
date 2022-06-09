@@ -30,4 +30,4 @@ ENV MLFLOW_TRACKING_PASSWORD $MLFLOW_TRACKING_PASSWORD
 
 RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
-CMD [ "python3","-W","ignore","run.py"]
+CMD [ "python3","run.py"]

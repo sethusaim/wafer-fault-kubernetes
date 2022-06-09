@@ -1,4 +1,3 @@
-from numpy import unique
 from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import GridSearchCV
 
@@ -47,8 +46,8 @@ class Model_Utils:
             self.log_writer.log(
                 f"Used {model_name} model to get predictions on test data", log_file
             )
-
-            if len(unique(test_y)) == 1:
+            
+            if len(test_y.unique()) == 1:
                 model_score = accuracy_score(test_y, preds)
 
                 self.log_writer.log(

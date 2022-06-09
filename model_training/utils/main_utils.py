@@ -193,11 +193,11 @@ class Main_Utils:
 
         try:
             feat_fnames = self.s3.get_files_from_folder(
-                self.config["feature_pattern"], self.bucket["feature_store"], log_file
+                self.config["file_pattern"], self.bucket["feature_store"], log_file
             )
 
             self.log_writer.log(
-                f"Got features file names from {self.bucket['feature_store']} bucket based on {self.config['feature_pattern']}",
+                f"Got features file names from {self.bucket['feature_store']} bucket based on {self.config['file_pattern']}",
                 log_file,
             )
 
