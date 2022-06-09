@@ -1,5 +1,4 @@
 from mlflow_operations import MLFlow_Operation
-from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
 from utils.read_params import read_params
@@ -22,11 +21,7 @@ class Load_Prod_Model:
 
         self.load_prod_model_log = self.config["log"]["load_prod_model"]
 
-        self.model_dir = self.config["models_dir"]
-
         self.mlflow_config = self.config["mlflow_config"]
-
-        self.s3 = S3_Operation()
 
         self.log_writer = App_Logger()
 
@@ -64,13 +59,7 @@ class Load_Prod_Model:
 
             runs = self.mlflow_op.get_runs_from_mlflow(exp.experiment_id)
 
-            feat_fnames = self.s3.get_files_from_folder(
-                self.config["feature_pattern"],
-                self.bucket["feature_store"],
-                self.load_prod_model_log,
-            )
-
-            num_clusters = len(feat_fnames)
+            num_clusters = self.utils.get_number_of_clusters(self.load_prod_model_log)
 
             """
             Code Explaination: 

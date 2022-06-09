@@ -11,8 +11,8 @@ from utils.read_params import read_params
 class Main_Utils:
     """
     Description :   This class is used for main utility functions required in core functions of the service
-
     Version     :   1.2
+    
     Revisions   :   Moved to setup to cloud 
     """
 
@@ -127,6 +127,44 @@ class Main_Utils:
             self.s3.create_folder(self.models_dir["stag"], bucket, log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def get_number_of_clusters(self, log_file):
+        """
+        Method Name :   get_number_of_cluster
+        Description :   This method gets the number of clusters based on training data on which clustering algorithm was used
+
+        Output      :   The number of clusters for the given training data is returned
+        On Failure  :   Write an exception log and then raise an exception
+
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.get_number_of_clusters.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            feat_fnames = self.s3.get_files_from_folder(
+                self.config["feature_pattern"], self.bucket["feature_store"], log_file
+            )
+
+            self.log_writer.log(
+                f"Got features file names from {self.bucket['feature_store']} bucket based on {self.config['feature_pattern']}",
+                log_file,
+            )
+
+            num_clusters = len(feat_fnames)
+
+            self.log_writer.log(
+                f"Got the number of clusters as {num_clusters}", log_file
+            )
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+            return num_clusters
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)

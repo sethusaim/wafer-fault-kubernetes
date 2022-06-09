@@ -34,10 +34,6 @@ class MLFlow_Operation:
 
         self.client = MlflowClient(self.remote_server_uri)
 
-        self.models_dir = self.config["models_dir"]
-
-        self.model_save_format = self.config["model_save_format"]
-
     def set_mlflow_tracking_uri(self):
         """
         Method Name :   set_mlflow_tracking_uri
