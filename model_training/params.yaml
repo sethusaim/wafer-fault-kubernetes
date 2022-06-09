@@ -53,22 +53,22 @@ RandomForestClassifier:
     - 3
     - 4
     - 5
+    
+AdaBoostClassifier:
+  n_estimators:
+    - 10
+    - 50
+    - 100
+    - 130
 
-XGBClassifier:
   learning_rate:
     - 0.5
     - 0.1
     - 0.01
     - 0.001
 
-  max_depth:
-    - 3
-    - 5
-    - 10
-    - 20
-
-  n_estimators:
-    - 10
-    - 50
+  random_state:
+    - 0
     - 100
     - 200
+    - 300

@@ -1,5 +1,4 @@
 from numpy import unique
-from s3_operations import S3_Operation
 from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import GridSearchCV
 
@@ -21,8 +20,6 @@ class Model_Utils:
         self.config = read_params()
 
         self.tuner_kwargs = self.config["model_utils"]
-
-        self.s3 = S3_Operation()
 
         self.log_writer = App_Logger()
 

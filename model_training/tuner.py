@@ -1,6 +1,5 @@
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
 from sklearn.model_selection import train_test_split
-from xgboost import XGBClassifier
 
 from mlflow_operations import MLFlow_Operation
 from s3_operations import S3_Operation
@@ -42,9 +41,7 @@ class Model_Finder:
 
         self.rf_model = RandomForestClassifier()
 
-        self.xgb_model = XGBClassifier(
-            objective="binary:logistic", eval_metric="logloss"
-        )
+        self.adaboost_model = AdaBoostClassifier()
 
     def get_rf_model(self, train_x, train_y):
         """
@@ -99,10 +96,10 @@ class Model_Finder:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_xgboost_model(self, train_x, train_y):
+    def get_adaboost_model(self, train_x, train_y):
         """
-        Method Name :   get_xgboost_model
-        Description :   get the parameters for XGBoost Algorithm which give the best accuracy.
+        Method Name :   get_adaboost_model
+        Description :   get the parameters for AdaBoostClassifier model which give the best score.
                         Use Hyper Parameter Tuning.
 
         Output      :   The model with the best parameters
@@ -111,33 +108,33 @@ class Model_Finder:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_xgboost_model.__name__
+        method_name = self.get_adaboost_model.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            self.xgb_model_name = self.xgb_model.__class__.__name__
+            self.ada_model_name = self.adaboost_model.__class__.__name__
 
-            self.xgb_best_params = self.model_utils.get_model_params(
-                self.xgb_model, train_x, train_y, self.log_file
+            self.adaboost_best_params = self.model_utils.get_model_params(
+                self.adaboost_model, train_x, train_y, self.log_file
             )
 
             self.log_writer.log(
-                f"{self.xgb_model_name} model best params are {self.xgb_best_params}",
+                f"{self.ada_model_name} model best params are {self.adaboost_best_params}",
                 self.log_file,
             )
 
-            self.xgb_model.set_params(**self.xgb_best_params)
+            self.adaboost_model.set_params(**self.adaboost_best_params)
 
             self.log_writer.log(
-                f"Initialized {self.xgb_model_name} model with best params as {self.xgb_best_params}",
+                f"Initialized {self.ada_model_name} with {self.adaboost_best_params} as params",
                 self.log_file,
             )
 
-            self.xgb_model.fit(train_x, train_y)
+            self.adaboost_model.fit(train_x, train_y)
 
             self.log_writer.log(
-                f"Created {self.xgb_model_name} model with best params as {self.xgb_best_params}",
+                f"Created {self.rf_model_name} based on the {self.rf_best_params} as params",
                 self.log_file,
             )
 
@@ -145,12 +142,10 @@ class Model_Finder:
                 "exit", self.class_name, method_name, self.log_file
             )
 
-            return self.xgb_model
+            return self.adaboost_model
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
+            raise e
 
     def get_trained_models(self, train_x, train_y, test_x, test_y):
         """
@@ -168,18 +163,19 @@ class Model_Finder:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            self.xgb_model = self.get_xgboost_model(train_x, train_y)
+            self.adaboost_model = self.get_adaboost_model(train_x, train_y)
 
             self.log_writer.log(
-                f"Got trained {self.xgb_model.__class__.__name__} model", self.log_file
+                f"Got trained {self.adaboost_model.__class__.__name__} model",
+                self.log_file,
             )
 
-            self.xgb_model_score = self.model_utils.get_model_score(
-                self.xgb_model, test_x, test_y, self.log_file
+            self.adaboost_model_score = self.model_utils.get_model_score(
+                self.adaboost_model, test_x, test_y, self.log_file
             )
 
             self.log_writer.log(
-                f"{self.xgb_model.__class__.__name__} model score is {self.xgb_model_score}",
+                f"{self.adaboost_model.__class__.__name__} model score is {self.xgb_model_score}",
                 self.log_file,
             )
 
@@ -199,7 +195,7 @@ class Model_Finder:
             )
 
             lst = [
-                (self.xgb_model, self.xgb_model_score),
+                (self.adaboost_model, self.adaboost_model_score),
                 (self.rf_model, self.rf_model_score),
             ]
 
