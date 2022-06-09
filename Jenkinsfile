@@ -14,10 +14,10 @@ pipeline {
       }
 
       steps {
-        script {
-          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 3.233.128.131 wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/application_cicd.sh'
+        sshagent(['ssh_key']) {
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 35.168.225.244 wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/application_cicd.sh'
 
-          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 3.233.128.131 bash application_cicd.sh'
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 35.168.225.244 bash application_cicd.sh'
         }
       }
     }
