@@ -1,3 +1,4 @@
+from cmath import log
 from os import listdir
 from os.path import join
 from shutil import rmtree
@@ -172,6 +173,118 @@ class Main_Utils:
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return np_array
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def get_number_of_clusters(self, log_file):
+        """
+        Method Name :   get_number_of_cluster
+        Description :   This method gets the number of clusters based on training data on which clustering algorithm was used
+        
+        Output      :   The number of clusters for the given training data is returned
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.get_number_of_clusters.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            feat_fnames = self.s3.get_files_from_folder(
+                self.config["feature_pattern"], self.bucket["feature_store"], log_file
+            )
+
+            self.log_writer.log(
+                f"Got features file names from {self.bucket['feature_store']} bucket based on {self.config['feature_pattern']}",
+                log_file,
+            )
+
+            num_clusters = len(feat_fnames)
+
+            self.log_writer.log(
+                f"Got the number of clusters as {num_clusters}", log_file
+            )
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+            return num_clusters
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def get_cluster_features(self, cluster_num, log_file):
+        """
+        Method Name :   get_cluster_features
+        Description :   This method gets the cluster features based on the cluster number 
+        
+        Output      :   The cluster features are returned based on the cluster number
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.get_cluster_features.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            feat_name = self.get_cluster_fname("features", cluster_num, log_file)
+
+            self.log_writer.log(
+                "Got cluster feature file name based on cluster number", log_file
+            )
+
+            cluster_feat = self.get_features_csv_as_numpy_array(
+                feat_name, self.bucket["feature_store"], log_file
+            )
+
+            self.log_writer.log(
+                "Got cluster features based on the cluster file name", log_file
+            )
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+            return cluster_feat
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def get_cluster_targets(self, cluster_num, log_file):
+        """
+        Method Name :   get_cluster_targets
+        Description :   This method gets the cluster targets based on the cluster number 
+        
+        Output      :   The cluster targets are returned based on the cluster number
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.get_cluster_targets.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            label_name = self.get_cluster_fname("targets", cluster_num, log_file)
+
+            self.log_writer.log(
+                "Got cluster targets file name based on cluster number", log_file
+            )
+
+            cluster_label = self.get_targets_csv_as_numpy_array(
+                label_name, self.bucket["feature_store"], log_file
+            )
+
+            self.log_writer.log(
+                "Got cluster targets based on the cluster file name", log_file
+            )
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+            return cluster_label
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)

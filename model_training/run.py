@@ -59,13 +59,9 @@ class Run:
         )
 
         try:
-            feat_fnames = self.s3.get_files_from_folder(
-                self.config["file_pattern"],
-                self.bucket["feature_store"],
-                self.train_log["model_train"],
+            lst_clusters = self.utils.get_number_of_clusters(
+                self.train_log["model_train"]
             )
-
-            lst_clusters = len(feat_fnames)
 
             self.log_writer.log(
                 f"Found the number of cluster to be {lst_clusters}",
@@ -92,33 +88,16 @@ class Run:
                 end_run()
 
             for i in range(lst_clusters):
-                feat_name = self.utils.get_cluster_fname(
-                    "features", i, self.train_log["model_train"]
+                cluster_feat = self.utils.get_cluster_features(
+                    i, self.train_log["model_train"]
                 )
 
-                label_name = self.utils.get_cluster_fname(
-                    "targets", i, self.train_log["model_train"]
-                )
-
-                self.log_writer.log(
-                    "Got the cluster features and cluster label file names",
-                    self.train_log["model_train"],
-                )
-
-                cluster_feat = self.utils.get_features_csv_as_numpy_array(
-                    feat_name,
-                    self.bucket["feature_store"],
-                    self.train_log["model_train"],
-                )
-
-                cluster_label = self.utils.get_targets_csv_as_numpy_array(
-                    label_name,
-                    self.bucket["feature_store"],
-                    self.train_log["model_train"],
+                cluster_label = self.utils.get_cluster_targets(
+                    i, self.train_log["model_train"]
                 )
 
                 self.log_writer.log(
-                    f"Got cluster features and cluster labels dataframe from {self.bucket['feature_store']} bucket",
+                    f"Got cluster features and cluster labels from {self.bucket['feature_store']} bucket",
                     self.train_log["model_train"],
                 )
 

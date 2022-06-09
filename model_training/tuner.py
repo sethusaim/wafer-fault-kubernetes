@@ -51,6 +51,7 @@ class Model_Finder:
         Method Name :   get_rf_model
         Description :   get the parameters for Random Forest Algorithm which give the best accuracy.
                         Use Hyper Parameter Tuning.
+        
         Output      :   The model with the best parameters
         On Failure  :   Write an exception log and then raise an exception
         

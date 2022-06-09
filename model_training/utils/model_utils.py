@@ -22,8 +22,6 @@ class Model_Utils:
 
         self.tuner_kwargs = self.config["model_utils"]
 
-        self.bucket = self.config["s3_bucket"]
-
         self.s3 = S3_Operation()
 
         self.log_writer = App_Logger()
