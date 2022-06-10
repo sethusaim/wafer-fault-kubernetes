@@ -102,9 +102,9 @@ class Main_Utils:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def get_targets_csv_as_numpy_array(self, fname, bucket, log_file):
+    def get_targets_csv(self, fname, bucket, log_file):
         """
-        Method Name :   get_targets_csv_as_numpy_array
+        Method Name :   get_targets_csv
         Description :   This method gets the targets csv file present in s3 bucket as numpy array
         
         Output      :   The targets csv file is returned as numpy array
@@ -113,35 +113,29 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_targets_csv_as_numpy_array.__name__
+        method_name = self.get_targets_csv.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            df = self.s3.read_csv(fname, bucket, log_file)
+            df = self.s3.read_csv(fname, bucket, log_file)["Labels"]
 
             self.log_writer.log(
                 "Got dataframe from {bucket} with file as {fname}", log_file
             )
 
-            targets = df["Labels"]
-
             self.log_writer.log("Got Labels col from dataframe", log_file)
-
-            np_array = targets.to_numpy(dtype=int)
-
-            self.log_writer.log("Converted targets dataframe to numpy array", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
-            return np_array
+            return df
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def get_features_csv_as_numpy_array(self, fname, bucket, log_file):
+    def get_features_csv(self, fname, bucket, log_file):
         """
-        Method Name :   get_features_csv_as_numpy_array
+        Method Name :   get_features_csv
         Description :   This method gets the features csv file present in s3 bucket as numpy array
         
         Output      :   The features csv file is returned as numpy array
@@ -150,7 +144,7 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_features_csv_as_numpy_array.__name__
+        method_name = self.get_features_csv.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
@@ -161,15 +155,9 @@ class Main_Utils:
                 f"Got the dataframe from {bucket} with file name as {fname}", log_file
             )
 
-            np_array = df.to_numpy()
-
-            self.log_writer.log(
-                f"Converted the dataframe to numpy array", log_file,
-            )
-
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
-            return np_array
+            return df
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
@@ -234,7 +222,7 @@ class Main_Utils:
                 "Got cluster feature file name based on cluster number", log_file
             )
 
-            cluster_feat = self.get_features_csv_as_numpy_array(
+            cluster_feat = self.get_features_csv(
                 feat_name, self.bucket["feature_store"], log_file
             )
 
@@ -271,7 +259,7 @@ class Main_Utils:
                 "Got cluster targets file name based on cluster number", log_file
             )
 
-            cluster_label = self.get_targets_csv_as_numpy_array(
+            cluster_label = self.get_targets_csv(
                 label_name, self.bucket["feature_store"], log_file
             )
 
