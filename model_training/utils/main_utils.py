@@ -130,8 +130,6 @@ class Main_Utils:
 
             np_array = targets.to_numpy(dtype=int)
 
-            # np_array = targets.astype(int)
-
             self.log_writer.log("Converted targets dataframe to numpy array", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
