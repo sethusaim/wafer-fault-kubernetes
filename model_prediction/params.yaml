@@ -1,6 +1,6 @@
 log:
-  pred: prediction_log.txt
-  upload: upload_model_prediction_log.txt
+  pred: prediction.log
+  upload: upload_model_prediction.log
 
 model_dir:
   prod: production

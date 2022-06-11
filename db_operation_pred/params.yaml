@@ -12,10 +12,10 @@ data_dir:
 log_dir: db_operation_pred_logs
 
 log:
-  db_insert: pred_db_insert_log.txt
-  export_csv: pred_export_to_csv_log.txt
-  db_main: prediction_main_log.txt
-  upload: upload_db_operation_pred_log.txt
+  db_insert: pred_db_insert.log
+  export_csv: pred_export_to_csv.log
+  db_main: prediction_main.log
+  upload: upload_db_operation_pred.log
 
 mongodb:
   db_name: wafer-data

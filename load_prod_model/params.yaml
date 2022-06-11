@@ -16,7 +16,7 @@ s3_bucket:
   feature_store: wafer-feature-store-02126f6
 
 log:
-  upload: upload_load_prod_model_log.txt
-  load_prod_model: load_prod_model.txt
+  upload: upload_load_prod_model.log
+  load_prod_model: load_prod_model.log
 
 log_dir: load_prod_model_logs

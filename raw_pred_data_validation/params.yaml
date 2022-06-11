@@ -16,10 +16,10 @@ files:
 log_dir: raw_pred_data_validation_logs
 
 log:
-  upload: upload_log.txt
-  raw_pred_main: raw_pred_main_log.txt
-  values_from_schema: values_from_schema_log.txt
-  general: general_log.txt
-  name_validation: pred_name_validation_log.txt
-  col_validation: pred_col_validation_log.txt
-  missing_values_in_col: pred_missing_values_in_column.txt
+  upload: upload_raw_pred_data_validation.log
+  raw_pred_main: raw_pred_main.log
+  values_from_schema: pred_values_from_schema.log
+  general: pred_general.log
+  name_validation: pred_name_validation.log
+  col_validation: pred_col_validation.log
+  missing_values_in_col: pred_missing_values_in_column.log

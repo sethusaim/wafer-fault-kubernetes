@@ -16,10 +16,10 @@ files:
 log_dir: raw_train_data_validation_logs
 
 log:
-  upload: upload_log.txt
-  raw_train_main: raw_train_main_log.txt
-  values_from_schema: values_from_schema_log.txt
-  general: general_log.txt
-  name_validation: train_name_validation_log.txt
-  col_validation: train_col_validation_log.txt
-  missing_values_in_col: train_missing_values_in_column.txt
+  upload: upload_raw_train_data_validation.log
+  raw_train_main: raw_train_main.log
+  values_from_schema: train_values_from_schema.log
+  general: train_general.log
+  name_validation: train_name_validation.log
+  col_validation: train_col_validation.log
+  missing_values_in_col: train_missing_values_in_column.log

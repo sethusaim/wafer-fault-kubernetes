@@ -8,9 +8,9 @@ data_dir:
   train_good: good/train
 
 log: 
-  data_transform: train_data_transform_log.txt
-  data_transform_main: data_transform_main.txt
-  upload: upload_data_transform_train_log.txt
+  data_transform: train_data_transform.log
+  data_transform_main: data_transform_main.log
+  upload: upload_data_transform_train.log
 
 col:
   output: Output

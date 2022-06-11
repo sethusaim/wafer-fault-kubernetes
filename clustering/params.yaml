@@ -11,8 +11,8 @@ files:
   elbow_plot: K-Means_Elbow_train.png
 
 log:
-  clustering: train_clustering_log.txt
-  upload: upload_train_cluster_log.txt
+  clustering: train_clustering.log
+  upload: upload_train_cluster.log
 
 log_dir: clustering_logs
 

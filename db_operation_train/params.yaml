@@ -12,10 +12,10 @@ data_dir:
 log_dir: db_operation_train_logs
 
 log:
-  db_insert: train_db_insert_log.txt
-  export_csv: train_export_to_csv_log.txt
-  db_main: training_main_log.txt
-  upload: upload_db_operation_train_log.txt
+  db_insert: train_db_insert.log
+  export_csv: train_export_to_csv.log
+  db_main: train_db_main.log
+  upload: upload_db_operation_train.log
 
 mongodb:
   db_name: wafer-data
