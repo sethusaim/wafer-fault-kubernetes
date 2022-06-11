@@ -32,7 +32,6 @@ The solution application is exposed as API using Flask and application is docker
 - Python
 - Sklearn for machine learning algorithms
 - Flask for creating an web application
-- Machine Learning
 - MLFlow for experiment tracking,model versioning and model staging.
 - Tekton is used for pipeline orchestration.
 - SQL-Lite as backend store for MLFlow server
