@@ -46,7 +46,7 @@ class Model_Utils:
             self.log_writer.log(
                 f"Used {model_name} model to get predictions on test data", log_file
             )
-            
+
             if len(test_y.unique()) == 1:
                 model_score = accuracy_score(test_y, preds)
 
