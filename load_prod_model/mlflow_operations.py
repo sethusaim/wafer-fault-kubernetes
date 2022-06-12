@@ -20,6 +20,8 @@ class MLFlow_Operation:
     def __init__(self, log_file):
         self.config = read_params()
 
+        self.bucket = self.config["s3_bucket"]
+
         self.class_name = self.__class__.__name__
 
         self.log_writer = App_Logger()
@@ -287,3 +289,160 @@ class MLFlow_Operation:
             self.log_writer.exception_log(
                 e, self.class_name, method_name, self.log_file,
             )
+
+    def transition_best_models(self, model, top_models, log_file):
+        """
+        Method Name :   transition_best_models
+        Description :   This method transitions the models to staging or production based on the condition nad moves the models within
+                        s3 buckets also.
+        
+        Output      :   A list of registered models in the mentioned order
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.transition_best_models.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            self.log_writer.log(
+                "Started transitioning best models to production and rest to staging",
+                log_file,
+            )
+
+            if model.name in top_models:
+                self.transition_mlflow_model(
+                    model.version,
+                    "Production",
+                    model.name,
+                    self.bucket["model"],
+                    self.bucket["model"],
+                )
+
+            ## In the registered models, even kmeans model is present, so during Prediction,
+            ## this model also needs to be in present in production, the code logic is present below
+
+            elif model.name == "KMeans":
+                self.transition_mlflow_model(
+                    model.version,
+                    "Production",
+                    model.name,
+                    self.bucket["model"],
+                    self.bucket["model"],
+                )
+
+            else:
+                self.transition_mlflow_model(
+                    model.version,
+                    "Staging",
+                    model.name,
+                    self.bucket["model"],
+                    self.bucket["model"],
+                )
+
+            self.log_writer.log(
+                "Transitioned best models to production and rest to staging", log_file
+            )
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def get_best_models(self, runs, num_clusters, log_file):
+        """
+        Method Name :   get_best_models
+        Description :   This method get the best models from the runs dataframe and based on the number of clusters
+        
+        Output      :   A list of registered models in the mentioned order
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.get_best_models.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            reg_model_names = self.get_mlflow_models()
+
+            cols = [
+                "metrics." + str(model) + "-best_score"
+                for model in reg_model_names
+                if model != "KMeans"
+            ]
+
+            self.log_writer.log(
+                "Created cols list based on registered models", log_file
+            )
+
+            runs_cols = runs.filter(cols).max().sort_values(ascending=False)
+
+            self.log_writer.log(
+                "Filtered the runs dataframe based on the cols in descending order",
+                log_file,
+            )
+
+            metrics_dict = runs_cols.to_dict()
+
+            self.log_writer.log("Converted runs_cols to dict", log_file)
+
+            """ 
+                        Eg-output: For 3 clusters, 
+                            [
+                            metrics.XGBoost0-best_score,
+                            metrics.XGBoost1-best_score,
+                            metrics.XGBoost2-best_score,
+                            metrics.RandomForest0-best_score,
+                            metrics.RandomForest1-best_score,
+                            metrics.RandomForest2-best_score
+                        ] 
+
+                        Eg- runs_dataframe: I am only showing for 3 cols,actual runs dataframe will be different
+                                            based on the number of clusters
+                                    since for every run cluster values changes, rest two cols will be left as blank,
+                            so only we are taking the max value of each col, which is nothing but the value of the metric
+                            
+
+            run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics.XGBoost1-best_score
+                0                   1                       0.5
+                1                                                                                   1             2                                                                               """
+
+            best_metrics_names = [
+                max(
+                    [
+                        (file, metrics_dict[file])[0]
+                        for file in metrics_dict
+                        if str(i) in file
+                    ]
+                )
+                for i in range(0, num_clusters)
+            ]
+
+            self.log_writer.log(
+                "Got the best metric names from the metrics_dict and number of clusters",
+                log_file,
+            )
+
+            ## best_metrics will store the value of metrics, but we want the names of the models,
+            ## so best_metrics.index will return the name of the metric as registered in mlflow
+
+            ## Eg. metrics.XGBoost1-best_score
+
+            ## top_mn_lst - will store the top 3 model names
+
+            top_mn_lst = [mn.split(".")[1].split("-")[0] for mn in best_metrics_names]
+
+            self.log_writer.log(
+                "Got the top model list from best_metrics names", log_file
+            )
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+            return top_mn_lst
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
