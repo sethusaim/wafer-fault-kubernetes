@@ -32,7 +32,6 @@ The solution application is exposed as API using Flask and application is docker
 - Python
 - Sklearn for machine learning algorithms
 - Flask for creating an web application
-- Machine Learning
 - MLFlow for experiment tracking,model versioning and model staging.
 - Tekton is used for pipeline orchestration.
 - SQL-Lite as backend store for MLFlow server
@@ -89,7 +88,7 @@ To solve this issue we need to understand the kubernetes control plane functiona
 
 But that is when tekton pipelines come to play. Tekton pipelines are similar to other workflow orchestrators like Argo Workflows, KubeFlow, Airflow, etc. Setting up kubeflow and working the kubeflow is challenging, I have tried that concluded that it is feasible for the use case, by default we need a big cluster of atleast 12GB RAM and 50GB memory, now that might be small of big companies who have a lot of data. But the POC, we do not need that much big cluster. Argo Workflows could not work in EKS cluster, and kubeflow interrnally uses argo workflows only. Airflow was not designed for kubernetes, but can be explored.
 
-Tekton pipelines are designed in such a way that each microservice can be defined as task, and group of tasks are called pipeline. This is common in other workflow orchestrators also, but the catch is when the workflow is deployed it automatically starts running, and we do not want to do that, and violates our preset condition. With tekton pipelines, there are two pipeline resources, pne is pipeline and pipelinerun, the difference is simple pipeline is a static kubernetes object and pipelinerun is the kubernetes object which references the pipeline object and then runs it. That means we can control our deployments through conditions, similar to our requirements.
+Tekton pipelines are designed in such a way that each microservice can be defined as task, and group of tasks are called pipeline. This is common in other workflow orchestrators also, but the catch is when the workflow is deployed it automatically starts running, and we do not want to do that, and violates our preset condition. With tekton pipelines, there are two pipeline resources, one is pipeline and pipelinerun, the difference is simple pipeline is a static kubernetes object and pipelinerun is the kubernetes object which references the pipeline object and then runs it. That means we can control our deployments through conditions, similar to our requirements.
 
 In the git repository, we store the pipeline yaml and not the pipelinerun yaml, so that ArgoCD can deploy the pipeline yaml, and our pipeline stays in kubernetes cluster waiting to be running. Using the tekton cli we can run pipelines whenever we want.
 
