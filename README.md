@@ -18,12 +18,11 @@ Once the data sharing agreement,is created we create a master data management, w
 
 The data which is sent to us will be stored in AWS S3 buckets. From AWS S3 buckets, using schema file, the data is validated againist filename, column length, and missing values in the column. 
 
-Once the data validation is done, the data transformation pipeline is triggered, where we add quotes to string values in the data.After the data transformation is done, The good data is stored is stored in MongoDB and once is stored in database, we will export a csv file which will be used training for the models.
+Once the data validation is done, the data transformation pipeline is triggered, where we add quotes to string values in the data.After the data transformation is done the good data is stored in MongoDB and then will export a csv file which will be used for model training.
 
-The model training is done by using a customized machine learning approach,in which the entire training data is divided to clusters using KMeans algorithm, and for every cluster of data, a model is trained and then model is used for prediction. So before we apply a clustering algorithm to the data, we need to preprocess the data as done in the jupyter notebook like  imputing missing values, replacing invalid values. Then elbow plot is created and number of clusters is created and based on the number of clusters XGBoost model and Random Forest Model are trained
-are saved in AWS S3 buckets.
+The model training is done by using a customized machine learning approach in which the entire training data is divided into clusters using KMeans algorithm, and for every cluster of data, a model is trained and then used for prediction. So before we apply a clustering algorithm to the data, we need to preprocess the data as done in the jupyter notebook like  imputing missing values, replacing invalid values. Then elbow plot is created and based on the number of clusters XGBoost model and Random Forest Model are trained and saved in AWS S3 buckets.
 
-Once the models are trained,they are tested againist the test data and model score is found out.Now MLFlow is used for logging the parameters,metrics and models to the server. Once this process is completed. A load production model is triggered to which will get the top models based on metrics and then transitioned to production or staging depending on the condition.
+Once the models are trained,they are tested againist the test data and model score is found out.Now MLFlow is used for logging the parameters,metrics and models to the server. Once this process is completed, a load production model pipeline is triggered, which will get the top models based on metrics and then transition them to production or staging depending on the condition.
 
 ### Post Model Training
 The solution application is exposed as API using Flask and application is containerized using Docker. MLFlow setup is done in an AWS EC2 instance . CI-CD pipeline is created which will deploy the application to AWS Elastic Kubernetes Service, whenever new code is commmited to GitHub.
