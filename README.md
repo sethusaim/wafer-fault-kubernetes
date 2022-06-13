@@ -646,7 +646,7 @@ server {
 We have successfully created mlflow nginx configuration file. Now we have apply those changes, in order to do so, execute the following commands
 
 ```bash
-sudo service nginx start
+sudo service nginx restart
 ```
 If above command does not return any error, it means that you have successfully configured nginx. 
 
