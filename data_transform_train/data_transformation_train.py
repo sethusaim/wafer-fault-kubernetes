@@ -115,7 +115,7 @@ class Data_Transform_Train:
                     self.train_log["data_transform"],
                 )
 
-                self.s3.upload_file(
+                self.s3.upload_df_as_csv(
                     df, abs_f, file, "train_data", self.train_log["data_transform"]
                 )
 
