@@ -23,6 +23,8 @@ class Main_Utils:
 
         self.config = read_params()
 
+        self.files = self.config["files"]
+
         self.bucket = self.config["s3_bucket"]
 
         self.class_name = self.__class__.__name__
@@ -73,3 +75,34 @@ class Main_Utils:
             self.log_writer.exception_log(
                 e, self.class_name, method_name, self.log_file
             )
+
+    def upload_data_to_feature_store(self, data, key, log_file):
+        """
+        Method Name :   upload_data_to_feature_store
+        Description :   This method uploads the data the feature store bucket based on key 
+        
+        Output      :   The data is uploaded to feature store bucket
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.upload_data_to_feature_store.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            self.s3.upload_df_as_csv(
+                data,
+                self.files[key],
+                self.files[key],
+                self.bucket["feature_store"],
+                log_file,
+            )
+
+            self.log_writer.log(f"Uploaded {key} to feature store bucket", log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)

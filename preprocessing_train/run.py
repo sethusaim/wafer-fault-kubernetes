@@ -21,9 +21,7 @@ class Run:
 
         self.preprocess_log = self.config["log"]["preprocess"]
 
-        self.files = self.config["files"]
-
-        self.bucket = self.config["s3_bucket"]
+        self.utils = Main_Utils()
 
         self.class_name = self.__class__.__name__
 
@@ -68,25 +66,14 @@ class Run:
 
             X = self.preprocessor.remove_columns(X, cols_to_drop)
 
-            self.s3.upload_df_as_csv(
-                X,
-                self.files["wafer_features"],
-                self.files["wafer_features"],
-                self.bucket["feature_store"],
-                self.preprocess_log,
+            Y = self.preprocessor.encode_target_col(Y)
+
+            self.utils.upload_data_to_feature_store(
+                X, "wafer_features", self.preprocess_log
             )
 
-            self.s3.upload_df_as_csv(
-                Y,
-                self.files["wafer_targets"],
-                self.files["wafer_targets"],
-                self.bucket["feature_store"],
-                self.preprocess_log,
-            )
-
-            self.log_writer.log(
-                f"Uploaded features and target csv files in {self.bucket['feature_store']} bucket",
-                self.preprocess_log,
+            self.utils.upload_data_to_feature_store(
+                Y, "wafer_targets", self.preprocess_log
             )
 
             self.log_writer.start_log(

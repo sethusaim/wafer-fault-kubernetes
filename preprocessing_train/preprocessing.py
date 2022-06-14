@@ -5,6 +5,7 @@ from sklearn.impute import KNNImputer
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
+from sklearn.preprocessing import LabelEncoder
 
 
 class Preprocessor:
@@ -29,6 +30,8 @@ class Preprocessor:
         self.imputer_params = self.config["knn_imputer"]
 
         self.log_writer = App_Logger()
+
+        self.le = LabelEncoder()
 
         self.class_name = self.__class__.__name__
 
@@ -230,6 +233,45 @@ class Preprocessor:
                 "Column search for Standard Deviation of Zero Failed.", self.log_file
             )
 
+            self.log_writer.exception_log(
+                e, self.class_name, method_name, self.log_fillog_file
+            )
+
+    def encode_target_col(self, data):
+        """
+        Method Name :   encode_target_col
+        Description :   This method encodes the target col using LabelEncoder
+        
+        Output      :   A dataframe of encoded target col is returned
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.encode_target_col.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
+
+        try:
+            y_col = self.le.fit_transform(data)
+
+            self.log_writer.log(
+                "Encoded target column using LabelEncoder", self.log_file
+            )
+
+            y_df = DataFrame(y_col, columns=["Labels"])
+
+            self.log_writer.log(
+                "Created a dataframe for encoded targets", self.log_file
+            )
+
+            self.log_writer.start_log(
+                "exit", self.class_name, method_name, self.log_file
+            )
+
+            return y_df
+
+        except Exception as e:
             self.log_writer.exception_log(
                 e, self.class_name, method_name, self.log_file
             )
