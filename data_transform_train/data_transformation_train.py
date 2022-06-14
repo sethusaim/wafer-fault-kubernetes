@@ -5,7 +5,7 @@ from utils.read_params import read_params
 
 class Data_Transform_Train:
     """
-    Description :   This class shall be used for transforming the good raw trainiction data before loading it in database
+    Description :   This class shall be used for transforming the good raw training data before loading it in database
     Version     :   1.2
     
     Revisions   :   Moved to setup to cloud 
@@ -22,11 +22,7 @@ class Data_Transform_Train:
 
         self.data_dir = self.config["data_dir"]
 
-        self.bucket = self.config["s3_bucket"]
-
         self.train_log = self.config["log"]
-
-        self.col = self.config["col"]
 
     def rename_column(self, from_col, to_col):
         """
@@ -48,7 +44,7 @@ class Data_Transform_Train:
         try:
             lst = self.s3.read_csv_from_folder(
                 self.data_dir["train_good"],
-                self.bucket["train_data"],
+                "train_data",
                 self.train_log["data_transform"],
             )
 
@@ -67,11 +63,7 @@ class Data_Transform_Train:
                 )
 
                 self.s3.upload_df_as_csv(
-                    df,
-                    abs_f,
-                    file,
-                    self.bucket["train_data"],
-                    self.train_log["data_transform"],
+                    df, abs_f, file, "train_data", self.train_log["data_transform"]
                 )
 
             self.log_writer.start_log(
@@ -103,7 +95,7 @@ class Data_Transform_Train:
         try:
             lst = self.s3.read_csv_from_folder(
                 self.data_dir["train_good"],
-                self.bucket["train_data"],
+                "train_data",
                 self.train_log["data_transform"],
             )
 
@@ -123,12 +115,8 @@ class Data_Transform_Train:
                     self.train_log["data_transform"],
                 )
 
-                self.s3.upload_df_as_csv(
-                    df,
-                    abs_f,
-                    file,
-                    self.bucket["train_data"],
-                    self.train_log["data_transform"],
+                self.s3.upload_file(
+                    df, abs_f, file, "train_data", self.train_log["data_transform"]
                 )
 
             self.log_writer.start_log(

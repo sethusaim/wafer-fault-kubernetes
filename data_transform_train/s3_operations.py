@@ -5,6 +5,7 @@ from boto3 import resource
 from pandas import read_csv
 
 from utils.logger import App_Logger
+from utils.read_params import read_params
 
 
 class S3_Operation:
@@ -18,9 +19,13 @@ class S3_Operation:
     def __init__(self):
         self.log_writer = App_Logger()
 
+        self.config = read_params()
+
         self.class_name = self.__class__.__name__
 
         self.s3_resource = resource("s3")
+
+        self.bucket = self.config["s3_bucket"]
 
     def read_object(
         self, object, log_file, decode=True, make_readable=False,
@@ -193,19 +198,19 @@ class S3_Operation:
         """
         method_name = self.upload_file.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             self.log_writer.log(
-                f"Uploading {from_fname} to s3 bucket {bucket}", log_file
+                f"Uploading {from_fname} to s3 bucket {self.bucket[bucket]}", log_file
             )
 
-            self.s3_resource.meta.client.upload_file(from_fname, bucket, to_fname)
+            self.s3_resource.meta.client.upload_file(
+                from_fname, self.bucket[bucket], to_fname
+            )
 
             self.log_writer.log(
-                f"Uploaded {from_fname} to s3 bucket {bucket}", log_file
+                f"Uploaded {from_fname} to s3 bucket {self.bucket[bucket]}", log_file
             )
 
             if delete is True:
@@ -348,7 +353,7 @@ class S3_Operation:
         )
 
         try:
-            bucket = self.get_bucket(bucket, log_file)
+            bucket = self.get_bucket(self.bucket[bucket], log_file)
 
             lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
 

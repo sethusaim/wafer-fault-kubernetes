@@ -28,9 +28,9 @@ class Run:
     def train_data_transform(self):
         """
         Method Name :   train_data_transform
-        Description :   This method performs the data transformation on the training data
+        Description :   This method performs the training data transformation and artifacts are stored in s3 buckets
         
-        Output      :   The data transformation is performed on the training data
+        Output      :   The data transformation is done on the training data and artifacts are stored in s3 buckets
         On Failure  :   Write an exception log and then raise an exception
         
         Version     :   1.2
