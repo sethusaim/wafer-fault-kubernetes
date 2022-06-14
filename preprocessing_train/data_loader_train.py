@@ -18,8 +18,6 @@ class Data_Getter_Train:
 
         self.files = self.config["files"]
 
-        self.bucket = self.config["s3_bucket"]
-
         self.s3 = S3_Operation()
 
         self.log_writer = App_Logger()
@@ -43,11 +41,11 @@ class Data_Getter_Train:
 
         try:
             df = self.s3.read_csv(
-                self.files["train_export"], self.bucket["feature_store"], self.log_file
+                self.files["train_export"], "feature_store", self.log_file
             )
 
             self.log_writer.log(
-                f"Training data loaded from {self.files['train_export']} file and {self.bucket['feature_store']} bucket",
+                f"Training data loaded from {self.files['train_export']} file and feature store bucket",
                 self.log_file,
             )
 
