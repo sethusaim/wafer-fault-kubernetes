@@ -52,18 +52,10 @@ class Run:
 
         try:
             data = self.s3.read_csv(
-                self.files["pred_input_file_preprocess"],
-                self.bucket["feature_store"],
-                self.pred_log,
+                self.files["pred_input_file_preprocess"], "feature_store", self.pred_log
             )
 
-            kmeans_model = self.s3.load_model(
-                "KMeans",
-                self.bucket["model"],
-                self.pred_log,
-                format=self.save_format,
-                model_dir=self.model_dir["prod"],
-            )
+            kmeans_model = self.s3.load_model("KMeans", "model", self.pred_log, "prod")
 
             clusters = kmeans_model.predict(data.drop(["Wafer"], axis=1))
 
@@ -84,12 +76,7 @@ class Run:
                     i, self.bucket["model"], self.pred_log
                 )
 
-                model = self.s3.load_model(
-                    model_name,
-                    self.bucket["model"],
-                    self.pred_log,
-                    format=self.save_format,
-                )
+                model = self.s3.load_model(model_name, "model", self.pred_log, "prod")
 
                 result = list(model.predict(cluster_data))
 
@@ -101,7 +88,7 @@ class Run:
                     result,
                     self.files["pred_output"],
                     self.files["pred_output"],
-                    self.bucket["io_files"],
+                    "io_files",
                     self.pred_log,
                 )
 

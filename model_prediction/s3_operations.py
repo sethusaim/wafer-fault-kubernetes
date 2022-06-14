@@ -24,9 +24,15 @@ class S3_Operation:
 
         self.config = read_params()
 
+        self.bucket = self.config["s3_bucket"]
+
         self.log_writer = App_Logger()
 
         self.class_name = self.__class__.__name__
+
+        self.save_format = self.config["save_format"]
+
+        self.model_dir = self.config["model_dir"]
 
     def get_bucket(self, bucket, log_file):
         """
@@ -44,7 +50,7 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            bucket = self.s3_resource.Bucket(bucket)
+            bucket = self.s3_resource.Bucket(self.bucket[bucket])
 
             self.log_writer.log(f"Got {bucket} bucket", log_file)
 
@@ -117,7 +123,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def load_model(self, model_name, bucket, log_file, format, model_dir=None):
+    def load_model(self, model_name, bucket, log_file, model_dir=None):
         """
         Method Name :   load_model
         Description :   This method loads the model from s3 bucket
@@ -134,9 +140,9 @@ class S3_Operation:
 
         try:
             func = (
-                lambda: model_name + format
-                if model_dir is None
-                else model_dir + "/" + model_name + format
+                lambda: model_name + self.save_format
+                if self.model_dir[model_dir] is None
+                else self.model_dir[model_dir] + "/" + model_name + self.save_format
             )
 
             model_file = func()
@@ -304,7 +310,9 @@ class S3_Operation:
                 f"Uploading {from_fname} to s3 bucket {bucket}", log_file
             )
 
-            self.s3_resource.meta.client.upload_file(from_fname, bucket, to_fname)
+            self.s3_resource.meta.client.upload_file(
+                from_fname, self.bucket[bucket], to_fname
+            )
 
             self.log_writer.log(
                 f"Uploaded {from_fname} to s3 bucket {bucket}", log_file
