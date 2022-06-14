@@ -43,11 +43,11 @@ class Data_Getter_Pred:
 
         try:
             df = self.s3.read_csv(
-                self.files["pred_input"], self.bucket["feature_store"], self.log_file
+                self.files["pred_input"], "feature_store", self.log_file
             )
 
             self.log_writer.log(
-                f"Data loaded from file {self.files['pred_input']} and bucket {self.bucket['feature_store']}",
+                f"Data loaded from file {self.files['pred_input']} and feature store bucket",
                 self.log_file,
             )
 

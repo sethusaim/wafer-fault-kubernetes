@@ -66,11 +66,9 @@ class Main_Utils:
 
                 dest_f = self.log_dir + "/" + f
 
-                self.s3.upload_file(local_f, dest_f, self.bucket["logs"], self.log_file)
+                self.s3.upload_file(local_f, dest_f, "logs", self.log_file)
 
-            self.log_writer.log(
-                f"Uploaded logs to {self.bucket['logs']}", self.log_file
-            )
+            self.log_writer.log("Uploaded logs to logs bucket", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
@@ -149,9 +147,7 @@ class Main_Utils:
                 f"Found existing Prediction batch file. Deleting it.", log_file
             )
 
-            self.s3.delete_file(
-                self.files["pred_file"], self.bucket["io_files"], log_file
-            )
+            self.s3.delete_file(self.files["pred_file"], "io_files", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 

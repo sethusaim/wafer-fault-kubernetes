@@ -25,8 +25,6 @@ class Run:
 
         self.files = self.config["files"]
 
-        self.bucket = self.config["s3_bucket"]
-
         self.data_getter_pred = Data_Getter_Pred(self.preprocess_log)
 
         self.preprocess = Preprocessor(self.preprocess_log)
@@ -91,7 +89,7 @@ class Run:
                 data,
                 self.files["pred_input_preprocess"],
                 self.files["pred_input_preprocess"],
-                self.bucket["feature_store"],
+                "feature_store",
                 self.preprocess_log,
             )
 

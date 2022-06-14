@@ -22,8 +22,6 @@ class Preprocessor:
 
         self.s3 = S3_Operation()
 
-        self.bucket = self.config["s3_bucket"]
-
         self.files = self.config["files"]
 
         self.imputer_params = self.config["knn_imputer"]
@@ -134,8 +132,8 @@ class Preprocessor:
                 self.s3.upload_df_as_csv(
                     null_df,
                     self.files["null_values"],
-                    self.files["null_values"],
-                    self.bucket["io_files"],
+                    self.files["null_files"],
+                    "io_files",
                     self.log_file,
                 )
 
