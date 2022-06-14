@@ -20,8 +20,6 @@ class MLFlow_Operation:
     def __init__(self, log_file):
         self.config = read_params()
 
-        self.bucket = self.config["s3_bucket"]
-
         self.class_name = self.__class__.__name__
 
         self.log_writer = App_Logger()
@@ -314,11 +312,7 @@ class MLFlow_Operation:
 
             if model.name in top_models:
                 self.transition_mlflow_model(
-                    model.version,
-                    "Production",
-                    model.name,
-                    self.bucket["model"],
-                    self.bucket["model"],
+                    model.version, "Production", model.name, "model", "model"
                 )
 
             ## In the registered models, even kmeans model is present, so during Prediction,
@@ -326,20 +320,12 @@ class MLFlow_Operation:
 
             elif model.name == "KMeans":
                 self.transition_mlflow_model(
-                    model.version,
-                    "Production",
-                    model.name,
-                    self.bucket["model"],
-                    self.bucket["model"],
+                    model.version, "Production", model.name, "model", "model"
                 )
 
             else:
                 self.transition_mlflow_model(
-                    model.version,
-                    "Staging",
-                    model.name,
-                    self.bucket["model"],
-                    self.bucket["model"],
+                    model.version, "Staging", model.name, "model", "model"
                 )
 
             self.log_writer.log(

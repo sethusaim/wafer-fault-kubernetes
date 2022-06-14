@@ -23,8 +23,6 @@ class Main_Utils:
 
         self.config = read_params()
 
-        self.bucket = self.config["s3_bucket"]
-
         self.models_dir = self.config["models_dir"]
 
         self.log_file = self.config["log"]["upload"]
@@ -34,6 +32,8 @@ class Main_Utils:
         self.file_format = self.config["model_save_format"]
 
         self.class_name = self.__class__.__name__
+
+        self.feats_pattern = self.config["feature_pattern"]
 
     def upload_logs(self):
         """
@@ -62,11 +62,9 @@ class Main_Utils:
 
                 dest_f = self.log_dir + "/" + f
 
-                self.s3.upload_file(local_f, dest_f, self.bucket["logs"], self.log_file)
+                self.s3.upload_file(local_f, dest_f, "logs", self.log_file)
 
-            self.log_writer.log(
-                f"Uploaded logs to {self.bucket['logs']}", self.log_file
-            )
+            self.log_writer.log(f"Uploaded logs to logs s3 bucket", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
@@ -148,11 +146,11 @@ class Main_Utils:
 
         try:
             feat_fnames = self.s3.get_files_from_folder(
-                self.config["feature_pattern"], self.bucket["feature_store"], log_file
+                self.feats_pattern, "feature_store", log_file
             )
 
             self.log_writer.log(
-                f"Got features file names from {self.bucket['feature_store']} bucket based on {self.config['feature_pattern']}",
+                f"Got features file names from feature store bucket based on feature pattern",
                 log_file,
             )
 

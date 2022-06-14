@@ -17,8 +17,6 @@ class Load_Prod_Model:
 
         self.class_name = self.__class__.__name__
 
-        self.bucket = self.config["s3_bucket"]
-
         self.load_prod_model_log = self.config["log"]["load_prod_model"]
 
         self.mlflow_config = self.config["mlflow_config"]
@@ -47,9 +45,7 @@ class Load_Prod_Model:
         )
 
         try:
-            self.utils.create_prod_and_stag_dirs(
-                self.bucket["model"], self.load_prod_model_log
-            )
+            self.utils.create_prod_and_stag_dirs("model", self.load_prod_model_log)
 
             self.mlflow_op.set_mlflow_tracking_uri()
 
