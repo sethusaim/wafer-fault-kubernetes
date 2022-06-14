@@ -23,8 +23,6 @@ class Main_Utils:
 
         self.config = read_params()
 
-        self.bucket = self.config["s3_bucket"]
-
         self.class_name = self.__class__.__name__
 
         self.log_file = self.config["log"]["upload"]
@@ -57,11 +55,9 @@ class Main_Utils:
 
                 dest_f = self.log_dir + "/" + f
 
-                self.s3.upload_file(local_f, dest_f, self.bucket["logs"], self.log_file)
+                self.s3.upload_file(local_f, dest_f, "logs", self.log_file)
 
-            self.log_writer.log(
-                f"Uploaded logs to {self.bucket['logs']}", self.log_file
-            )
+            self.log_writer.log(f"Uploaded logs to logs s3 bucket", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file

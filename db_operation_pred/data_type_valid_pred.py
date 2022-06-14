@@ -17,8 +17,6 @@ class DB_Operation_Pred:
 
         self.class_name = self.__class__.__name__
 
-        self.bucket = self.config["s3_bucket"]
-
         self.files = self.config["files"]
 
         self.data_dir = self.config["data_dir"]
@@ -50,9 +48,7 @@ class DB_Operation_Pred:
 
         try:
             lst = self.s3.read_csv_from_folder(
-                self.data_dir["pred_good"],
-                self.bucket["pred_data"],
-                self.pred_log["db_insert"],
+                self.data_dir["pred_good"], "pred_data", self.pred_log["db_insert"]
             )
 
             for _, f in enumerate(lst):
@@ -107,7 +103,7 @@ class DB_Operation_Pred:
                 df,
                 self.files["pred_export"],
                 self.files["pred_export"],
-                self.bucket["feature_store"],
+                "feature_stire",
                 self.pred_log["export_csv"],
             )
 
