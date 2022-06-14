@@ -28,7 +28,7 @@ class S3_Operation:
 
         self.bucket = self.config["s3_bucket"]
 
-        self.save_format = self.config["save_format"]
+        self.save_format = self.config["model_save_format"]
 
         self.model_dir = self.config["model_dir"]
 
