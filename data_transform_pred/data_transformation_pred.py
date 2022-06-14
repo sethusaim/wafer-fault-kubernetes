@@ -22,11 +22,7 @@ class Data_Transform_Pred:
 
         self.data_dir = self.config["data_dir"]
 
-        self.bucket = self.config["s3_bucket"]
-
         self.pred_log = self.config["log"]
-
-        self.col = self.config["col"]
 
     def rename_column(self, from_col, to_col):
         """
@@ -47,9 +43,7 @@ class Data_Transform_Pred:
 
         try:
             lst = self.s3.read_csv_from_folder(
-                self.data_dir["pred_good"],
-                self.bucket["pred_data"],
-                self.pred_log["data_transform"],
+                self.data_dir["pred_good"], "pred_data", self.pred_log["data_transform"]
             )
 
             for _, f in enumerate(lst):
@@ -67,11 +61,7 @@ class Data_Transform_Pred:
                 )
 
                 self.s3.upload_df_as_csv(
-                    df,
-                    abs_f,
-                    file,
-                    self.bucket["pred_data"],
-                    self.pred_log["data_transform"],
+                    df, abs_f, file, "pred_data", self.pred_log["data_transform"]
                 )
 
             self.log_writer.start_log(
@@ -102,9 +92,7 @@ class Data_Transform_Pred:
 
         try:
             lst = self.s3.read_csv_from_folder(
-                self.data_dir["pred_good"],
-                self.bucket["pred_data"],
-                self.pred_log["data_transform"],
+                self.data_dir["pred_good"], "pred_data", self.pred_log["data_transform"]
             )
 
             for _, f in enumerate(lst):
@@ -123,12 +111,8 @@ class Data_Transform_Pred:
                     self.pred_log["data_transform"],
                 )
 
-                self.s3.upload_df_as_csv(
-                    df,
-                    abs_f,
-                    file,
-                    self.bucket["pred_data"],
-                    self.pred_log["data_transform"],
+                self.s3.upload_file(
+                    df, abs_f, file, "pred_data", self.pred_log["data_transform"]
                 )
 
             self.log_writer.start_log(
