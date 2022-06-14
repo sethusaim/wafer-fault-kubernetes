@@ -37,9 +37,9 @@ pipeline {
         COMP_FILE = "wafer_clustering.yaml"
       }
 
-      when {
-        changeset 'clustering/*'
-      }
+      // when {
+      //   changeset 'clustering/*'
+      // }
 
       steps {
         script {
