@@ -291,7 +291,7 @@ class S3_Operation:
 
                 folder_obj = folder_name + "/"
 
-                self.s3_client.put_object(Bucket=bucket, Key=folder_obj)
+                self.s3_client.put_object(Bucket=self.bucket[bucket], Key=folder_obj)
 
                 self.log_writer.log(
                     f"{folder_name} folder created in {bucket} bucket", log_file
@@ -416,10 +416,10 @@ class S3_Operation:
             "start", self.class_name, method_name, log_file,
         )
 
-        try:
-            copy_source = {"Bucket": from_bucket, "Key": from_fname}
+        try:            
+            copy_source = {"Bucket": self.bucket[from_bucket], "Key": from_fname}
 
-            self.s3_resource.meta.client.copy(copy_source, to_bucket, to_fname)
+            self.s3_resource.meta.client.copy(copy_source, self.bucket[to_bucket], to_fname)
 
             self.log_writer.log(
                 f"Copied data from bucket {from_bucket} to bucket {to_bucket}",
