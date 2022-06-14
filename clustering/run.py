@@ -15,10 +15,6 @@ class Run:
     def __init__(self):
         self.config = read_params()
 
-        self.files = self.config["files"]
-
-        self.bucket = self.config["s3_bucket"]
-
         self.clustering_log = self.config["log"]["clustering"]
 
         self.utils = Main_Utils()
@@ -50,14 +46,14 @@ class Run:
             X = self.utils.get_training_data("features", self.clustering_log)
 
             self.log_writer.log(
-                f"Read the features file for training from {self.bucket['feature_store']} bucket",
+                f"Read the features file for training from feature store bucket",
                 self.clustering_log,
             )
 
             Y = self.utils.get_training_data("targets", self.clustering_log)
 
             self.log_writer.log(
-                f"Read the labels for training from {self.bucket['feature_store']} bucket",
+                f"Read the labels for training from feature store bucket",
                 self.clustering_log,
             )
 

@@ -20,13 +20,7 @@ class KMeans_Clustering:
 
         self.config = read_params()
 
-        self.bucket = self.config["s3_bucket"]
-
-        self.model_dir = self.config["model_dir"]
-
         self.kmeans_params = self.config["KMeans"]
-
-        self.model_save_format = self.config["model_save_format"]
 
         self.knee_params = self.config["knee"]
 
@@ -80,7 +74,7 @@ class KMeans_Clustering:
             self.s3.upload_file(
                 self.files["elbow_plot"],
                 self.files["elbow_plot"],
-                self.bucket["io_files"],
+                "io_files",
                 self.log_file,
             )
 
@@ -121,13 +115,7 @@ class KMeans_Clustering:
 
             self.y_kmeans = self.kmeans.fit_predict(data)
 
-            self.s3.save_model(
-                self.kmeans,
-                self.model_dir["trained"],
-                self.bucket["model"],
-                self.model_save_format,
-                self.log_file,
-            )
+            self.s3.save_model(self.kmeans, "trained", "model", self.log_file)
 
             data["Cluster"] = self.y_kmeans
 

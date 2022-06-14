@@ -26,6 +26,12 @@ class S3_Operation:
 
         self.class_name = self.__class__.__name__
 
+        self.bucket = self.config["s3_bucket"]
+
+        self.save_format = self.config["save_format"]
+
+        self.model_dir = self.config["model_dir"]
+
     def get_bucket(self, bucket, log_file):
         """
         Method Name :   get_bucket
@@ -112,7 +118,7 @@ class S3_Operation:
 
             self.log_writer.log(f"Read the s3 object with decode as {decode}", log_file)
 
-            conv_func = lambda: StringIO(func() if make_readable is True else func())
+            conv_func = lambda: StringIO(func()) if make_readable is True else func()
 
             self.log_writer.log(
                 f"read the s3 object with make_readable as {make_readable}", log_file
@@ -144,13 +150,15 @@ class S3_Operation:
 
         try:
             self.log_writer.log(
-                f"Uploading {from_fname} to s3 bucket {bucket}", log_file
+                f"Uploading {from_fname} to s3 bucket {self.bucket[bucket]}", log_file
             )
 
-            self.s3_resource.meta.client.upload_file(from_fname, bucket, to_fname)
+            self.s3_resource.meta.client.upload_file(
+                from_fname, self.bucket[bucket], to_fname
+            )
 
             self.log_writer.log(
-                f"Uploaded {from_fname} to s3 bucket {bucket}", log_file
+                f"Uploaded {from_fname} to s3 bucket {self.bucket[bucket]}", log_file
             )
 
             if delete is True:
@@ -175,7 +183,7 @@ class S3_Operation:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def save_model(
-        self, model, model_dir, model_bucket, format, log_file, idx=None,
+        self, model, model_dir, model_bucket, log_file, idx=None,
     ):
         """
         Method Name :   save_model
@@ -197,9 +205,9 @@ class S3_Operation:
             self.log_writer.log(f"Got {model_name} model name", log_file)
 
             func = (
-                lambda: model_name + format
+                lambda: model_name + self.save_format
                 if model_name == "KMeans"
-                else model_name + str(idx) + format
+                else model_name + str(idx) + self.save_format
             )
 
             model_file = func()
@@ -211,7 +219,7 @@ class S3_Operation:
                 f"Saved {model_name} model as {model_file} name", log_file
             )
 
-            bucket_model_path = model_dir + "/" + model_file
+            bucket_model_path = self.model_dir[model_dir] + "/" + model_file
 
             self.log_writer.log(
                 f"Uploading {model_file} to {model_bucket} bucket", log_file
@@ -306,11 +314,13 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            csv_obj = self.get_file_object(fname, bucket, log_file)
+            csv_obj = self.get_file_object(fname, self.bucket[bucket], log_file)
 
             df = self.get_df_from_object(csv_obj, log_file)
 
-            self.log_writer.log(f"Read {fname} csv file from {bucket} bucket", log_file)
+            self.log_writer.log(
+                f"Read {fname} csv file from {self.bucket[bucket]} bucket", log_file
+            )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 

@@ -23,8 +23,6 @@ class Main_Utils:
 
         self.config = read_params()
 
-        self.bucket = self.config["s3_bucket"]
-
         self.files = self.config["files"]
 
         self.log_file = self.config["log"]["upload"]
@@ -60,11 +58,9 @@ class Main_Utils:
 
                 dest_f = self.log_dir + "/" + f
 
-                self.s3.upload_file(local_f, dest_f, self.bucket["logs"], self.log_file)
+                self.s3.upload_file(local_f, dest_f, "logs", self.log_file)
 
-            self.log_writer.log(
-                f"Uploaded logs to {self.bucket['logs']}", self.log_file
-            )
+            self.log_writer.log(f"Uploaded logs to s3 bucket", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
@@ -130,16 +126,11 @@ class Main_Utils:
             )
 
             self.s3.upload_df_as_csv(
-                cluster_data,
-                cluster_fname,
-                cluster_fname,
-                self.bucket["feature_store"],
-                log_file,
+                cluster_data, cluster_fname, cluster_fname, "feature_store", log_file
             )
 
             self.log_writer.log(
-                f"Uploaded {cluster_fname} file to {self.bucket['feature_store']} bucket",
-                log_file,
+                f"Uploaded {cluster_fname} file to feature store bucket", log_file,
             )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
@@ -163,12 +154,11 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            data = self.s3.read_csv(
-                self.files[key], self.bucket["feature_store"], log_file
-            )
+            data = self.s3.read_csv(self.files[key], "feature_store", log_file)
 
             self.log_writer.log(
-                f"Got the training data based on {key} from {self.bucket['feature_store']} bucket",log_file
+                f"Got the training data based on {key} from feature store bucket",
+                log_file,
             )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
