@@ -26,12 +26,6 @@ class Model_Finder:
 
         self.split_kwargs = self.config["base"]
 
-        self.model_dir = self.config["models_dir"]
-
-        self.bucket = self.config["s3_bucket"]
-
-        self.save_format = self.config["save_format"]
-
         self.mlflow_op = MLFlow_Operation(self.log_file)
 
         self.model_utils = Model_Utils()
@@ -112,7 +106,7 @@ class Model_Finder:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            xgb_model = XGBClassifier(objective="binary:logistic")
+            xgb_model = XGBClassifier()
 
             xgb_model_name = xgb_model.__class__.__name__
 
@@ -249,14 +243,7 @@ class Model_Finder:
 
                 model_score = tm[1]
 
-                self.s3.save_model(
-                    model,
-                    self.model_dir["train"],
-                    self.bucket["model"],
-                    log_file,
-                    format=self.save_format,
-                    idx=idx,
-                )
+                self.s3.save_model(model, "train", "model", log_file, idx=idx)
 
                 self.mlflow_op.log_all_for_model(model, model_score, idx)
 

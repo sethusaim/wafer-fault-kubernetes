@@ -6,6 +6,7 @@ from boto3 import resource
 from pandas import read_csv
 
 from utils.logger import App_Logger
+from utils.read_params import read_params
 
 
 class S3_Operation:
@@ -21,7 +22,15 @@ class S3_Operation:
 
         self.class_name = self.__class__.__name__
 
+        self.config = read_params()
+
         self.s3_resource = resource("s3")
+
+        self.bucket = self.config["s3_bucket"]
+
+        self.save_format = self.config["save_format"]
+
+        self.model_dir = self.config["models_dir"]
 
     def get_bucket(self, bucket, log_file):
         """
@@ -165,11 +174,13 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            csv_obj = self.get_file_object(fname, bucket, log_file,)
+            csv_obj = self.get_file_object(fname, self.bucket[bucket], log_file)
 
             df = self.get_df_from_object(csv_obj, log_file)
 
-            self.log_writer.log(f"Read {fname} csv file from {bucket} bucket", log_file)
+            self.log_writer.log(
+                f"Read {fname} csv file from {self.bucket[bucket]} bucket", log_file
+            )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
@@ -179,7 +190,7 @@ class S3_Operation:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def save_model(
-        self, model, model_dir, model_bucket, log_file, format, idx=None,
+        self, model, model_dir, model_bucket, log_file, idx=None,
     ):
         """
         Method Name :   save_model
@@ -199,9 +210,9 @@ class S3_Operation:
             model_name = model.__class__.__name__
 
             func = (
-                lambda: model_name + format
+                lambda: model_name + self.save_format
                 if model_name == "KMeans"
-                else model_name + str(idx) + format
+                else model_name + str(idx) + self.save_format
             )
 
             model_file = func()
@@ -213,7 +224,7 @@ class S3_Operation:
                 f"Saved {model_name} model as {model_file} name", log_file
             )
 
-            bucket_model_path = model_dir + "/" + model_file
+            bucket_model_path = self.model_dir[model_dir] + "/" + model_file
 
             self.log_writer.log(
                 f"Uploading {model_file} to {model_bucket} bucket", log_file
@@ -251,13 +262,15 @@ class S3_Operation:
 
         try:
             self.log_writer.log(
-                f"Uploading {from_fname} to s3 bucket {bucket}", log_file
+                f"Uploading {from_fname} to s3 bucket {self.bucket[bucket]}", log_file
             )
 
-            self.s3_resource.meta.client.upload_file(from_fname, bucket, to_fname)
+            self.s3_resource.meta.client.upload_file(
+                from_fname, self.bucket[bucket], to_fname
+            )
 
             self.log_writer.log(
-                f"Uploaded {from_fname} to s3 bucket {bucket}", log_file
+                f"Uploaded {from_fname} to s3 bucket {self.bucket[bucket]}", log_file
             )
 
             if delete is True:
@@ -295,11 +308,13 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            lst = self.get_file_object(folder_name, bucket, log_file)
+            lst = self.get_file_object(folder_name, self.bucket[bucket], log_file)
 
             list_of_files = [object.key for object in lst]
 
-            self.log_writer.log(f"Got list of files from bucket {bucket}", log_file)
+            self.log_writer.log(
+                f"Got list of files from bucket {self.bucket[bucket]}", log_file
+            )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
@@ -323,16 +338,18 @@ class S3_Operation:
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
         try:
-            files = self.get_files_from_folder(folder_name, bucket, log_file,)
+            files = self.get_files_from_folder(
+                folder_name, self.bucket[bucket], log_file,
+            )
 
             lst = [
-                (self.read_csv(f, bucket, log_file), f, f.split("/")[-1],)
+                (self.read_csv(f, self.bucket[bucket], log_file), f, f.split("/")[-1],)
                 for f in files
                 if f.endswith(".csv")
             ]
 
             self.log_writer.log(
-                f"Read csv files from {folder_name} folder from {bucket} bucket",
+                f"Read csv files from {folder_name} folder from {self.bucket[bucket]} bucket",
                 log_file,
             )
 
@@ -372,7 +389,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def load_model(self, model_name, bucket, log_file, save_format, model_dir=None):
+    def load_model(self, model_name, bucket, log_file, model_dir=None):
         """
         Method Name :   load_model
         Description :   This method loads the model from s3 bucket
@@ -389,16 +406,16 @@ class S3_Operation:
 
         try:
             func = (
-                lambda: model_name + save_format
-                if model_dir is None
-                else model_dir + "/" + model_name + save_format
+                lambda: model_name + self.save_format
+                if self.model_dir[model_dir] is None
+                else self.model_dir[model_dir] + "/" + model_name + self.save_format
             )
 
             model_file = func()
 
             self.log_writer.log(f"Got {model_file} as model file", log_file)
 
-            f_obj = self.get_file_object(model_file, bucket, log_file)
+            f_obj = self.get_file_object(model_file, self.bucket[bucket], log_file)
 
             model_obj = self.read_object(f_obj, log_file, decode=False)
 

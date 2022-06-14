@@ -12,8 +12,8 @@ class Run:
     """
     Description :   This class shall be used for model training
     Version     :   1.2
-    
-    Revisions   :   Moved to setup to cloud 
+
+    Revisions   :   Moved to setup to cloud
     """
 
     def __init__(self):
@@ -23,13 +23,7 @@ class Run:
 
         self.train_log = self.config["log"]
 
-        self.bucket = self.config["s3_bucket"]
-
-        self.model_dir = self.config["models_dir"]
-
         self.mlflow_config = self.config["mlflow_config"]
-
-        self.save_format = self.config["save_format"]
 
         self.model = Model_Finder(self.train_log["model_train"])
 
@@ -44,11 +38,11 @@ class Run:
     def training_model(self):
         """
         Method Name :   training_model
-        Description :   This method is responsible for training models in existing data 
-        
+        Description :   This method is responsible for training models in existing data
+
         Output      :   The models are trained,logged and stored in s3 bucket
         On Failure  :   Write an exception log and then raise an exception
-        
+
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -69,11 +63,7 @@ class Run:
             )
 
             kmeans_model = self.s3.load_model(
-                "KMeans",
-                self.bucket["model"],
-                self.train_log["model_train"],
-                self.save_format,
-                model_dir=self.model_dir["train"],
+                "KMeans", "model", self.train_log["model_train"], model_dir="train"
             )
 
             kmeans_model_name = kmeans_model.__class__.__name__
@@ -97,7 +87,7 @@ class Run:
                 )
 
                 self.log_writer.log(
-                    f"Got cluster features and cluster labels from {self.bucket['feature_store']} bucket",
+                    "Got cluster features and cluster labels",
                     self.train_log["model_train"],
                 )
 

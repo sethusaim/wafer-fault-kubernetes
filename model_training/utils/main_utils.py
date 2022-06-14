@@ -21,11 +21,11 @@ class Main_Utils:
 
         self.config = read_params()
 
-        self.bucket = self.config["s3_bucket"]
-
         self.log_file = self.config["log"]["upload"]
 
         self.log_dir = self.config["log_dir"]
+
+        self.file_pattern = self.config["file_pattern"]
 
         self.s3 = S3_Operation()
 
@@ -58,11 +58,9 @@ class Main_Utils:
 
                 dest_f = self.log_dir + "/" + f
 
-                self.s3.upload_file(local_f, dest_f, self.bucket["logs"], self.log_file)
+                self.s3.upload_file(local_f, dest_f, "logs", self.log_file)
 
-            self.log_writer.log(
-                f"Uploaded logs to {self.bucket['logs']}", self.log_file
-            )
+            self.log_writer.log("Uploaded logs to s3 bucket", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
@@ -133,7 +131,7 @@ class Main_Utils:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def get_features_csv(self, fname, bucket, log_file):
+    def get_features_csv(self, fname, log_file):
         """
         Method Name :   get_features_csv
         Description :   This method gets the features csv file present in s3 bucket as numpy array
@@ -149,10 +147,11 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            df = self.s3.read_csv(fname, bucket, log_file)
+            df = self.s3.read_csv(fname, "feature_store", log_file)
 
             self.log_writer.log(
-                f"Got the dataframe from {bucket} with file name as {fname}", log_file
+                f"Got the dataframe from feature store with file name as {fname}",
+                log_file,
             )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
@@ -179,11 +178,11 @@ class Main_Utils:
 
         try:
             feat_fnames = self.s3.get_files_from_folder(
-                self.config["file_pattern"], self.bucket["feature_store"], log_file
+                self.file_pattern, "feature_store", log_file
             )
 
             self.log_writer.log(
-                f"Got features file names from {self.bucket['feature_store']} bucket based on {self.config['file_pattern']}",
+                f"Got features file names from s3 bucket based on {self.file_pattern}",
                 log_file,
             )
 
@@ -222,9 +221,7 @@ class Main_Utils:
                 "Got cluster feature file name based on cluster number", log_file
             )
 
-            cluster_feat = self.get_features_csv(
-                feat_name, self.bucket["feature_store"], log_file
-            )
+            cluster_feat = self.get_features_csv(feat_name, "feature_store", log_file)
 
             self.log_writer.log(
                 "Got cluster features based on the cluster file name", log_file
@@ -259,8 +256,8 @@ class Main_Utils:
                 "Got cluster targets file name based on cluster number", log_file
             )
 
-            cluster_label = self.get_targets_csv(
-                label_name, self.bucket["feature_store"], log_file
+            cluster_label = self.get_cluster_targets(
+                label_name, "feature_store", log_file
             )
 
             self.log_writer.log(

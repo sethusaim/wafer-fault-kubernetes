@@ -11,8 +11,8 @@ class MLFlow_Operation:
     """
     Description :    This class shall be used for handling all the mlflow operations
     Version     :   1.2
-    
-    Revisions   :   Moved to setup to cloud 
+
+    Revisions   :   Moved to setup to cloud
     """
 
     def __init__(self, log_file):
@@ -21,8 +21,6 @@ class MLFlow_Operation:
         self.class_name = self.__class__.__name__
 
         self.log_writer = App_Logger()
-
-        self.server_uri = environ["MLFLOW_TRACKING_URI"]
 
         self.log_file = log_file
 
@@ -62,9 +60,9 @@ class MLFlow_Operation:
     def set_mlflow_tracking_uri(self):
         """
         Method Name :   set_mlflow_tracking_uri
-        Description :   This method sets the mlflow tracking uri in mlflow server 
+        Description :   This method sets the mlflow tracking uri in mlflow server
 
-        Output      :   MLFLow server will set the particular uri to communicate with code 
+        Output      :   MLFLow server will set the particular uri to communicate with code
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
@@ -75,7 +73,7 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            set_tracking_uri(self.server_uri)
+            set_tracking_uri(environ["MLFLOW_TRACKING_URI"])
 
             self.log_writer.log("Set mlflow tracking uri", self.log_file)
 
@@ -161,7 +159,7 @@ class MLFlow_Operation:
         Output      :   A model param is logged to mlflow server
         On Failure  :   Write an exception log and then raise an exception
 
-        Version     :   1.2 
+        Version     :   1.2
         Revisions   :   moved setup to cloud
         """
         method_name = self.log_model_param.__name__
