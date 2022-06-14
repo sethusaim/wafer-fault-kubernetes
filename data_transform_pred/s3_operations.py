@@ -18,7 +18,7 @@ class S3_Operation:
 
     def __init__(self):
         self.log_writer = App_Logger()
-        
+
         self.config = read_params()
 
         self.class_name = self.__class__.__name__
