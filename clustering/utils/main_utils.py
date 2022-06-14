@@ -168,7 +168,7 @@ class Main_Utils:
             )
 
             self.log_writer.log(
-                f"Got the training data based on {key} from {self.bucket['feature_store']} bucket"
+                f"Got the training data based on {key} from {self.bucket['feature_store']} bucket",log_file
             )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
