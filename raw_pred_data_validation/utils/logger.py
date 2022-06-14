@@ -99,4 +99,3 @@ class App_Logger:
         error(exception_msg)
 
         raise Exception(exception_msg)
-s

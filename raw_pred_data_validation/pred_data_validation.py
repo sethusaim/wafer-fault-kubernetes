@@ -56,7 +56,7 @@ class Raw_Pred_Data_Validation:
 
             dic = self.s3.read_json(
                 self.files["pred_schema"],
-                self.bucket["io_files"],
+                "io_files",
                 self.pred_log["values_from_schema"],
             )
 
@@ -117,7 +117,7 @@ class Raw_Pred_Data_Validation:
             )
 
             regex = self.s3.read_text(
-                self.files["regex"], self.bucket["io_files"], self.pred_log["general"],
+                self.files["regex"], "io_files", self.pred_log["general"]
             )
 
             self.log_writer.log(f"Got {regex} pattern", self.pred_log["general"])
@@ -149,17 +149,12 @@ class Raw_Pred_Data_Validation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            self.s3.create_folder(
-                self.data_dir["pred_good"], self.bucket["pred_data"], log_file
-            )
+            self.s3.create_folder(self.data_dir["pred_good"], "pred_data", log_file)
 
-            self.s3.create_folder(
-                self.data_dir["pred_bad"], self.bucket["pred_data"], log_file
-            )
+            self.s3.create_folder(self.data_dir["pred_bad"], "pred_data", log_file)
 
             self.log_writer.log(
-                f"Created folders for good and bad data in {self.bucket['pred_data']}",
-                log_file,
+                f"Created folders for good and bad data in s3 bucket", log_file,
             )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
@@ -191,7 +186,7 @@ class Raw_Pred_Data_Validation:
 
             onlyfiles = self.s3.get_files_from_folder(
                 self.data_dir["raw_pred_batch"],
-                self.bucket["raw_pred_data"],
+                "raw_pred_data",
                 self.pred_log["name_validation"],
             )
 
@@ -229,35 +224,36 @@ class Raw_Pred_Data_Validation:
                         if len(splitAtDot[2]) == LengthOfTimeStampInFile:
                             self.s3.copy_data(
                                 raw_data_pred_fname,
-                                self.bucket["raw_pred_data"],
+                                "raw_pred_data",
                                 good_data_pred_fname,
-                                self.bucket["pred_data"],
+                                "pred_data",
                                 self.pred_log["name_validation"],
                             )
 
                         else:
                             self.s3.copy_data(
                                 raw_data_pred_fname,
-                                self.bucket["raw_pred_data"],
+                                "raw_pred_data",
                                 bad_data_pred_fname,
-                                self.bucket["pred_data"],
+                                "pred_data",
                                 self.pred_log["name_validation"],
                             )
 
                     else:
                         self.s3.copy_data(
                             raw_data_pred_fname,
-                            self.bucket["raw_pred_data"],
+                            "raw_pred_data",
                             bad_data_pred_fname,
-                            self.bucket["pred_data"],
+                            "pred_data",
                             self.pred_log["name_validation"],
                         )
+
                 else:
                     self.s3.copy_data(
                         raw_data_pred_fname,
-                        self.bucket["raw_pred_data"],
+                        "raw_pred_data",
                         bad_data_pred_fname,
-                        self.bucket["pred_data"],
+                        "pred_data",
                         self.pred_log["name_validation"],
                     )
 
@@ -289,9 +285,7 @@ class Raw_Pred_Data_Validation:
 
         try:
             lst = self.s3.read_csv_from_folder(
-                self.data_dir["pred_good"],
-                self.bucket["pred_data"],
-                self.pred_log["col_validation"],
+                self.data_dir["pred_good"], "pred_data", self.pred_log["col_validation"]
             )
 
             for _, f in enumerate(lst):
@@ -309,9 +303,9 @@ class Raw_Pred_Data_Validation:
 
                     self.s3.move_data(
                         file,
-                        self.bucket["pred_data"],
+                        "pred_data",
                         dest_f,
-                        self.bucket["pred_data"],
+                        "pred_data",
                         self.pred_log["col_validation"],
                     )
 
@@ -347,7 +341,7 @@ class Raw_Pred_Data_Validation:
         try:
             lst = self.s3.read_csv_from_folder(
                 self.data_dir["pred_good"],
-                self.bucket["pred_data"],
+                "pred_data",
                 self.pred_log["missing_values_in_col"],
             )
 
@@ -368,9 +362,9 @@ class Raw_Pred_Data_Validation:
 
                         self.s3.move_data(
                             file,
-                            self.bucket["pred_data"],
+                            "pred_data",
                             dest_f,
-                            self.bucket["pred_data"],
+                            "pred_data",
                             self.pred_log["missing_values_in_col"],
                         )
 
@@ -383,7 +377,7 @@ class Raw_Pred_Data_Validation:
                         df,
                         abs_f,
                         dest_f,
-                        self.bucket["pred_data"],
+                        "pred_data",
                         self.pred_log["missing_values_in_col"],
                     )
 

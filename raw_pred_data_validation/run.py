@@ -21,8 +21,6 @@ class Run:
 
         self.pred_main_log = self.config["log"]["raw_pred_main"]
 
-        self.bucket = self.config["s3_bucket"]
-
         self.raw_data = Raw_Pred_Data_Validation()
 
     def raw_pred_data_validation(self):
