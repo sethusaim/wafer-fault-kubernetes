@@ -50,9 +50,7 @@ class DB_Operation_Train:
 
         try:
             lst = self.s3.read_csv_from_folder(
-                self.data_dir["train_good"],
-                self.bucket["train_data"],
-                self.train_log["db_insert"],
+                self.data_dir["train_good"], "train_data", self.train_log["db_insert"]
             )
 
             for _, f in enumerate(lst):
@@ -107,7 +105,7 @@ class DB_Operation_Train:
                 df,
                 self.files["train_export"],
                 self.files["train_export"],
-                self.bucket["feature_store"],
+                "feature_store",
                 self.train_log["export_csv"],
             )
 

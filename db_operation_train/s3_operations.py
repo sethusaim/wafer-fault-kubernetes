@@ -5,6 +5,7 @@ from boto3 import resource
 from pandas import read_csv
 
 from utils.logger import App_Logger
+from utils.read_params import read_params
 
 
 class S3_Operation:
@@ -21,6 +22,10 @@ class S3_Operation:
         self.s3_resource = resource("s3")
 
         self.log_writer = App_Logger()
+
+        self.config = read_params()
+
+        self.bucket = self.config["s3_bucket"]
 
     def read_object(self, object, log_file, decode=True, make_readable=False):
         """
@@ -153,7 +158,7 @@ class S3_Operation:
         )
 
         try:
-            bucket = self.s3_resource.Bucket(bucket)
+            bucket = self.s3_resource.Bucket(self.bucket[bucket])
 
             self.log_writer.log(f"Got {bucket} bucket", log_file)
 
@@ -310,7 +315,9 @@ class S3_Operation:
                 f"Uploading {from_fname} to s3 bucket {bucket}", log_file
             )
 
-            self.s3_resource.meta.client.upload_file(from_fname, bucket, to_fname)
+            self.s3_resource.meta.client.upload_file(
+                from_fname, self.bucket[bucket], to_fname
+            )
 
             self.log_writer.log(
                 f"Uploaded {from_fname} to s3 bucket {bucket}", log_file
