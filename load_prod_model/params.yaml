@@ -6,7 +6,7 @@ models_dir:
 model_save_format: .sav
 
 mlflow_config:
-  exp_name: wafer-ops
+  exp_name: wafer
 
 feature_pattern: wafer_train_features-
 
