@@ -252,7 +252,7 @@ pipeline {
 
         REPO_NAME = "wafer_model_prediction"
 
-        COMP_FILE = "wafer_load_prod_model.yaml"
+        COMP_FILE = "wafer_model_prediction.yaml"
       }
 
       // when {
