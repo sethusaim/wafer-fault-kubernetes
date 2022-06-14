@@ -288,7 +288,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file,
             )
 
-    def transition_best_models(self, model, top_models, log_file):
+    def transition_best_models(self, model, top_models):
         """
         Method Name :   transition_best_models
         Description :   This method transitions the models to staging or production based on the condition nad moves the models within
@@ -302,12 +302,12 @@ class MLFlow_Operation:
         """
         method_name = self.transition_best_models.__name__
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             self.log_writer.log(
                 "Started transitioning best models to production and rest to staging",
-                log_file,
+                self.log_file,
             )
 
             if model.name in top_models:
@@ -329,13 +329,13 @@ class MLFlow_Operation:
                 )
 
             self.log_writer.log(
-                "Transitioned best models to production and rest to staging", log_file
+                "Transitioned best models to production and rest to staging", self.log_file
             )
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", self.class_name, method_name, self.log_file)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, self.class_name, method_name, self.log_file)
 
     def get_best_models(self, runs, num_clusters, log_file):
         """
