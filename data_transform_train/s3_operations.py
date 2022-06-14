@@ -201,17 +201,13 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            self.log_writer.log(
-                f"Uploading {from_fname} to s3 bucket {self.bucket[bucket]}", log_file
-            )
+            self.log_writer.log(f"Uploading {from_fname} to {bucket} bucket", log_file)
 
             self.s3_resource.meta.client.upload_file(
                 from_fname, self.bucket[bucket], to_fname
             )
 
-            self.log_writer.log(
-                f"Uploaded {from_fname} to s3 bucket {self.bucket[bucket]}", log_file
-            )
+            self.log_writer.log(f"Uploaded {from_fname} to {bucket} bucket", log_file)
 
             if delete is True:
                 self.log_writer.log(
@@ -254,7 +250,7 @@ class S3_Operation:
         )
 
         try:
-            bucket = self.s3_resource.Bucket(bucket)
+            bucket = self.s3_resource.Bucket(self.bucket[bucket])
 
             self.log_writer.log(f"Got {bucket} bucket", log_file)
 
@@ -353,11 +349,11 @@ class S3_Operation:
         )
 
         try:
-            bucket = self.get_bucket(self.bucket[bucket], log_file)
+            bucket = self.get_bucket(bucket, log_file)
 
             lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
 
-            self.log_writer.log(f"Got {fname} from bucket {bucket}", log_file)
+            self.log_writer.log(f"Got {fname} from {bucket} bucket", log_file)
 
             func = lambda x: x[0] if len(x) == 1 else x
 
