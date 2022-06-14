@@ -221,7 +221,7 @@ class Main_Utils:
                 "Got cluster feature file name based on cluster number", log_file
             )
 
-            cluster_feat = self.get_features_csv(feat_name, "feature_store", log_file)
+            cluster_feat = self.get_features_csv(feat_name, log_file)
 
             self.log_writer.log(
                 "Got cluster features based on the cluster file name", log_file
@@ -256,9 +256,7 @@ class Main_Utils:
                 "Got cluster targets file name based on cluster number", log_file
             )
 
-            cluster_label = self.get_cluster_targets(
-                label_name, "feature_store", log_file
-            )
+            cluster_label = self.get_targets_csv(label_name, "feature_store", log_file)
 
             self.log_writer.log(
                 "Got cluster targets based on the cluster file name", log_file
