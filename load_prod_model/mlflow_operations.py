@@ -329,13 +329,18 @@ class MLFlow_Operation:
                 )
 
             self.log_writer.log(
-                "Transitioned best models to production and rest to staging", self.log_file
+                "Transitioned best models to production and rest to staging",
+                self.log_file,
             )
 
-            self.log_writer.start_log("exit", self.class_name, method_name, self.log_file)
+            self.log_writer.start_log(
+                "exit", self.class_name, method_name, self.log_file
+            )
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, self.log_file)
+            self.log_writer.exception_log(
+                e, self.class_name, method_name, self.log_file
+            )
 
     def get_best_models(self, runs, num_clusters, log_file):
         """

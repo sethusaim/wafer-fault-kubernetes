@@ -416,10 +416,12 @@ class S3_Operation:
             "start", self.class_name, method_name, log_file,
         )
 
-        try:            
+        try:
             copy_source = {"Bucket": self.bucket[from_bucket], "Key": from_fname}
 
-            self.s3_resource.meta.client.copy(copy_source, self.bucket[to_bucket], to_fname)
+            self.s3_resource.meta.client.copy(
+                copy_source, self.bucket[to_bucket], to_fname
+            )
 
             self.log_writer.log(
                 f"Copied data from bucket {from_bucket} to bucket {to_bucket}",
