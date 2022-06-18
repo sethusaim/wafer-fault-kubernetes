@@ -20,6 +20,8 @@ class MLFlow_Operation:
     def __init__(self, log_file):
         self.config = read_params()
 
+        self.mlflow_config = self.config["mlflow_config"]
+
         self.class_name = self.__class__.__name__
 
         self.log_writer = App_Logger()
@@ -63,9 +65,9 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_experiment_from_mlflow(self, exp_name):
+    def get_experiment(self, exp_name):
         """
-        Method Name :   get_experiment_from_mlflow
+        Method Name :   get_experiment
         Description :   This method gets the experiment from mlflow server using the experiment name
         
         Output      :   An experiment which was stored in mlflow server
@@ -74,12 +76,12 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_experiment_from_mlflow.__name__
+        method_name = self.get_experiment.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            exp = get_experiment_by_name(exp_name)
+            exp = get_experiment_by_name(self.mlflow_config[exp_name])
 
             self.log_writer.log(f"Got {exp_name} experiment from mlflow", self.log_file)
 
@@ -118,14 +120,14 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return runs
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
     def get_mlflow_models(self):
@@ -149,14 +151,14 @@ class MLFlow_Operation:
             self.log_writer.log("Got registered models from mlflow", self.log_file)
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return reg_model_names
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
     def search_mlflow_models(self, order):
@@ -182,18 +184,18 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return results
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
     def transition_mlflow_model(
-        self, model_version, stage, model_name, from_bucket, to_bucket,
+        self, model_version, stage, model_name, from_bucket, to_bucket
     ):
         """
         Method Name :   transition_mlflow_model
@@ -280,12 +282,12 @@ class MLFlow_Operation:
                 )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
     def transition_best_models(self, model, top_models):

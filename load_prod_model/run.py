@@ -17,15 +17,13 @@ class Load_Prod_Model:
 
         self.class_name = self.__class__.__name__
 
-        self.load_prod_model_log = self.config["log"]["load_prod_model"]
-
         self.mlflow_config = self.config["mlflow_config"]
 
         self.log_writer = App_Logger()
 
         self.utils = Main_Utils()
 
-        self.mlflow_op = MLFlow_Operation(self.load_prod_model_log)
+        self.mlflow_op = MLFlow_Operation("load_prod_model")
 
     def load_production_model(self):
         """
@@ -41,21 +39,19 @@ class Load_Prod_Model:
         method_name = self.load_production_model.__name__
 
         self.log_writer.start_log(
-            "start", self.class_name, method_name, self.load_prod_model_log
+            "start", self.class_name, method_name, "load_prod_model"
         )
 
         try:
-            self.utils.create_prod_and_stag_dirs("model", self.load_prod_model_log)
+            self.utils.create_prod_and_stag_dirs("model", "load_prod_model")
 
             self.mlflow_op.set_mlflow_tracking_uri()
 
-            exp = self.mlflow_op.get_experiment_from_mlflow(
-                self.mlflow_config["exp_name"]
-            )
+            exp = self.mlflow_op.get_experiment("exp_name")
 
             runs = self.mlflow_op.get_runs_from_mlflow(exp.experiment_id)
 
-            num_clusters = self.utils.get_number_of_clusters(self.load_prod_model_log)
+            num_clusters = self.utils.get_number_of_clusters("load_prod_model")
 
             """
             Code Explaination: 
@@ -69,10 +65,10 @@ class Load_Prod_Model:
             """
 
             top_mn_lst = self.mlflow_op.get_best_models(
-                runs, num_clusters, self.load_prod_model_log
+                runs, num_clusters, "load_prod_model"
             )
 
-            self.log_writer.log(f"Got the top model names", self.load_prod_model_log)
+            self.log_writer.log(f"Got the top model names", "load_prod_model")
 
             results = self.mlflow_op.search_mlflow_models("DESC")
 
@@ -89,16 +85,16 @@ class Load_Prod_Model:
 
             self.log_writer.log(
                 "Transitioning of models based on scores successfully done",
-                self.load_prod_model_log,
+                "load_prod_model",
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.load_prod_model_log,
+                "exit", self.class_name, method_name, "load_prod_model"
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.load_prod_model_log,
+                e, self.class_name, method_name, "load_prod_model"
             )
 
 
