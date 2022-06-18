@@ -17,8 +17,6 @@ class Run:
 
         self.class_name = self.__class__.__name__
 
-        self.col = self.config["col"]
-
         self.log_writer = App_Logger()
 
         self.data_transform = Data_Transform_Train()
