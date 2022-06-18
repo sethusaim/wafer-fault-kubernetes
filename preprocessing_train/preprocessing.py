@@ -1,11 +1,11 @@
 import numpy as np
 from pandas import DataFrame
 from sklearn.impute import KNNImputer
-
-from s3_operations import S3_Operation
-from utils.logger import App_Logger
-from utils.read_params import read_params
 from sklearn.preprocessing import LabelEncoder
+
+from utils.logger import App_Logger
+from utils.main_utils import Main_Utils
+from utils.read_params import read_params
 
 
 class Preprocessor:
@@ -21,13 +21,13 @@ class Preprocessor:
 
         self.config = read_params()
 
-        self.s3 = S3_Operation()
-
-        self.files = self.config["files"]
-
         self.imputer_params = self.config["knn_imputer"]
 
+        self.label_col_name = self.config["target_col"]
+
         self.log_writer = App_Logger()
+
+        self.utils = Main_Utils()
 
         self.le = LabelEncoder()
 
@@ -64,7 +64,7 @@ class Preprocessor:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def separate_label_feature(self, data, label_col_name):
+    def separate_label_feature(self, data):
         """
         Method name :   separate_label_feature
         Description :   This method separates the features and a label columns
@@ -80,9 +80,9 @@ class Preprocessor:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            self.X = data.drop(labels=label_col_name, axis=1)
+            self.X = data.drop(labels=self.label_col_name, axis=1)
 
-            self.Y = data[label_col_name]
+            self.Y = data[self.label_col_name]
 
             self.log_writer.log(f"Label Separation Successful", self.log_file)
 
@@ -126,19 +126,7 @@ class Preprocessor:
                     break
 
             if self.null_present:
-                null_df = DataFrame()
-
-                null_df["columns"] = data.columns
-
-                null_df["missing values count"] = np.asarray(data.isna().sum())
-
-                self.s3.upload_df_as_csv(
-                    null_df,
-                    self.files["null_values"],
-                    self.files["null_values"],
-                    "io_files",
-                    self.log_file,
-                )
+                self.utils.upload_null_values_file(data, self.log_file)
 
             self.log_writer.log(
                 "Finding missing values is a success.Data written to the null values file",
@@ -232,7 +220,7 @@ class Preprocessor:
             )
 
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_fillog_file
+                e, self.class_name, method_name, self.log_file
             )
 
     def encode_target_col(self, data):
