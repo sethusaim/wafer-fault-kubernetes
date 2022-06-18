@@ -17,8 +17,6 @@ class Run:
 
         self.class_name = self.__class__.__name__
 
-        self.train_main_log = self.config["log"]["data_transform_main"]
-
         self.col = self.config["col"]
 
         self.log_writer = App_Logger()
@@ -39,19 +37,21 @@ class Run:
         method_name = self.train_data_transform.__name__
 
         try:
-            self.log_writer.log("Starting Data Transformation", self.train_main_log)
+            self.log_writer.log("Starting Data Transformation", "data_transform_main")
 
-            self.data_transform.rename_column(self.col["unnamed"], self.col["wafer"])
+            self.data_transform.rename_column("unamed", "wafer")
 
-            self.data_transform.rename_column(self.col["good_bad"], self.col["output"])
+            self.data_transform.rename_column("good_bad", "output")
 
             self.data_transform.replace_missing_with_null()
 
-            self.log_writer.log("Data Transformation completed !!", self.train_main_log)
+            self.log_writer.log(
+                "Data Transformation completed !!", "data_transform_main"
+            )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.train_main_log,
+                e, self.class_name, method_name, "data_transform_main",
             )
 
 
