@@ -2,8 +2,8 @@ import numpy as np
 from pandas import DataFrame
 from sklearn.impute import KNNImputer
 
-from s3_operations import S3_Operation
 from utils.logger import App_Logger
+from utils.main_utils import Main_Utils
 from utils.read_params import read_params
 
 
@@ -20,13 +20,11 @@ class Preprocessor:
 
         self.config = read_params()
 
-        self.s3 = S3_Operation()
-
-        self.files = self.config["files"]
-
         self.imputer_params = self.config["knn_imputer"]
 
         self.log_writer = App_Logger()
+
+        self.utils = Main_Utils()
 
         self.class_name = self.__class__.__name__
 
@@ -123,19 +121,7 @@ class Preprocessor:
                     break
 
             if self.null_present:
-                null_df = DataFrame()
-
-                null_df["columns"] = data.columns
-
-                null_df["missing values count"] = np.asarray(data.isna().sum())
-
-                self.s3.upload_df_as_csv(
-                    null_df,
-                    self.files["null_values"],
-                    self.files["null_files"],
-                    "io_files",
-                    self.log_file,
-                )
+                self.utils.upload_null_values_file(data, self.log_file)
 
             self.log_writer.log(
                 "Finding missing values is a success.Data written to the null values file",

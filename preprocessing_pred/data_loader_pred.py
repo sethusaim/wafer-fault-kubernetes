@@ -18,8 +18,6 @@ class Data_Getter_Pred:
 
         self.files = self.config["files"]
 
-        self.bucket = self.config["s3_bucket"]
-
         self.s3 = S3_Operation()
 
         self.log_writer = App_Logger()

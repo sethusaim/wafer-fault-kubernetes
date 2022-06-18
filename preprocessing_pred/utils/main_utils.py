@@ -2,8 +2,10 @@ from os import listdir
 from os.path import join
 from shutil import rmtree
 
+import numpy as np
 from boto3 import resource
 from botocore.exceptions import ClientError
+from pandas import DataFrame
 from s3_operations import S3_Operation
 
 from utils.logger import App_Logger
@@ -31,11 +33,7 @@ class Main_Utils:
 
         self.bucket = self.config["s3_bucket"]
 
-        self.model_dir = self.config["model_dir"]
-
         self.log_dir = self.config["log_dir"]
-
-        self.log_file = self.config["log"]["upload"]
 
         self.class_name = self.__class__.__name__
 
@@ -52,13 +50,13 @@ class Main_Utils:
         """
         method_name = self.upload_logs.__name__
 
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
+        self.log_writer.start_log("start", self.class_name, method_name, "upload")
 
         try:
             lst = listdir(self.log_dir)
 
             self.log_writer.log(
-                f"Got list of logs from {self.log_dir} folder", self.log_file
+                f"Got list of logs from {self.log_dir} folder", "upload"
             )
 
             for f in lst:
@@ -66,62 +64,16 @@ class Main_Utils:
 
                 dest_f = self.log_dir + "/" + f
 
-                self.s3.upload_file(local_f, dest_f, "logs", self.log_file)
+                self.s3.upload_file(local_f, dest_f, "logs", "upload")
 
-            self.log_writer.log("Uploaded logs to logs bucket", self.log_file)
+            self.log_writer.log("Uploaded logs to logs bucket", "upload")
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, "upload")
 
             rmtree(self.log_dir)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
-
-    def find_correct_model_file(self, cluster_number, bucket, log_file):
-        """
-        Method Name :   find_correct_model_file
-        Description :   This method gets correct model file based on cluster number during prediction
-        
-        Output      :   A correct model file is found 
-        On Failure  :   Write an exception log and then raise an exception
-        
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.find_correct_model_file.__name__
-
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
-
-        try:
-            list_of_files = self.s3.get_files_from_folder(
-                self.model_dir["prod"], bucket, log_file
-            )
-
-            for file in list_of_files:
-                try:
-                    if file.index(str(cluster_number)) != -1:
-                        model_name = file
-
-                except:
-                    continue
-
-            model_name = model_name.split(".")[0]
-
-            self.log_writer.log(
-                f"Got {model_name} from {self.prod_model_dir} folder in {bucket} bucket",
-                log_file,
-            )
-
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
-
-            return model_name
-
-        except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, self.class_name, method_name, "upload")
 
     def delete_pred_file(self, log_file):
         """
@@ -156,6 +108,44 @@ class Main_Utils:
                 pass
 
             else:
-                self.log_writer.exception_log(
-                    e, self.class_name, method_name, log_file,
-                )
+                self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def upload_null_values_file(self, data, log_file):
+        try:
+            null_df = DataFrame()
+
+            null_df["columns"] = data.columns
+
+            null_df["missing values count"] = np.asarray(data.isna().sum())
+
+            self.s3.upload_df_as_csv(
+                null_df,
+                self.files["null_values"],
+                self.files["null_files"],
+                "io_files",
+                log_file,
+            )
+
+        except Exception as e:
+            raise e
+
+    def upload_preprocessed_data(self, data, log_file):
+        method_name = self.upload_preprocessed_data.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            self.s3.upload_df_as_csv(
+                data,
+                self.files["pred_input_preprocess"],
+                self.files["pred_input_preprocess"],
+                "feature_store",
+                log_file,
+            )
+
+            self.log_writer.log("Uploaded preprocessed data to s3 bucket", log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
