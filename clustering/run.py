@@ -15,13 +15,11 @@ class Run:
     def __init__(self):
         self.config = read_params()
 
-        self.clustering_log = self.config["log"]["clustering"]
-
         self.utils = Main_Utils()
 
         self.log_writer = App_Logger()
 
-        self.kmeans_op = KMeans_Clustering(self.clustering_log)
+        self.kmeans_op = KMeans_Clustering("clustering")
 
         self.class_name = self.__class__.__name__
 
@@ -38,23 +36,22 @@ class Run:
         """
         method_name = self.run_clustering.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.clustering_log
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, "clustering")
+
+        self.log_writer.start_log("start", self.class_name, method_name, "clustering")
 
         try:
-            X = self.utils.get_training_data("features", self.clustering_log)
+            X = self.utils.get_training_data("features", "clustering")
 
             self.log_writer.log(
                 f"Read the features file for training from feature store bucket",
-                self.clustering_log,
+                "clustering",
             )
 
-            Y = self.utils.get_training_data("targets", self.clustering_log)
+            Y = self.utils.get_training_data("targets", "clustering")
 
             self.log_writer.log(
-                f"Read the labels for training from feature store bucket",
-                self.clustering_log,
+                f"Read the labels for training from feature store bucket", "clustering",
             )
 
             num_clusters = self.kmeans_op.draw_elbow_plot(X)
@@ -66,7 +63,7 @@ class Run:
             list_of_clusters = X["Cluster"].unique()
 
             self.log_writer.log(
-                f"Got the {list_of_clusters} unique clusters", self.clustering_log
+                f"Got the {list_of_clusters} unique clusters", "clustering"
             )
 
             for i in list_of_clusters:
@@ -77,21 +74,19 @@ class Run:
                 cluster_label = cluster_data["Labels"]
 
                 self.utils.upload_cluster_data(
-                    i, cluster_features, self.clustering_log, key="features"
+                    i, cluster_features, "clustering", key="features"
                 )
 
                 self.utils.upload_cluster_data(
-                    i, cluster_label, self.clustering_log, key="targets"
+                    i, cluster_label, "clustering", key="targets"
                 )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.clustering_log
+                "exit", self.class_name, method_name, "clustering"
             )
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.clustering_log
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, "clustering")
 
 
 if __name__ == "__main__":
