@@ -29,8 +29,6 @@ class Raw_Train_Data_Validation:
 
         self.files = self.config["files"]
 
-        self.train_log = self.config["log"]
-
     def values_from_schema(self):
         """
         Method Name :   values_from_schema
@@ -46,16 +44,11 @@ class Raw_Train_Data_Validation:
 
         try:
             self.log_writer.start_log(
-                "start",
-                self.class_name,
-                method_name,
-                self.train_log["values_from_schema"],
+                "start", self.class_name, method_name, "values_from_schema",
             )
 
             dic = self.s3.read_json(
-                self.files["train_schema"],
-                "io_files",
-                self.train_log["values_from_schema"],
+                self.files["train_schema"], "io_files", "values_from_schema",
             )
 
             LengthOfDateStampInFile = dic["LengthOfDateStampInFile"]
@@ -75,18 +68,15 @@ class Raw_Train_Data_Validation:
                 + "\n"
             )
 
-            self.log_writer.log(message, self.train_log["values_from_schema"])
+            self.log_writer.log(message, "values_from_schema")
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                self.train_log["values_from_schema"],
+                "exit", self.class_name, method_name, "values_from_schema",
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.train_log["values_from_schema"],
+                e, self.class_name, method_name, "values_from_schema",
             )
 
         return (
@@ -111,54 +101,23 @@ class Raw_Train_Data_Validation:
 
         try:
             self.log_writer.start_log(
-                "start", self.class_name, method_name, self.train_log["general"],
+                "start", self.class_name, method_name, "general",
             )
 
-            regex = self.s3.read_text(
-                self.files["regex"], "io_files", self.train_log["general"]
-            )
+            regex = self.s3.read_text(self.files["regex"], "io_files", "general")
 
-            self.log_writer.log(f"Got {regex} pattern", self.train_log["general"])
+            self.log_writer.log(f"Got {regex} pattern", "general")
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.train_log["general"],
+                "exit", self.class_name, method_name, "general",
             )
 
             return regex
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.train_log["general"],
+                e, self.class_name, method_name, "general",
             )
-
-    def create_dirs_for_good_bad_data(self, log_file):
-        """
-        Method Name :   create_dirs_for_good_bad_data
-        Description :   This method creates folders for good and bad data in s3 bucket
-
-        Output      :   Good and bad folders are created in s3 bucket
-        On Failure  :   Write an exception log and then raise an exception
-
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.create_dirs_for_good_bad_data.__name__
-
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
-
-        try:
-            self.s3.create_folder(self.data_dir["train_good"], "train_data", log_file)
-
-            self.s3.create_folder(self.data_dir["train_bad"], "train_data", log_file)
-
-            self.log_writer.log(
-                f"Created folders for good and bad data in s3 bucket", log_file,
-            )
-
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
-
-        except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def validate_raw_fname(
         self, regex, LengthOfDateStampInFile, LengthOfTimeStampInFile
@@ -176,41 +135,37 @@ class Raw_Train_Data_Validation:
         method_name = self.validate_raw_fname.__name__
 
         self.log_writer.start_log(
-            "start", self.class_name, method_name, self.train_log["name_validation"],
+            "start", self.class_name, method_name, "name_validation",
         )
 
         try:
-            self.create_dirs_for_good_bad_data(self.train_log["name_validation"])
+            self.utils.create_dirs_for_good_bad_data("name_validation")
 
             onlyfiles = self.s3.get_files_from_folder(
-                self.data_dir["raw_train_batch"],
-                "raw_train_data",
-                self.train_log["name_validation"],
+                self.data_dir["raw_train_batch"], "raw_train_data", "name_validation",
             )
 
             train_batch_files = [f.split("/")[1] for f in onlyfiles]
 
             self.log_writer.log(
-                "Got training files with absolute file name",
-                self.train_log["name_validation"],
+                "Got training files with absolute file name", "name_validation",
             )
 
             for fname in train_batch_files:
                 raw_data_train_fname = self.utils.get_train_fname(
-                    "raw_train_batch", fname, self.train_log["name_validation"]
+                    "raw_train_batch", fname, "name_validation"
                 )
 
                 good_data_train_fname = self.utils.get_train_fname(
-                    "train_good", fname, self.train_log["name_validation"]
+                    "train_good", fname, "name_validation"
                 )
 
                 bad_data_train_fname = self.utils.get_train_fname(
-                    "train_bad", fname, self.train_log["name_validation"]
+                    "train_bad", fname, "name_validation"
                 )
 
                 self.log_writer.log(
-                    "Created raw,good and bad data file name",
-                    self.train_log["name_validation"],
+                    "Created raw,good and bad data file name", "name_validation",
                 )
 
                 if match(regex, fname):
@@ -225,7 +180,7 @@ class Raw_Train_Data_Validation:
                                 "raw_train_data",
                                 good_data_train_fname,
                                 "train_data",
-                                self.train_log["name_validation"],
+                                "name_validation",
                             )
 
                         else:
@@ -234,7 +189,7 @@ class Raw_Train_Data_Validation:
                                 "raw_train_data",
                                 bad_data_train_fname,
                                 "train_data",
-                                self.train_log["name_validation"],
+                                "name_validation",
                             )
 
                     else:
@@ -243,7 +198,7 @@ class Raw_Train_Data_Validation:
                             "raw_train_data",
                             bad_data_train_fname,
                             "train_data",
-                            self.train_log["name_validation"],
+                            "name_validation",
                         )
                 else:
                     self.s3.copy_data(
@@ -251,16 +206,16 @@ class Raw_Train_Data_Validation:
                         "raw_train_data",
                         bad_data_train_fname,
                         "train_data",
-                        self.train_log["name_validation"],
+                        "name_validation",
                     )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.train_log["name_validation"],
+                "exit", self.class_name, method_name, "name_validation",
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.train_log["name_validation"],
+                e, self.class_name, method_name, "name_validation",
             )
 
     def validate_col_length(self, NumberofColumns):
@@ -277,14 +232,12 @@ class Raw_Train_Data_Validation:
         method_name = self.validate_col_length.__name__
 
         self.log_writer.start_log(
-            "start", self.class_name, method_name, self.train_log["col_validation"],
+            "start", self.class_name, method_name, "col_validation",
         )
 
         try:
             lst = self.s3.read_csv_from_folder(
-                self.data_dir["train_good"],
-                "train_data",
-                self.train_log["col_validation"],
+                self.data_dir["train_good"], "train_data", "col_validation",
             )
 
             for _, f in enumerate(lst):
@@ -301,20 +254,16 @@ class Raw_Train_Data_Validation:
                     dest_f = self.data_dir["train_bad"] + "/" + abs_f
 
                     self.s3.move_data(
-                        file,
-                        "train_data",
-                        dest_f,
-                        "train_data",
-                        self.train_log["col_validation"],
+                        file, "train_data", dest_f, "train_data", "col_validation",
                     )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.train_log["col_validation"],
+                "exit", self.class_name, method_name, "col_validation",
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.train_log["col_validation"],
+                e, self.class_name, method_name, "col_validation",
             )
 
     def validate_missing_values_in_col(self):
@@ -331,17 +280,12 @@ class Raw_Train_Data_Validation:
         method_name = self.validate_missing_values_in_col.__name__
 
         self.log_writer.start_log(
-            "start",
-            self.class_name,
-            method_name,
-            self.train_log["missing_values_in_col"],
+            "start", self.class_name, method_name, "missing_values_in_col",
         )
 
         try:
             lst = self.s3.read_csv_from_folder(
-                self.data_dir["train_good"],
-                "train_data",
-                self.train_log["missing_values_in_col"],
+                self.data_dir["train_good"], "train_data", "missing_values_in_col",
             )
 
             for _, f in enumerate(lst):
@@ -364,7 +308,7 @@ class Raw_Train_Data_Validation:
                             "train_data",
                             dest_f,
                             "train_data",
-                            self.train_log["missing_values_in_col"],
+                            "missing_values_in_col",
                         )
 
                         break
@@ -373,27 +317,17 @@ class Raw_Train_Data_Validation:
                     dest_f = self.data_dir["train_good"] + "/" + abs_f
 
                     self.s3.upload_df_as_csv(
-                        df,
-                        abs_f,
-                        dest_f,
-                        "train_data",
-                        self.train_log["missing_values_in_col"],
+                        df, abs_f, dest_f, "train_data", "missing_values_in_col",
                     )
 
                 else:
                     pass
 
                 self.log_writer.start_log(
-                    "exit",
-                    self.class_name,
-                    method_name,
-                    self.train_log["missing_values_in_col"],
+                    "exit", self.class_name, method_name, "missing_values_in_col",
                 )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.train_log["missing_values_in_col"],
+                e, self.class_name, method_name, "missing_values_in_col",
             )

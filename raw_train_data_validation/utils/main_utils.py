@@ -1,4 +1,3 @@
-from locale import locale_encoding_alias
 from os import listdir
 from os.path import join
 from shutil import rmtree
@@ -28,8 +27,6 @@ class Main_Utils:
 
         self.log_dir = self.config["log_dir"]
 
-        self.log_file = self.config["log"]["upload"]
-
         self.data_dir = self.config["data_dir"]
 
     def upload_logs(self):
@@ -45,13 +42,13 @@ class Main_Utils:
         """
         method_name = self.upload_logs.__name__
 
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
+        self.log_writer.start_log("start", self.class_name, method_name, "upload")
 
         try:
             lst = listdir(self.log_dir)
 
             self.log_writer.log(
-                f"Got list of logs from {self.log_dir} folder", self.log_file
+                f"Got list of logs from {self.log_dir} folder", "upload"
             )
 
             for f in lst:
@@ -59,20 +56,16 @@ class Main_Utils:
 
                 dest_f = self.log_dir + "/" + f
 
-                self.s3.upload_file(local_f, dest_f, "logs", self.log_file)
+                self.s3.upload_file(local_f, dest_f, "logs", "upload")
 
-            self.log_writer.log("Uploaded logs to logs bucket", self.log_file)
+            self.log_writer.log("Uploaded logs to logs bucket", "upload")
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, "upload")
 
             rmtree(self.log_dir)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, "upload")
 
     def get_train_fname(self, key, fname, log_file):
         """
@@ -97,6 +90,35 @@ class Main_Utils:
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return train_fname
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def create_dirs_for_good_bad_data(self, log_file):
+        """
+        Method Name :   create_dirs_for_good_bad_data
+        Description :   This method creates folders for good and bad data in s3 bucket
+
+        Output      :   Good and bad folders are created in s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.create_dirs_for_good_bad_data.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            self.s3.create_folder(self.data_dir["train_good"], "train_data", log_file)
+
+            self.s3.create_folder(self.data_dir["train_bad"], "train_data", log_file)
+
+            self.log_writer.log(
+                f"Created folders for good and bad data in s3 bucket", log_file,
+            )
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
