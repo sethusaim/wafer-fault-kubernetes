@@ -48,7 +48,7 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            bucket = self.s3_resource.Bucket(bucket)
+            bucket = self.s3_resource.Bucket(self.bucket[bucket])
 
             self.log_writer.log(f"Got {bucket} bucket", log_file)
 
@@ -145,9 +145,11 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            copy_source = {"Bucket": from_bucket, "Key": from_fname}
+            copy_source = {"Bucket": self.bucket[from_bucket], "Key": from_fname}
 
-            self.s3_resource.meta.client.copy(copy_source, to_bucket, to_fname)
+            self.s3_resource.meta.client.copy(
+                copy_source, self.bucket[to_bucket], to_fname
+            )
 
             self.log_writer.log(
                 f"Copied data from bucket {from_bucket} to bucket {to_bucket}", log_file
@@ -174,13 +176,11 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            csv_obj = self.get_file_object(fname, self.bucket[bucket], log_file)
+            csv_obj = self.get_file_object(fname, bucket, log_file)
 
             df = self.get_df_from_object(csv_obj, log_file)
 
-            self.log_writer.log(
-                f"Read {fname} csv file from {self.bucket[bucket]} bucket", log_file
-            )
+            self.log_writer.log(f"Read {fname} csv file from {bucket} bucket", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
@@ -270,7 +270,7 @@ class S3_Operation:
             )
 
             self.log_writer.log(
-                f"Uploaded {from_fname} to s3 bucket {self.bucket[bucket]}", log_file
+                f"Uploaded {from_fname} to s3 bucket {bucket}", log_file
             )
 
             if delete is True:
@@ -308,13 +308,11 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            lst = self.get_file_object(folder_name, self.bucket[bucket], log_file)
+            lst = self.get_file_object(folder_name, bucket, log_file)
 
             list_of_files = [object.key for object in lst]
 
-            self.log_writer.log(
-                f"Got list of files from bucket {self.bucket[bucket]}", log_file
-            )
+            self.log_writer.log(f"Got list of files from bucket {bucket}", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
@@ -343,13 +341,13 @@ class S3_Operation:
             )
 
             lst = [
-                (self.read_csv(f, self.bucket[bucket], log_file), f, f.split("/")[-1],)
+                (self.read_csv(f, bucket, log_file), f, f.split("/")[-1],)
                 for f in files
                 if f.endswith(".csv")
             ]
 
             self.log_writer.log(
-                f"Read csv files from {folder_name} folder from {self.bucket[bucket]} bucket",
+                f"Read csv files from {folder_name} folder from {bucket} bucket",
                 log_file,
             )
 
@@ -415,7 +413,7 @@ class S3_Operation:
 
             self.log_writer.log(f"Got {model_file} as model file", log_file)
 
-            f_obj = self.get_file_object(model_file, self.bucket[bucket], log_file)
+            f_obj = self.get_file_object(model_file, bucket, log_file)
 
             model_obj = self.read_object(f_obj, log_file, decode=False)
 

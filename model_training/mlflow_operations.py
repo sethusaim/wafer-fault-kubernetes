@@ -42,7 +42,7 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            set_experiment(exp_name)
+            set_experiment(self.mlflow_config[exp_name])
 
             self.log_writer.log(
                 f"Set mlflow experiment with name as {exp_name}", self.log_file

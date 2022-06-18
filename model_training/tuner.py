@@ -140,7 +140,9 @@ class Model_Finder:
             return xgb_model
 
         except Exception as e:
-            raise e
+            self.log_writer.exception_log(
+                e, self.class_name, method_name, self.log_file
+            )
 
     def get_trained_models(self, train_x, train_y, test_x, test_y):
         """

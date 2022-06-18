@@ -21,11 +21,9 @@ class Run:
 
         self.config = read_params()
 
-        self.train_log = self.config["log"]
-
         self.mlflow_config = self.config["mlflow_config"]
 
-        self.model = Model_Finder(self.train_log["model_train"])
+        self.model = Model_Finder("model_train")
 
         self.utils = Main_Utils()
 
@@ -33,7 +31,7 @@ class Run:
 
         self.log_writer = App_Logger()
 
-        self.mlflow_op = MLFlow_Operation(self.train_log["model_train"])
+        self.mlflow_op = MLFlow_Operation("model_train")
 
     def training_model(self):
         """
@@ -48,29 +46,24 @@ class Run:
         """
         method_name = self.training_model.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.train_log["model_train"]
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, "model_train")
 
         try:
-            lst_clusters = self.utils.get_number_of_clusters(
-                self.train_log["model_train"]
-            )
+            lst_clusters = self.utils.get_number_of_clusters("model_train")
 
             self.log_writer.log(
-                f"Found the number of cluster to be {lst_clusters}",
-                self.train_log["model_train"],
+                f"Found the number of cluster to be {lst_clusters}", "model_train",
             )
 
             kmeans_model = self.s3.load_model(
-                "KMeans", "model", self.train_log["model_train"], model_dir="train"
+                "KMeans", "model", "model_train", model_dir="train"
             )
 
             kmeans_model_name = kmeans_model.__class__.__name__
 
             self.mlflow_op.set_mlflow_tracking_uri()
 
-            self.mlflow_op.set_mlflow_experiment(self.mlflow_config["exp_name"])
+            self.mlflow_op.set_mlflow_experiment("exp_name")
 
             with start_run(run_name=self.mlflow_config["run_name"]):
                 self.mlflow_op.log_sklearn_model(kmeans_model, kmeans_model_name)
@@ -78,39 +71,31 @@ class Run:
                 end_run()
 
             for i in range(lst_clusters):
-                cluster_feat = self.utils.get_cluster_features(
-                    i, self.train_log["model_train"]
-                )
+                cluster_feat = self.utils.get_cluster_features(i, "model_train")
 
-                cluster_label = self.utils.get_cluster_targets(
-                    i, self.train_log["model_train"]
-                )
+                cluster_label = self.utils.get_cluster_targets(i, "model_train")
 
                 self.log_writer.log(
-                    "Got cluster features and cluster labels",
-                    self.train_log["model_train"],
+                    "Got cluster features and cluster labels", "model_train"
                 )
 
                 with start_run(run_name=self.mlflow_config["run_name"] + str(i)):
                     self.model.train_and_log_models(
-                        cluster_feat,
-                        cluster_label,
-                        self.train_log["model_train"],
-                        idx=i,
+                        cluster_feat, cluster_label, "model_train", idx=i,
                     )
 
             self.log_writer.log(
                 "Completed model and training and logging of the models to mlflow",
-                self.train_log["model_train"],
+                "model_train",
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.train_log["model_train"]
+                "exit", self.class_name, method_name, "model_train"
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.train_log["model_train"]
+                e, self.class_name, method_name, "model_train"
             )
 
 
