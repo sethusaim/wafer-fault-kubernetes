@@ -111,12 +111,18 @@ class Main_Utils:
                 self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def upload_null_values_file(self, data, log_file):
+        method_name = self.upload_null_values_file.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
         try:
             null_df = DataFrame()
 
             null_df["columns"] = data.columns
 
             null_df["missing values count"] = np.asarray(data.isna().sum())
+
+            self.log_writer.log("Created dataframe of null values", log_file)
 
             self.s3.upload_df_as_csv(
                 null_df,
@@ -126,8 +132,12 @@ class Main_Utils:
                 log_file,
             )
 
+            self.log_writer.log("Uploaded null values csv file to s3 bucket", log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
         except Exception as e:
-            raise e
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def upload_preprocessed_data(self, data, log_file):
         method_name = self.upload_preprocessed_data.__name__
