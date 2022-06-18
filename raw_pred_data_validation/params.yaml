@@ -6,7 +6,7 @@ s3_bucket:
 
 data_dir:
   raw_pred_batch: pred_batch
-  pred_good: good/pred  
+  pred_good: good/pred
   pred_bad: bad/pred
 
 files:
