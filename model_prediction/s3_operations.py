@@ -2,7 +2,7 @@ from io import StringIO
 from os import remove
 from pickle import loads
 
-from boto3 import client, resource
+from boto3 import resource
 from pandas import read_csv
 
 from utils.logger import App_Logger
@@ -18,8 +18,6 @@ class S3_Operation:
     """
 
     def __init__(self):
-        self.s3_client = client("s3")
-
         self.s3_resource = resource("s3")
 
         self.config = read_params()

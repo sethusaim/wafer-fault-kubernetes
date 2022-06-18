@@ -1,9 +1,5 @@
-from pandas import DataFrame
-
-from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
-from utils.read_params import read_params
 
 
 class Run:
@@ -17,23 +13,9 @@ class Run:
     def __init__(self):
         self.class_name = self.__class__.__name__
 
-        self.config = read_params()
-
-        self.pred_log = self.config["log"]["pred"]
-
-        self.model_dir = self.config["model_dir"]
-
-        self.files = self.config["files"]
-
-        self.bucket = self.config["s3_bucket"]
-
-        self.save_format = self.config["save_format"]
-
         self.log_writer = App_Logger()
 
         self.utils = Main_Utils()
-
-        self.s3 = S3_Operation()
 
     def predict_from_model(self):
         """
@@ -48,65 +30,24 @@ class Run:
         """
         method_name = self.predict_from_model.__name__
 
-        self.log_writer.start_log("start", self.class_name, method_name, self.pred_log)
+        self.log_writer.start_log("start", self.class_name, method_name, "pred")
 
         try:
-            data = self.s3.read_csv(
-                self.files["pred_input_file_preprocess"], "feature_store", self.pred_log
-            )
-
-            kmeans_model = self.s3.load_model("KMeans", "model", self.pred_log, "prod")
-
-            clusters = kmeans_model.predict(data.drop(["Wafer"], axis=1))
-
-            data["clusters"] = clusters
-
-            unique_clusters = data["clusters"].unique()
+            unique_clusters = self.utils.get_unique_clusters("pred")
 
             for i in unique_clusters:
-                cluster_data = data[data["clusters"] == i]
+                result = self.utils.get_predictions(i, "pred")
 
-                wafer_names = list(cluster_data["Wafer"])
+                self.utils.upload_results(result, "pred")
 
-                cluster_data = data.drop(labels=["Wafer"], axis=1)
+            self.log_writer.log("Prediction file is created in io_files bucket", "pred")
 
-                cluster_data = cluster_data.drop(["clusters"], axis=1)
+            self.log_writer.log("End of prediction", "pred")
 
-                model_name = self.utils.find_correct_model_file(
-                    i, self.bucket["model"], self.pred_log
-                )
-
-                model = self.s3.load_model(model_name, "model", self.pred_log, "prod")
-
-                result = list(model.predict(cluster_data))
-
-                result = DataFrame(
-                    list(zip(wafer_names, result)), columns=["Wafer", "Prediction"]
-                )
-
-                self.s3.upload_df_as_csv(
-                    result,
-                    self.files["pred_output"],
-                    self.files["pred_output"],
-                    "io_files",
-                    self.pred_log,
-                )
-
-            self.log_writer.log(
-                f"Prediction file is created with {self.files['pred_output']} in {self.bucket['io_files']}",
-                self.pred_log,
-            )
-
-            self.log_writer.log("End of prediction", self.pred_log)
-
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.pred_log
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, "pred")
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.pred_log
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, "pred")
 
 
 if __name__ == "__main__":

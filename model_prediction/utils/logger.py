@@ -12,6 +12,8 @@ class App_Logger:
 
         self.log_dir = self.config["log_dir"]
 
+        self.log_file = self.config["log"]
+
         self.current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
 
         makedirs(self.log_dir, exist_ok=True)
