@@ -14,6 +14,8 @@ class App_Logger:
 
         self.current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
 
+        self.log_file = self.config["log"]
+
         makedirs(self.log_dir, exist_ok=True)
 
     def log(self, log_message, log_file):
@@ -28,7 +30,7 @@ class App_Logger:
         Revisions   :   moved setup to cloud
         """
         try:
-            log_f = self.current_date + "-" + log_file
+            log_f = self.current_date + "-" + self.log_file[log_file]
 
             log_file = join(self.log_dir, log_f)
 
