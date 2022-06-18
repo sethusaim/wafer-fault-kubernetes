@@ -15,9 +15,9 @@ pipeline {
 
       steps {
         sshagent(['ssh_key']) {
-          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 35.168.225.244 wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/application_cicd.sh'
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu YOUR_APP_IP wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/application_cicd.sh'
 
-          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 35.168.225.244 bash application_cicd.sh'
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu YOUR_APP_IP bash application_cicd.sh'
         }
       }
     }
@@ -220,9 +220,9 @@ pipeline {
         COMP_FILE = "wafer_load_prod_model.yaml"
       }
 
-      // when {
-      //   changeset 'load_prod_model/*'
-      // }
+      when {
+        changeset 'load_prod_model/*'
+      }
 
       steps {
         script {
