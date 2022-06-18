@@ -27,9 +27,7 @@ class S3_Operation:
 
         self.bucket = self.config["s3_bucket"]
 
-    def read_object(
-        self, object, log_file, decode: bool = True, make_readable: bool = False,
-    ):
+    def read_object(self, object, log_file, decode=True, make_readable=False):
         """
         Method Name :   read_object
         Description :   This method reads the object with kwargs
@@ -294,7 +292,7 @@ class S3_Operation:
             )
 
     def upload_file(
-        self, from_fname, to_fname, bucket, log_file, delete: bool = True,
+        self, from_fname, to_fname, bucket, log_file, delete=True,
     ):
         """
         Method Name :   upload_file
