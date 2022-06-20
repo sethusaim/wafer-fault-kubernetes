@@ -1,7 +1,6 @@
 from clustering import KMeans_Clustering
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
-from utils.read_params import read_params
 
 
 class Run:
@@ -13,8 +12,6 @@ class Run:
     """
 
     def __init__(self):
-        self.config = read_params()
-
         self.utils = Main_Utils()
 
         self.log_writer = App_Logger()
