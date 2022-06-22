@@ -12,7 +12,7 @@ class App_Logger:
 
         self.log_dir = self.config["dir"]["log"]
 
-        self.log_file = self.log["log_file"]
+        self.log_file = self.config["log"]
 
         self.current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
 

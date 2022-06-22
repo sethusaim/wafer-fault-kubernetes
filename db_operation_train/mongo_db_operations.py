@@ -56,35 +56,6 @@ class MongoDB_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def get_collection(self, database, collection_name, log_file):
-        """
-        Method Name :   get_collection
-        Description :   This method gets collection from the particular database and collection name
-
-        Output      :   A collection is returned from database with name as collection name
-        On Failure  :   Write an exception log and then raise an exception
-
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.get_collection.__name__
-
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
-
-        try:
-            collection = database[self.mongo_config[collection_name]]
-
-            self.log_writer.log(
-                f"Created {collection_name} collection in mongodb", log_file
-            )
-
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
-
-            return collection
-
-        except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
-
     def get_collection_as_dataframe(self, db_name, collection_name, log_file):
         """
         Method Name :   get_collection_as_dataframe
@@ -102,9 +73,9 @@ class MongoDB_Operation:
 
         try:
             database = self.get_database(db_name, log_file)
-
-            collection = self.get_collection(database, collection_name, log_file)
-
+            
+            collection = database.get_collection(self.mongo_config[collection_name])
+        
             df = DataFrame(list(collection.find()))
 
             if "_id" in df.columns.to_list():
@@ -142,8 +113,8 @@ class MongoDB_Operation:
             self.log_writer.log(f"Converted dataframe to json records", log_file)
 
             database = self.get_database(db_name, log_file)
-
-            collection = database.get_collection(collection_name)
+            
+            collection = database.get_collection(self.mongo_config[collection_name])
 
             self.log_writer.log("Inserting records to MongoDB", log_file)
 
