@@ -6,6 +6,7 @@ from s3_operations import S3_Operation
 
 from utils.logger import App_Logger
 from utils.read_params import read_params
+from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
 
 
 class Main_Utils:
@@ -156,6 +157,35 @@ class Main_Utils:
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return data
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def save_and_upload_elbow_plot(self, max_clusters, wcss, log_file):
+        method_name = self.save_and_upload_elbow_plot.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            plot(range(1, max_clusters), wcss)
+
+            title("The Elbow Method")
+
+            xlabel("Number of clusters")
+
+            ylabel("WCSS")
+
+            savefig(self.files["elbow_plot"])
+
+            self.log_writer.log(
+                "Saved elbow plot based on max_clusters and wcss", log_file
+            )
+
+            self.s3.upload_file("elbow_plot", "elbow_plot", "io_files", log_file)
+
+            self.log_writer.log("Uploaded elbow plot to s3 bucket", log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)

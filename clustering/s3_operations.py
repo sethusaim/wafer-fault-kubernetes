@@ -28,9 +28,11 @@ class S3_Operation:
 
         self.bucket = self.config["s3_bucket"]
 
+        self.files = self.config["files"]
+
         self.save_format = self.config["model_save_format"]
 
-        self.model_dir = self.config["model_dir"]
+        self.dir = self.config["dir"]
 
     def get_bucket(self, bucket, log_file):
         """
@@ -149,12 +151,10 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            self.log_writer.log(
-                f"Uploading {from_fname} to s3 bucket {self.bucket[bucket]}", log_file
-            )
+            self.log_writer.log(f"Uploading {from_fname} to s3 bucket", log_file)
 
             self.s3_resource.meta.client.upload_file(
-                from_fname, self.bucket[bucket], to_fname
+                self.files[from_fname], self.bucket[bucket], self.files[to_fname]
             )
 
             self.log_writer.log(
@@ -219,7 +219,7 @@ class S3_Operation:
                 f"Saved {model_name} model as {model_file} name", log_file
             )
 
-            bucket_model_path = self.model_dir[model_dir] + "/" + model_file
+            bucket_model_path = self.dir[model_dir] + "/" + model_file
 
             self.log_writer.log(
                 f"Uploading {model_file} to {model_bucket} bucket", log_file

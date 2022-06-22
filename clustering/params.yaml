@@ -3,8 +3,7 @@ s3_bucket:
   model: wafer-model-3e502a3
   logs: wafer-logs-4e1f3bd
   feature_store: wafer-feature-store-02126f6
-  component: wafer-kubeflow-components-4efdbdc
-
+  
 files:
   features: wafer_train_features.csv
   targets: wafer_train_targets.csv
@@ -19,8 +18,8 @@ log_dir: clustering_logs
 base:
   random_state: 42
 
-model_dir:
-  trained: trained
+dir:
+  model_trained: trained
 
 KMeans:
   init: k-means++

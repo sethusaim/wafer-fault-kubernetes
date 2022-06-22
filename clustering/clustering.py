@@ -1,9 +1,9 @@
 from kneed import KneeLocator
-from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
 from sklearn.cluster import KMeans
 
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
+from utils.main_utils import Main_Utils
 from utils.read_params import read_params
 
 
@@ -26,9 +26,9 @@ class KMeans_Clustering:
 
         self.max_clusters = self.config["max_clusters"]
 
-        self.files = self.config["files"]
-
         self.s3 = S3_Operation()
+
+        self.utils = Main_Utils()
 
         self.log_writer = App_Logger()
 
@@ -59,24 +59,11 @@ class KMeans_Clustering:
 
                 wcss.append(kmeans.inertia_)
 
-            plot(range(1, self.max_clusters), wcss)
-
-            title("The Elbow Method")
-
-            xlabel("Number of clusters")
-
-            ylabel("WCSS")
-
-            savefig(self.files["elbow_plot"])
+            self.utils.save_and_upload_elbow_plot(
+                self.max_clusters, wcss, self.log_file
+            )
 
             self.log_writer.log("Saved elbow plot with local copy", self.log_file)
-
-            self.s3.upload_file(
-                self.files["elbow_plot"],
-                self.files["elbow_plot"],
-                "io_files",
-                self.log_file,
-            )
 
             self.kn = KneeLocator(range(1, self.max_clusters), wcss, **self.knee_params)
 
@@ -115,7 +102,7 @@ class KMeans_Clustering:
 
             self.y_kmeans = self.kmeans.fit_predict(data)
 
-            self.s3.save_model(self.kmeans, "trained", "model", self.log_file)
+            self.s3.save_model(self.kmeans, "model_trained", "model", self.log_file)
 
             data["Cluster"] = self.y_kmeans
 
