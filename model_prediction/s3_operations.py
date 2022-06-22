@@ -1,5 +1,6 @@
 from io import StringIO
-from os import remove
+from os import listdir, remove
+from os.path import join
 from pickle import loads
 
 from boto3 import resource
@@ -30,7 +31,9 @@ class S3_Operation:
 
         self.save_format = self.config["save_format"]
 
-        self.model_dir = self.config["model_dir"]
+        self.dir = self.config["dir"]
+
+        self.files = self.config["files"]
 
     def get_bucket(self, bucket, log_file):
         """
@@ -108,7 +111,7 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            lst = self.get_file_object(folder_name, bucket, log_file)
+            lst = self.get_file_object(self.dir[folder_name], bucket, log_file)
 
             list_of_files = [object.key for object in lst]
 
@@ -139,8 +142,8 @@ class S3_Operation:
         try:
             func = (
                 lambda: model_name + self.save_format
-                if self.model_dir[model_dir] is None
-                else self.model_dir[model_dir] + "/" + model_name + self.save_format
+                if self.dir[model_dir] is None
+                else self.dir[model_dir] + "/" + model_name + self.save_format
             )
 
             model_file = func()
@@ -275,7 +278,7 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            csv_obj = self.get_file_object(fname, bucket, log_file,)
+            csv_obj = self.get_file_object(self.files[fname], bucket, log_file)
 
             df = self.get_df_from_object(csv_obj, log_file)
 
@@ -358,6 +361,30 @@ class S3_Operation:
             )
 
             self.upload_file(local_fname, bucket_fname, bucket, log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def upload_folder(self, folder, bucket, log_file):
+        method_name = self.upload_folder.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            lst = listdir(folder)
+
+            self.log_writer.log("Got a list of files from folder", log_file)
+
+            for f in lst:
+                local_f = join(folder, f)
+
+                dest_f = folder + "/" + f
+
+                self.upload_file(local_f, dest_f, bucket, log_file)
+
+            self.log_writer.log("Uploaded folder to s3 bucket", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 

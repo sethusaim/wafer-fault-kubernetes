@@ -2,12 +2,11 @@ log:
   pred: prediction.log
   upload: upload_model_prediction.log
 
-model_dir:
-  prod: production
+dir:
+  prod_model: production
+  log: model_prediction_logs
 
 save_format: .sav
-
-log_dir: model_prediction_logs
 
 files:
   pred_input_file_preprocess: pred_input_file_preprocess.csv

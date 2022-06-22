@@ -1,5 +1,3 @@
-from os import listdir
-from os.path import join
 from shutil import rmtree
 
 from pandas import DataFrame
@@ -24,11 +22,7 @@ class Main_Utils:
 
         self.config = read_params()
 
-        self.model_dir = self.config["model_dir"]
-
         self.log_dir = self.config["dir"]["log"]
-
-        self.files = self.config["files"]
 
         self.class_name = self.__class__.__name__
 
@@ -48,18 +42,7 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, "upload")
 
         try:
-            lst = listdir(self.log_dir)
-
-            self.log_writer.log(
-                f"Got list of logs from {self.log_dir} folder", "upload"
-            )
-
-            for f in lst:
-                local_f = join(self.log_dir, f)
-
-                dest_f = self.log_dir + "/" + f
-
-                self.s3.upload_file(local_f, dest_f, "logs", "upload")
+            self.s3.upload_folder(self.log_dir, "upload")
 
             self.log_writer.log(f"Uploaded logs to logs s3 bucket", "upload")
 
@@ -87,7 +70,7 @@ class Main_Utils:
 
         try:
             list_of_files = self.s3.get_files_from_folder(
-                self.model_dir["prod"], bucket, log_file
+                "prod_model", bucket, log_file
             )
 
             for file in list_of_files:
@@ -101,8 +84,7 @@ class Main_Utils:
             model_name = model_name.split(".")[0]
 
             self.log_writer.log(
-                f"Got {model_name} from {self.model_dir['prod']} folder in {bucket} bucket",
-                log_file,
+                f"Got {model_name} from prod model folder in {bucket} bucket", log_file
             )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
@@ -172,7 +154,7 @@ class Main_Utils:
 
         try:
             data = self.s3.read_csv(
-                self.files["pred_input_file_preprocess"], "feature_store", log_file
+                "pred_input_file_preprocess", "feature_store", log_file
             )
 
             self.log_writer.log("Got the prediction input file", log_file)
@@ -236,11 +218,7 @@ class Main_Utils:
 
         try:
             self.s3.upload_df_as_csv(
-                result_df,
-                self.files["pred_output"],
-                self.files["pred_output"],
-                "io_files",
-                log_file,
+                result_df, "pred_output", "pred_output", "io_files", log_file
             )
 
             self.log_writer.log("Uploaded results as csv file to s3 bucket", log_file)
