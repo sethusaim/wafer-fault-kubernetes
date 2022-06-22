@@ -362,7 +362,7 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            lst = listdir(self.dir[folder])
+            lst = listdir(folder)
 
             self.log_writer.log("Got a list of files from folder", log_file)
 
