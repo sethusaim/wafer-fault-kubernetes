@@ -1,7 +1,6 @@
 from mongo_db_operations import MongoDB_Operation
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
-from utils.read_params import read_params
 
 
 class DB_Operation_Train:
@@ -13,15 +12,7 @@ class DB_Operation_Train:
     """
 
     def __init__(self):
-        self.config = read_params()
-
         self.class_name = self.__class__.__name__
-
-        self.files = self.config["files"]
-
-        self.data_dir = self.config["data_dir"]
-
-        self.train_log = self.config["log"]
 
         self.s3 = S3_Operation()
 
@@ -46,7 +37,7 @@ class DB_Operation_Train:
 
         try:
             lst = self.s3.read_csv_from_folder(
-                self.data_dir["train_good"], "train_data", "db_insert"
+                "train_good_data", "train_data", "db_insert"
             )
 
             for _, f in enumerate(lst):
@@ -86,11 +77,7 @@ class DB_Operation_Train:
             )
 
             self.s3.upload_df_as_csv(
-                df,
-                self.files["train_export"],
-                self.files["train_export"],
-                "feature_store",
-                "export_csv",
+                df, "train_export", "train_export", "feature_store", "export_csv"
             )
 
             self.log_writer.log("Exported dataframe to csv file", "export_csv")

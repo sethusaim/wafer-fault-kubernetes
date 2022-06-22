@@ -6,8 +6,9 @@ s3_bucket:
 files:
   train_export: train_input_file.csv
 
-data_dir:
-  train_good: good/train
+dir:
+  train_good_data: good/train
+  log: db_operation_train_logs
 
 log_dir: db_operation_train_logs
 
