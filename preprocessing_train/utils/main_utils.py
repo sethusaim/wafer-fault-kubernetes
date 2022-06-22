@@ -1,5 +1,3 @@
-from os import listdir
-from os.path import join
 from shutil import rmtree
 
 import numpy as np
@@ -25,8 +23,6 @@ class Main_Utils:
 
         self.config = read_params()
 
-        self.files = self.config["files"]
-
         self.class_name = self.__class__.__name__
 
         self.log_dir = self.config["dir"]["log"]
@@ -48,16 +44,7 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, "upload")
 
         try:
-            lst = listdir(self.log_dir)
-
-            self.log_writer.log("Got list of logs from app_logs folder", "upload")
-
-            for f in lst:
-                local_f = join(self.log_dir, f)
-
-                dest_f = self.log_dir + "/" + f
-
-                self.s3.upload_file(local_f, dest_f, "logs", "upload")
+            self.s3.upload_folder(self.log_dir, "logs", "upload")
 
             self.log_writer.log(f"Uploaded logs to logs s3 bucket", "upload")
 
@@ -84,9 +71,7 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            self.s3.upload_df_as_csv(
-                data, self.files[key], self.files[key], "feature_store", log_file
-            )
+            self.s3.upload_df_as_csv(data, key, key, "feature_store", log_file)
 
             self.log_writer.log(f"Uploaded {key} to feature store bucket", log_file)
 
@@ -110,11 +95,7 @@ class Main_Utils:
             self.log_writer.log("Created dataframe of null values", log_file)
 
             self.s3.upload_df_as_csv(
-                null_df,
-                self.files["null_values"],
-                self.files["null_files"],
-                "io_files",
-                log_file,
+                null_df, "null_values", "null_values", "io_files", log_file
             )
 
             self.log_writer.log("Uploaded null values csv file to s3 bucket", log_file)
