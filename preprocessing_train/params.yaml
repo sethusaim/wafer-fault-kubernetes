@@ -19,4 +19,5 @@ knn_imputer:
   n_neighbors: 3
   weights: uniform
 
-log_dir: preprocess_train_logs
+dir:
+  log: preprocess_train_logs

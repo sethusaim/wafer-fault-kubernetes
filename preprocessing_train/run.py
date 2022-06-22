@@ -60,6 +60,10 @@ class Run:
 
             self.utils.upload_data_to_feature_store(Y, "wafer_targets", "preprocess")
 
+            self.log_writer.log(
+                "Completed preprocessing on training data", "preprocess"
+            )
+
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, "preprocess"
             )
