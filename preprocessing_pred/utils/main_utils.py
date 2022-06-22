@@ -33,7 +33,7 @@ class Main_Utils:
 
         self.bucket = self.config["s3_bucket"]
 
-        self.log_dir = self.config["log_dir"]
+        self.log_dir = self.config["dir"]["log"]
 
         self.class_name = self.__class__.__name__
 

@@ -10,7 +10,7 @@ class App_Logger:
     def __init__(self):
         self.config = read_params()
 
-        self.log_dir = self.config["log_dir"]
+        self.log_dir = self.config["dir"]["log"]
 
         self.current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
 

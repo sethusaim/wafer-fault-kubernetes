@@ -21,7 +21,7 @@ class Main_Utils:
 
         self.config = read_params()
 
-        self.log_dir = self.config["log_dir"]
+        self.log_dir = self.config["dir"]["log"]
 
         self.file_pattern = self.config["file_pattern"]
 

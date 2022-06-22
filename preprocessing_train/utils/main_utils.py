@@ -29,7 +29,7 @@ class Main_Utils:
 
         self.class_name = self.__class__.__name__
 
-        self.log_dir = self.config["log_dir"]
+        self.log_dir = self.config["dir"]["log"]
 
     def upload_logs(self):
         """

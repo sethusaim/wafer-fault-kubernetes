@@ -25,7 +25,7 @@ class Main_Utils:
 
         self.models_dir = self.config["models_dir"]
 
-        self.log_dir = self.config["log_dir"]
+        self.log_dir = self.config["dir"]["log"]
 
         self.file_format = self.config["model_save_format"]
 
