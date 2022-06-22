@@ -245,7 +245,7 @@ class Model_Finder:
 
                 model_score = tm[1]
 
-                self.s3.save_model(model, "train", "model", log_file, idx=idx)
+                self.s3.save_model(model, "train_model", "model", log_file, idx=idx)
 
                 self.mlflow_op.log_all_for_model(model, model_score, idx)
 

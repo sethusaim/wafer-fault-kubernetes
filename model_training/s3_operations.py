@@ -1,5 +1,6 @@
 from io import StringIO
-from os import remove
+from os import listdir, remove
+from os.path import join
 from pickle import dump, loads
 
 from boto3 import resource
@@ -30,7 +31,7 @@ class S3_Operation:
 
         self.save_format = self.config["save_format"]
 
-        self.model_dir = self.config["models_dir"]
+        self.dir = self.config["dir"]
 
     def get_bucket(self, bucket, log_file):
         """
@@ -224,7 +225,7 @@ class S3_Operation:
                 f"Saved {model_name} model as {model_file} name", log_file
             )
 
-            bucket_model_path = self.model_dir[model_dir] + "/" + model_file
+            bucket_model_path = self.dir[model_dir] + "/" + model_file
 
             self.log_writer.log(
                 f"Uploading {model_file} to {model_bucket} bucket", log_file
@@ -405,8 +406,8 @@ class S3_Operation:
         try:
             func = (
                 lambda: model_name + self.save_format
-                if self.model_dir[model_dir] is None
-                else self.model_dir[model_dir] + "/" + model_name + self.save_format
+                if self.dir[model_dir] is None
+                else self.dir[model_dir] + "/" + model_name + self.save_format
             )
 
             model_file = func()
@@ -424,6 +425,30 @@ class S3_Operation:
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return model
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def upload_folder(self, folder, bucket, log_file):
+        method_name = self.upload_folder.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            lst = listdir(folder)
+
+            self.log_writer.log("Got a list of files from folder", log_file)
+
+            for f in lst:
+                local_f = join(folder, f)
+
+                dest_f = folder + "/" + f
+
+                self.upload_file(local_f, dest_f, bucket, log_file)
+
+            self.log_writer.log("Uploaded folder to s3 bucket", log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
