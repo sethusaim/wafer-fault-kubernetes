@@ -1,5 +1,3 @@
-from os import listdir
-from os.path import join
 from shutil import rmtree
 
 from s3_operations import S3_Operation
@@ -27,7 +25,7 @@ class Main_Utils:
 
         self.log_dir = self.config["dir"]["log"]
 
-        self.data_dir = self.config["data_dir"]
+        self.dir = self.config["dir"]
 
     def upload_logs(self):
         """
@@ -45,18 +43,7 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, "upload")
 
         try:
-            lst = listdir(self.log_dir)
-
-            self.log_writer.log(
-                f"Got list of logs from {self.log_dir} folder", "upload"
-            )
-
-            for f in lst:
-                local_f = join(self.log_dir, f)
-
-                dest_f = self.log_dir + "/" + f
-
-                self.s3.upload_file(local_f, dest_f, "logs", "upload")
+            self.s3.upload_folder(self.log_dir, "upload")
 
             self.log_writer.log("Uploaded logs to logs bucket", "upload")
 
@@ -67,7 +54,7 @@ class Main_Utils:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, "upload")
 
-    def get_train_fname(self, key, fname, log_file):
+    def get_filename(self, key, fname, log_file):
         """
         Method Name :   get_train_fname
         Description :   This method gets the trainiction file name based on the key
@@ -78,14 +65,14 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_train_fname.__name__
+        method_name = self.get_filename.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            train_fname = self.data_dir[key] + "/" + fname
+            train_fname = self.dir[key] + "/" + fname
 
-            self.log_writer.log(f"Got the train file name for {key}", log_file)
+            self.log_writer.log(f"Got the file name for {key}", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
@@ -110,12 +97,12 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            self.s3.create_folder(self.data_dir["train_good"], "train_data", log_file)
+            self.s3.create_folder("train_good_data", "train_data", log_file)
 
-            self.s3.create_folder(self.data_dir["train_bad"], "train_data", log_file)
+            self.s3.create_folder("train_bad_data", "train_data", log_file)
 
             self.log_writer.log(
-                f"Created folders for good and bad data in s3 bucket", log_file,
+                f"Created folders for good and bad data in s3 bucket", log_file
             )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)

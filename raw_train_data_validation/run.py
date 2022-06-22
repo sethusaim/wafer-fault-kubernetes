@@ -32,7 +32,7 @@ class Run:
         method_name = self.raw_train_data_validation.__name__
 
         self.log_writer.start_log(
-            "start", self.class_name, method_name, "raw_train_main",
+            "start", self.class_name, method_name, "raw_train_main"
         )
 
         try:
@@ -63,7 +63,7 @@ class Run:
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, "raw_train_main",
+                e, self.class_name, method_name, "raw_train_main"
             )
 
 
