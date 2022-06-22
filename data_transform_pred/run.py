@@ -46,7 +46,7 @@ class Run:
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, "data_transform_main",
+                e, self.class_name, method_name, "data_transform_main"
             )
 
 

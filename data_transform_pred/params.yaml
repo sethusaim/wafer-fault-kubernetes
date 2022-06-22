@@ -2,10 +2,9 @@ s3_bucket:
   pred_data: wafer-pred-data-2648352
   logs: wafer-logs-4e1f3bd
 
-log_dir: data_transform_pred_logs
-
-data_dir:
-  pred_good: good/pred
+dir:
+  pred_good_data: good/pred
+  log: data_transform_pred_logs
 
 log:
   data_transform: pred_data_transform.log

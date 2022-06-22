@@ -20,8 +20,6 @@ class Data_Transform_Pred:
 
         self.log_writer = App_Logger()
 
-        self.data_dir = self.config["data_dir"]
-
         self.col = self.config["col"]
 
     def rename_column(self, from_col, to_col):
@@ -43,7 +41,7 @@ class Data_Transform_Pred:
 
         try:
             lst = self.s3.read_csv_from_folder(
-                self.data_dir["pred_good"], "pred_data", "data_transform"
+                "pred_good_data", "pred_data", "data_transform"
             )
 
             for _, f in enumerate(lst):
@@ -56,18 +54,18 @@ class Data_Transform_Pred:
                 df.rename(colums={self.col[from_col]: self.col[to_col]}, inplace=True)
 
                 self.log_writer.log(
-                    f"Renamed the output columns for the file {file}", "data_transform",
+                    f"Renamed the output columns for the file {file}", "data_transform"
                 )
 
                 self.s3.upload_df_as_csv(df, abs_f, file, "pred_data", "data_transform")
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, "data_transform",
+                "exit", self.class_name, method_name, "data_transform"
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, "data_transform",
+                e, self.class_name, method_name, "data_transform"
             )
 
     def replace_missing_with_null(self):
@@ -84,12 +82,12 @@ class Data_Transform_Pred:
         method_name = self.replace_missing_with_null.__name__
 
         self.log_writer.start_log(
-            "start", self.class_name, method_name, "data_transform",
+            "start", self.class_name, method_name, "data_transform"
         )
 
         try:
             lst = self.s3.read_csv_from_folder(
-                self.data_dir["pred_good"], "pred_data", "data_transform"
+                "pred_good_data", "pred_data", "data_transform"
             )
 
             for _, f in enumerate(lst):
@@ -111,7 +109,7 @@ class Data_Transform_Pred:
                 self.s3.upload_file(df, abs_f, file, "pred_data", "data_transform")
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, "data_transform",
+                "exit", self.class_name, method_name, "data_transform"
             )
 
         except Exception as e:
