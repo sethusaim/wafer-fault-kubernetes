@@ -209,7 +209,7 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            files = self.get_files_from_folder(self.dir[folder_name], bucket, log_file)
+            files = self.get_files_from_folder(folder_name, bucket, log_file)
 
             lst = [
                 (self.read_csv(f, bucket, log_file), f, f.split("/")[-1])
@@ -257,7 +257,7 @@ class S3_Operation:
                     f"{folder_name} folder does not exist,creating new one", log_file
                 )
 
-                folder_obj = folder_name + "/"
+                folder_obj = self.dir[folder_name] + "/"
 
                 self.s3_client.put_object(Bucket=self.bucket[bucket], Key=folder_obj)
 

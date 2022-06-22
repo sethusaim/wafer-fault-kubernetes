@@ -43,7 +43,7 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, "upload")
 
         try:
-            self.s3.upload_folder(self.log_dir, "upload")
+            self.s3.upload_folder(self.log_dir, "logs", "upload")
 
             self.log_writer.log("Uploaded logs to logs bucket", "upload")
 
