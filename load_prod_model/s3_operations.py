@@ -1,4 +1,5 @@
-from os import remove
+from os import listdir, remove
+from os.path import join
 
 from boto3 import client, resource
 from botocore.exceptions import ClientError
@@ -248,6 +249,30 @@ class S3_Operation:
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return list_of_files
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def upload_folder(self, folder, bucket, log_file):
+        method_name = self.upload_folder.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            lst = listdir(folder)
+
+            self.log_writer.log("Got a list of files from folder", log_file)
+
+            for f in lst:
+                local_f = join(folder, f)
+
+                dest_f = folder + "/" + f
+
+                self.upload_file(local_f, dest_f, bucket, log_file)
+
+            self.log_writer.log("Uploaded folder to s3 bucket", log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)

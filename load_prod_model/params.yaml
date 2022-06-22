@@ -1,7 +1,8 @@
-models_dir:
-  trained: trained
-  stag: staging
-  prod: production
+dir:
+  trained_model: trained
+  stag_model: staging
+  prod_model: production
+  log: load_prod_model_logs
 
 model_save_format: .sav
 
@@ -18,5 +19,3 @@ s3_bucket:
 log:
   upload: upload_load_prod_model.log
   load_prod_model: load_prod_model.log
-
-log_dir: load_prod_model_logs
