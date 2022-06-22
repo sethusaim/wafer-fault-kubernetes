@@ -29,6 +29,8 @@ class S3_Operation:
 
         self.bucket = self.config["s3_bucket"]
 
+        self.dir = self.config["dir"]
+
     def create_folder(self, folder_name, bucket, log_file):
         """
         Method Name :   create_folder
@@ -47,7 +49,7 @@ class S3_Operation:
         )
 
         try:
-            self.s3_resource.Object(self.bucket[bucket], folder_name).load()
+            self.s3_resource.Object(self.bucket[bucket], self.dir[folder_name]).load()
 
             self.log_writer.log(f"Folder {folder_name} already exists.", log_file)
 
@@ -62,7 +64,7 @@ class S3_Operation:
                 )
 
                 self.s3_client.put_object(
-                    Bucket=self.bucket[bucket], Key=(folder_name + "/")
+                    Bucket=self.bucket[bucket], Key=(self.dir[folder_name] + "/")
                 )
 
                 self.log_writer.log(

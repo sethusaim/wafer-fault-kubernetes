@@ -21,7 +21,7 @@ class Main_Utils:
 
         self.config = read_params()
 
-        self.models_dir = self.config["dir"]
+        self.dir = self.config["dir"]
 
         self.log_dir = self.config["dir"]["log"]
 
@@ -74,7 +74,7 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            model_file = self.models_dir[key] + "/" + model_name + self.file_format
+            model_file = self.dir[key] + "/" + model_name + self.file_format
 
             self.log_writer.log(f"Got model file for {key}", log_file)
 
@@ -101,9 +101,9 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            self.s3.create_folder(self.models_dir["prod"], bucket, log_file)
+            self.s3.create_folder("prod_model", bucket, log_file)
 
-            self.s3.create_folder(self.models_dir["stag"], bucket, log_file)
+            self.s3.create_folder("stag_model", bucket, log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
