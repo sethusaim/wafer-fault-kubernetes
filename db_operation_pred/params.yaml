@@ -6,10 +6,9 @@ s3_bucket:
 files:
   pred_export: pred_input_file.csv
 
-data_dir:
-  pred_good: good/pred
-
-log_dir: db_operation_pred_logs
+dir:
+  pred_good_data: good/pred
+  log: db_operation_pred_logs
 
 log:
   db_insert: pred_db_insert.log
