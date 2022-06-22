@@ -1,5 +1,6 @@
 from io import StringIO
-from os import remove
+from os import listdir, remove
+from os.path import join
 
 from boto3 import resource
 from pandas import read_csv
@@ -22,6 +23,8 @@ class S3_Operation:
         self.config = read_params()
 
         self.bucket = self.config["s3_bucket"]
+
+        self.files = self.config["files"]
 
         self.log_writer = App_Logger()
 
@@ -92,13 +95,15 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            data_frame.to_csv(local_fname, index=None, header=True)
+            data_frame.to_csv(self.files[local_fname], index=None, header=True)
 
             self.log_writer.log(
                 f"Created a local copy of dataframe with name {local_fname}", log_file
             )
 
-            self.upload_file(local_fname, bucket_fname, bucket, log_file)
+            self.upload_file(
+                self.files[local_fname], self.files[bucket_fname], bucket, log_file
+            )
 
             self.log_writer.log(
                 f"Uploaded dataframe as csv to {bucket} bucket with name as {bucket_fname}",
@@ -258,7 +263,7 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            csv_obj = self.get_file_object(fname, bucket, log_file,)
+            csv_obj = self.get_file_object(self.files[fname], bucket, log_file,)
 
             df = self.get_df_from_object(csv_obj, log_file)
 
@@ -316,9 +321,33 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            self.s3_resource.Object(self.bucket[bucket], fname).delete()
+            self.s3_resource.Object(self.bucket[bucket], self.files[fname]).delete()
 
             self.log_writer.log(f"Deleted {fname} from bucket {bucket}", log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def upload_folder(self, folder, bucket, log_file):
+        method_name = self.upload_folder.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            lst = listdir(folder)
+
+            self.log_writer.log("Got a list of files from folder", log_file)
+
+            for f in lst:
+                local_f = join(folder, f)
+
+                dest_f = folder + "/" + f
+
+                self.upload_file(local_f, dest_f, bucket, log_file)
+
+            self.log_writer.log("Uploaded folder to s3 bucket", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 

@@ -1,5 +1,3 @@
-from os import listdir
-from os.path import join
 from shutil import rmtree
 
 import numpy as np
@@ -53,18 +51,7 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, "upload")
 
         try:
-            lst = listdir(self.log_dir)
-
-            self.log_writer.log(
-                f"Got list of logs from {self.log_dir} folder", "upload"
-            )
-
-            for f in lst:
-                local_f = join(self.log_dir, f)
-
-                dest_f = self.log_dir + "/" + f
-
-                self.s3.upload_file(local_f, dest_f, "logs", "upload")
+            self.s3.upload_folder(self.log_dir, "logs", "upload")
 
             self.log_writer.log("Uploaded logs to logs bucket", "upload")
 
@@ -99,7 +86,7 @@ class Main_Utils:
                 f"Found existing Prediction batch file. Deleting it.", log_file
             )
 
-            self.s3.delete_file(self.files["pred_file"], "io_files", log_file)
+            self.s3.delete_file("pred_file", "io_files", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
@@ -125,11 +112,7 @@ class Main_Utils:
             self.log_writer.log("Created dataframe of null values", log_file)
 
             self.s3.upload_df_as_csv(
-                null_df,
-                self.files["null_values"],
-                self.files["null_files"],
-                "io_files",
-                log_file,
+                null_df, "null_values", "null_values", "io_files", log_file
             )
 
             self.log_writer.log("Uploaded null values csv file to s3 bucket", log_file)
@@ -147,8 +130,8 @@ class Main_Utils:
         try:
             self.s3.upload_df_as_csv(
                 data,
-                self.files["pred_input_preprocess"],
-                self.files["pred_input_preprocess"],
+                "pred_input_preprocess",
+                "pred_input_preprocess",
                 "feature_store",
                 log_file,
             )

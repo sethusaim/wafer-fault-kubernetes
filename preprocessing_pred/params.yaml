@@ -11,9 +11,6 @@ files:
 
 target_col: Output
 
-model_dir:
-  prod: production
-
 log:
   preprocess_pred: preprocess_pred.log
   upload: upload_preprocess_pred.log
@@ -22,4 +19,5 @@ knn_imputer:
   n_neighbors: 3
   weights: uniform
 
-log_dir: preprocess_pred_logs
+dir: 
+  log: preprocess_pred_logs

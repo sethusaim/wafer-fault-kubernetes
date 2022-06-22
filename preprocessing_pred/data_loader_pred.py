@@ -1,6 +1,5 @@
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
-from utils.read_params import read_params
 
 
 class Data_Getter_Pred:
@@ -12,11 +11,7 @@ class Data_Getter_Pred:
     """
 
     def __init__(self, log_file):
-        self.config = read_params()
-
         self.log_file = log_file
-
-        self.files = self.config["files"]
 
         self.s3 = S3_Operation()
 
@@ -40,12 +35,10 @@ class Data_Getter_Pred:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            df = self.s3.read_csv(
-                self.files["pred_input"], "feature_store", self.log_file
-            )
+            df = self.s3.read_csv("pred_input", "feature_store", self.log_file)
 
             self.log_writer.log(
-                f"Data loaded from file {self.files['pred_input']} and feature store bucket",
+                "Data loaded from pred_input file and feature store bucket",
                 self.log_file,
             )
 
