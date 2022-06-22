@@ -1,3 +1,4 @@
+from mlflow import end_run, start_run
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
@@ -5,7 +6,7 @@ from xgboost import XGBClassifier
 from mlflow_operations import MLFlow_Operation
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
-from utils.model_utils import Model_Utils
+from utils.main_utils import Main_Utils
 from utils.read_params import read_params
 
 
@@ -26,9 +27,11 @@ class Model_Finder:
 
         self.split_kwargs = self.config["base"]
 
+        self.mlflow_config = self.config["mlflow_config"]
+
         self.mlflow_op = MLFlow_Operation(self.log_file)
 
-        self.model_utils = Model_Utils()
+        self.utils = Main_Utils()
 
         self.log_writer = App_Logger()
 
@@ -55,7 +58,7 @@ class Model_Finder:
 
             rf_model_name = rf_model.__class__.__name__
 
-            rf_best_params = self.model_utils.get_model_params(
+            rf_best_params = self.utils.get_model_params(
                 rf_model, train_x, train_y, self.log_file
             )
 
@@ -110,7 +113,7 @@ class Model_Finder:
 
             xgb_model_name = xgb_model.__class__.__name__
 
-            xgb_best_params = self.model_utils.get_model_params(
+            xgb_best_params = self.utils.get_model_params(
                 xgb_model, train_x, train_y, self.log_file
             )
 
@@ -166,7 +169,7 @@ class Model_Finder:
                 f"Got trained {xgb_model.__class__.__name__} model", self.log_file,
             )
 
-            xgb_model_score = self.model_utils.get_model_score(
+            xgb_model_score = self.utils.get_model_score(
                 xgb_model, test_x, test_y, self.log_file
             )
 
@@ -181,7 +184,7 @@ class Model_Finder:
                 f"Got trained {rf_model.__class__.__name__} model", self.log_file
             )
 
-            rf_model_score = self.model_utils.get_model_score(
+            rf_model_score = self.utils.get_model_score(
                 rf_model, test_x, test_y, self.log_file
             )
 
@@ -252,6 +255,44 @@ class Model_Finder:
             self.log_writer.log(
                 "Saved and logged all trained models to mlflow", log_file
             )
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def perform_training(self, lst_clusters, log_file):
+        method_name = self.perform_training.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            kmeans_model = self.s3.load_model(
+                "KMeans", "model", log_file, model_dir="train_model"
+            )
+
+            kmeans_model_name = kmeans_model.__class__.__name__
+
+            self.mlflow_op.set_mlflow_tracking_uri()
+
+            self.mlflow_op.set_mlflow_experiment("exp_name")
+
+            with start_run(run_name=self.mlflow_config["run_name"]):
+                self.mlflow_op.log_sklearn_model(kmeans_model, kmeans_model_name)
+
+                end_run()
+
+            for i in range(lst_clusters):
+                cluster_feat = self.utils.get_cluster_features(i, log_file)
+
+                cluster_label = self.utils.get_cluster_targets(i, log_file)
+
+                self.log_writer.log("Got cluster features and cluster labels", log_file)
+
+                with start_run(run_name=self.mlflow_config["run_name"] + str(i)):
+                    self.train_and_log_models(
+                        cluster_feat, cluster_label, log_file, idx=i,
+                    )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
