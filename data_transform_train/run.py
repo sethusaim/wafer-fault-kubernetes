@@ -1,7 +1,6 @@
 from data_transformation_train import Data_Transform_Train
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
-from utils.read_params import read_params
 
 
 class Run:
@@ -13,8 +12,6 @@ class Run:
     """
 
     def __init__(self):
-        self.config = read_params()
-
         self.class_name = self.__class__.__name__
 
         self.log_writer = App_Logger()

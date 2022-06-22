@@ -2,12 +2,11 @@ s3_bucket:
   train_data: wafer-train-data-5acbd2d
   logs: wafer-logs-4e1f3bd
 
-log_dir: data_transform_train_logs
+dir:
+  train_good_data: good/train
+  log: data_transform_train_logs
 
-data_dir:
-  train_good: good/train
-
-log: 
+log:
   data_transform: train_data_transform.log
   data_transform_main: data_transform_main.log
   upload: upload_data_transform_train.log
@@ -17,4 +16,3 @@ col:
   good_bad: Good/Bad
   wafer: Wafer
   unnamed: "Unnamed: 0"
-
