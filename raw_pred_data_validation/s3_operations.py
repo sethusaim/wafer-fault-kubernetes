@@ -1,6 +1,7 @@
 from io import StringIO
 from json import loads
-from os import remove
+from os import listdir, remove
+from os.path import join
 
 from boto3 import client, resource
 from botocore.exceptions import ClientError
@@ -26,6 +27,10 @@ class S3_Operation:
         self.config = read_params()
 
         self.bucket = self.config["s3_bucket"]
+
+        self.dir = self.config["dir"]
+
+        self.files = self.config["files"]
 
         self.s3_client = client("s3")
 
@@ -63,16 +68,12 @@ class S3_Operation:
                 f"read the s3 object with make_readable as {make_readable}", log_file
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return conv_func()
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def read_text(self, fname, bucket, log_file):
         """
@@ -87,12 +88,10 @@ class S3_Operation:
         """
         method_name = self.read_text.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            txt_obj = self.get_file_object(fname, bucket, log_file)
+            txt_obj = self.get_file_object(self.files[fname], bucket, log_file)
 
             content = self.read_object(txt_obj, log_file)
 
@@ -100,16 +99,12 @@ class S3_Operation:
                 f"Read {fname} file as text from {bucket} bucket", log_file
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return content
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def read_json(self, fname, bucket, log_file):
         """
@@ -124,12 +119,10 @@ class S3_Operation:
         """
         method_name = self.read_json.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            f_obj = self.get_file_object(fname, bucket, log_file)
+            f_obj = self.get_file_object(self.files[fname], bucket, log_file)
 
             json_content = self.read_object(f_obj, log_file)
 
@@ -142,9 +135,7 @@ class S3_Operation:
             return dic
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def get_df_from_object(self, object, log_file):
         """
@@ -159,9 +150,7 @@ class S3_Operation:
         """
         method_name = self.get_df_from_object.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             content = self.read_object(object, log_file, make_readable=True)
@@ -170,16 +159,12 @@ class S3_Operation:
 
             self.log_writer.log("Got the dataframe from object", log_file)
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return df
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def read_csv(self, fname, bucket, log_file):
         """
@@ -194,9 +179,7 @@ class S3_Operation:
         """
         method_name = self.read_csv.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             csv_obj = self.get_file_object(fname, bucket, log_file)
@@ -205,16 +188,12 @@ class S3_Operation:
 
             self.log_writer.log(f"Read {fname} csv file from {bucket} bucket", log_file)
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return df
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def read_csv_from_folder(self, folder_name, bucket, log_file):
         """
@@ -229,11 +208,10 @@ class S3_Operation:
         """
         method_name = self.read_csv_from_folder.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
         try:
-            files = self.get_files_from_folder(folder_name, bucket, log_file)
+            files = self.get_files_from_folder(self.dir[folder_name], bucket, log_file)
 
             lst = [
                 (self.read_csv(f, bucket, log_file), f, f.split("/")[-1])
@@ -246,16 +224,12 @@ class S3_Operation:
                 log_file,
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return lst
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def create_folder(self, folder_name, bucket, log_file):
         """
@@ -270,18 +244,14 @@ class S3_Operation:
         """
         method_name = self.create_folder.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            self.s3_resource.Object(self.bucket[bucket], folder_name).load()
+            self.s3_resource.Object(self.bucket[bucket], self.dir[folder_name]).load()
 
             self.log_writer.log(f"Folder {folder_name} already exists.", log_file)
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except ClientError as e:
             if e.response["Error"]["Code"] == "404":
@@ -302,16 +272,12 @@ class S3_Operation:
                     f"Error occured in creating {folder_name} folder", log_file
                 )
 
-                self.log_writer.exception_log(
-                    e, self.class_name, method_name, log_file,
-                )
+                self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def upload_file(
-        self, from_fname, to_fname, bucket, log_file, delete=True,
-    ):
+    def upload_file(self, from_fname, to_fname, bucket, log_file, delete=True):
         """
         Method Name :   upload_file
         Description :   This method uploades a file to s3 bucket with kwargs
@@ -324,9 +290,7 @@ class S3_Operation:
         """
         method_name = self.upload_file.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             self.log_writer.log(
@@ -351,7 +315,7 @@ class S3_Operation:
                 self.log_writer.log(f"Removed the local copy of {from_fname}", log_file)
 
                 self.log_writer.start_log(
-                    "exit", self.class_name, method_name, log_file,
+                    "exit", self.class_name, method_name, log_file
                 )
 
             else:
@@ -360,9 +324,7 @@ class S3_Operation:
                 )
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def get_bucket(self, bucket, log_file):
         """
@@ -377,29 +339,21 @@ class S3_Operation:
         """
         method_name = self.get_bucket.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             bucket = self.s3_resource.Bucket(self.bucket[bucket])
 
             self.log_writer.log(f"Got {bucket} bucket", log_file)
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return bucket
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def copy_data(
-        self, from_fname, from_bucket, to_fname, to_bucket, log_file,
-    ):
+    def copy_data(self, from_fname, from_bucket, to_fname, to_bucket, log_file):
         """
         Method Name :   copy_data
         Description :   This method copies the data from one bucket to another bucket
@@ -412,9 +366,7 @@ class S3_Operation:
         """
         method_name = self.copy_data.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             copy_source = {"Bucket": from_bucket, "Key": from_fname}
@@ -422,18 +374,13 @@ class S3_Operation:
             self.s3_resource.meta.client.copy(copy_source, to_bucket, to_fname)
 
             self.log_writer.log(
-                f"Copied data from bucket {from_bucket} to bucket {to_bucket}",
-                log_file,
+                f"Copied data from bucket {from_bucket} to bucket {to_bucket}", log_file
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def delete_file(self, fname, bucket, log_file):
         """
@@ -448,27 +395,19 @@ class S3_Operation:
         """
         method_name = self.delete_file.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             self.s3_resource.Object(bucket, fname).delete()
 
             self.log_writer.log(f"Deleted {fname} from bucket {bucket}", log_file)
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def move_data(
-        self, from_fname, from_bucket, to_fname, to_bucket, log_file,
-    ):
+    def move_data(self, from_fname, from_bucket, to_fname, to_bucket, log_file):
         """
         Method Name :   move_data
         Description :   This method moves the data from one bucket to other bucket
@@ -481,9 +420,7 @@ class S3_Operation:
         """
         method_name = self.move_data.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             self.copy_data(from_fname, from_bucket, to_fname, to_bucket, log_file)
@@ -491,18 +428,13 @@ class S3_Operation:
             self.delete_file(from_fname, from_bucket, log_file)
 
             self.log_writer.log(
-                f"Moved {from_fname} from bucket {from_bucket} to {to_bucket}",
-                log_file,
+                f"Moved {from_fname} from bucket {from_bucket} to {to_bucket}", log_file
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def get_files_from_folder(self, folder_name, bucket, log_file):
         """
@@ -517,27 +449,21 @@ class S3_Operation:
         """
         method_name = self.get_files_from_folder.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            lst = self.get_file_object(folder_name, bucket, log_file)
+            lst = self.get_df_from_object(self.dir[folder_name], bucket, log_file)
 
             list_of_files = [object.key for object in lst]
 
             self.log_writer.log(f"Got list of files from bucket {bucket}", log_file)
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return list_of_files
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def get_file_object(self, fname, bucket, log_file):
         """
@@ -552,9 +478,7 @@ class S3_Operation:
         """
         method_name = self.get_file_object.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             bucket = self.get_bucket(bucket, log_file)
@@ -569,20 +493,14 @@ class S3_Operation:
 
             self.log_writer.log(f"Got the file object from bucket {bucket}", log_file)
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return file_objs
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def upload_df_as_csv(
-        self, data_frame, local_fname, bucket_fname, bucket, log_file,
-    ):
+    def upload_df_as_csv(self, data_frame, local_fname, bucket_fname, bucket, log_file):
         """
         Method Name :   upload_df_as_csv
         Description :   This method uploades a dataframe as csv file to s3 bucket
@@ -595,9 +513,7 @@ class S3_Operation:
         """
         method_name = self.upload_df_as_csv.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             data_frame.to_csv(local_fname, index=None, header=True)
@@ -613,11 +529,31 @@ class S3_Operation:
                 log_file,
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def upload_folder(self, folder, bucket, log_file):
+        method_name = self.upload_folder.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            lst = listdir(folder)
+
+            self.log_writer.log("Got a list of files from folder", log_file)
+
+            for f in lst:
+                local_f = join(folder, f)
+
+                dest_f = folder + "/" + f
+
+                self.upload_file(local_f, dest_f, bucket, log_file)
+
+            self.log_writer.log("Uploaded folder to s3 bucket", log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)

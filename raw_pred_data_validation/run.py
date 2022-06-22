@@ -32,7 +32,7 @@ class Run:
         method_name = self.raw_pred_data_validation.__name__
 
         self.log_writer.start_log(
-            "start", self.class_name, method_name, "raw_pred_main",
+            "start", self.class_name, method_name, "raw_pred_main"
         )
 
         try:
@@ -58,12 +58,12 @@ class Run:
             self.log_writer.log("Raw Data Validation Completed !!", "raw_pred_main")
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, "raw_pred_main",
+                "exit", self.class_name, method_name, "raw_pred_main"
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, "raw_pred_main",
+                e, self.class_name, method_name, "raw_pred_main"
             )
 
 
