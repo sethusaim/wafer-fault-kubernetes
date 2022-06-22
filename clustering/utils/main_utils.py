@@ -108,7 +108,12 @@ class Main_Utils:
             )
 
             self.s3.upload_df_as_csv(
-                cluster_data, cluster_fname, cluster_fname, "feature_store", log_file
+                cluster_data,
+                cluster_fname,
+                cluster_fname,
+                "feature_store",
+                log_file,
+                index=True,
             )
 
             self.log_writer.log(

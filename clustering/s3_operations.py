@@ -135,7 +135,7 @@ class S3_Operation:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def upload_file(
-        self, from_fname, to_fname, bucket, log_file, delete=True,
+        self, from_fname, to_fname, bucket, log_file, delete=True, index=False
     ):
         """
         Method Name :   upload_file
@@ -154,8 +154,14 @@ class S3_Operation:
         try:
             self.log_writer.log(f"Uploading {from_fname} to s3 bucket", log_file)
 
+            func = (
+                lambda: (self.files[from_fname], self.files[to_fname])
+                if index is False
+                else (from_fname, to_fname)
+            )
+
             self.s3_resource.meta.client.upload_file(
-                self.files[from_fname], self.bucket[bucket], self.files[to_fname]
+                func()[0], self.bucket[bucket], func()[1]
             )
 
             self.log_writer.log(
@@ -167,18 +173,16 @@ class S3_Operation:
                     f"Option remove is set {delete}..deleting the file", log_file
                 )
 
-                remove(from_fname)
+                remove(func()[0])
 
                 self.log_writer.log(f"Removed the local copy of {from_fname}", log_file)
-
-                self.log_writer.start_log(
-                    "exit", self.class_name, method_name, log_file
-                )
 
             else:
                 self.log_writer.log(
                     f"Option remove is set {delete}, not deleting the file", log_file
                 )
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
@@ -226,7 +230,9 @@ class S3_Operation:
                 f"Uploading {model_file} to {model_bucket} bucket", log_file
             )
 
-            self.upload_file(model_file, bucket_model_path, model_bucket, log_file)
+            self.upload_file(
+                model_file, bucket_model_path, model_bucket, log_file, index=True
+            )
 
             self.log_writer.log(
                 f"Uploaded  {model_file} to {model_bucket} bucket", log_file
@@ -240,7 +246,7 @@ class S3_Operation:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def upload_df_as_csv(
-        self, data_frame, local_fname, bucket_fname, bucket, log_file,
+        self, data_frame, local_fname, bucket_fname, bucket, log_file, index=False
     ):
         """
         Method Name :   upload_df_as_csv
@@ -263,7 +269,7 @@ class S3_Operation:
                 f"Created a local copy of dataframe with name {local_fname}", log_file
             )
 
-            self.upload_file(local_fname, bucket_fname, bucket, log_file)
+            self.upload_file(local_fname, bucket_fname, bucket, log_file, index=index)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 

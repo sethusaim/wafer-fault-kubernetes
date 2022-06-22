@@ -13,13 +13,12 @@ log:
   clustering: train_clustering.log
   upload: upload_train_cluster.log
 
-log_dir: clustering_logs
-
 base:
   random_state: 42
 
 dir:
   model_trained: trained
+  log: clustering_logs
 
 KMeans:
   init: k-means++
