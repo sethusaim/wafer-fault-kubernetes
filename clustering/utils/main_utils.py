@@ -1,3 +1,5 @@
+from shutil import rmtree
+
 from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
 from s3_operations import S3_Operation
 
@@ -47,6 +49,8 @@ class Main_Utils:
             self.log_writer.log(f"Uploaded logs to s3 bucket", "upload")
 
             self.log_writer.start_log("exit", self.class_name, method_name, "upload")
+
+            rmtree(self.log_dir)
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, "upload")

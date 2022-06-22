@@ -2,7 +2,6 @@ from io import StringIO
 from os import listdir, remove
 from os.path import join
 from pickle import dump
-from shutil import rmtree
 
 from boto3 import resource
 from pandas import read_csv
@@ -351,8 +350,6 @@ class S3_Operation:
             self.log_writer.log("Uploaded folder to s3 bucket", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
-
-            rmtree(folder)
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
