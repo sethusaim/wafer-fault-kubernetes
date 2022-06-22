@@ -1,12 +1,8 @@
-from os import listdir
-from os.path import join
-from shutil import rmtree
-
+from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
 from s3_operations import S3_Operation
 
 from utils.logger import App_Logger
 from utils.read_params import read_params
-from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
 
 
 class Main_Utils:
@@ -46,22 +42,11 @@ class Main_Utils:
         self.log_writer.start_log("start", self.class_name, method_name, "upload")
 
         try:
-            lst = listdir(self.log_dir)
-
-            self.log_writer.log("Got list of logs from train_logs folder", "upload")
-
-            for f in lst:
-                local_f = join(self.log_dir, f)
-
-                dest_f = self.log_dir + "/" + f
-
-                self.s3.upload_file(local_f, dest_f, "logs", "upload")
+            self.s3.upload_folder(self.log_dir, "logs", "upload")
 
             self.log_writer.log(f"Uploaded logs to s3 bucket", "upload")
 
             self.log_writer.start_log("exit", self.class_name, method_name, "upload")
-
-            rmtree(self.log_dir)
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, "upload")

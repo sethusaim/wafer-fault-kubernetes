@@ -35,13 +35,11 @@ class Run:
 
         self.log_writer.start_log("start", self.class_name, method_name, "clustering")
 
-        self.log_writer.start_log("start", self.class_name, method_name, "clustering")
-
         try:
             X = self.utils.get_training_data("features", "clustering")
 
             self.log_writer.log(
-                f"Read the features file for training from feature store bucket",
+                "Read the features file for training from feature store bucket",
                 "clustering",
             )
 
