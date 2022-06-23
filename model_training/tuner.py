@@ -39,7 +39,7 @@ class Model_Finder:
 
         self.rf_model = RandomForestClassifier()
 
-        self.xgb_model = XGBClassifier()
+        self.xgb_model = XGBClassifier(objective="binary:logistic")
 
     def get_rf_model(self, train_x, train_y):
         """
