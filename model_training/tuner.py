@@ -37,6 +37,10 @@ class Model_Finder:
 
         self.s3 = S3_Operation()
 
+        self.rf_model = RandomForestClassifier()
+
+        self.xgb_model = XGBClassifier()
+
     def get_rf_model(self, train_x, train_y):
         """
         Method Name :   get_rf_model
@@ -54,12 +58,10 @@ class Model_Finder:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            rf_model = RandomForestClassifier()
-
-            rf_model_name = rf_model.__class__.__name__
+            rf_model_name = self.rf_model.__class__.__name__
 
             rf_best_params = self.utils.get_model_params(
-                rf_model, train_x, train_y, self.log_file
+                self.rf_model, train_x, train_y, self.log_file
             )
 
             self.log_writer.log(
@@ -67,14 +69,14 @@ class Model_Finder:
                 self.log_file,
             )
 
-            rf_model.set_params(**rf_best_params)
+            self.rf_model.set_params(**rf_best_params)
 
             self.log_writer.log(
                 f"Initialized {rf_model_name} with {rf_best_params} as params",
                 self.log_file,
             )
 
-            rf_model.fit(train_x, train_y)
+            self.rf_model.fit(train_x, train_y)
 
             self.log_writer.log(
                 f"Created {rf_model_name} based on the {rf_best_params} as params",
@@ -85,7 +87,7 @@ class Model_Finder:
                 "exit", self.class_name, method_name, self.log_file
             )
 
-            return rf_model
+            return self.rf_model
 
         except Exception as e:
             self.log_writer.exception_log(
@@ -109,12 +111,10 @@ class Model_Finder:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            xgb_model = XGBClassifier()
-
-            xgb_model_name = xgb_model.__class__.__name__
+            xgb_model_name = self.xgb_model.__class__.__name__
 
             xgb_best_params = self.utils.get_model_params(
-                xgb_model, train_x, train_y, self.log_file
+                self.xgb_model, train_x, train_y, self.log_file
             )
 
             self.log_writer.log(
@@ -122,14 +122,14 @@ class Model_Finder:
                 self.log_file,
             )
 
-            xgb_model.set_params(**xgb_best_params)
+            self.xgb_model.set_params(**xgb_best_params)
 
             self.log_writer.log(
                 f"Initialized {xgb_model_name} with {xgb_best_params} as params",
                 self.log_file,
             )
 
-            xgb_model.fit(train_x, train_y)
+            self.xgb_model.fit(train_x, train_y)
 
             self.log_writer.log(
                 f"Created {xgb_model_name} based on the {xgb_best_params} as params",
@@ -140,7 +140,7 @@ class Model_Finder:
                 "exit", self.class_name, method_name, self.log_file
             )
 
-            return xgb_model
+            return self.xgb_model
 
         except Exception as e:
             self.log_writer.exception_log(
