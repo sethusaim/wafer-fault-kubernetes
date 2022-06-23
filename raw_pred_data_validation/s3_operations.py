@@ -24,21 +24,19 @@ class S3_Operation:
 
         self.class_name = self.__class__.__name__
 
-        self.config = read_params()
-
-        self.bucket = self.config["s3_bucket"]
-
-        self.dir = self.config["dir"]
-
-        self.files = self.config["files"]
-
         self.s3_client = client("s3")
 
         self.s3_resource = resource("s3")
 
-    def read_object(
-        self, object, log_file, decode=True, make_readable=False,
-    ):
+        self.config = read_params()
+
+        self.bucket = self.config["s3_bucket"]
+
+        self.files = self.config["files"]
+
+        self.dir = self.config["dir"]
+
+    def read_object(self, object, log_file, decode=True, make_readable=False):
         """
         Method Name :   read_object
         Description :   This method reads the object with kwargs
@@ -211,7 +209,7 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            files = self.get_files_from_folder(self.dir[folder_name], bucket, log_file)
+            files = self.get_files_from_folder(folder_name, bucket, log_file)
 
             lst = [
                 (self.read_csv(f, bucket, log_file), f, f.split("/")[-1])
@@ -259,9 +257,9 @@ class S3_Operation:
                     f"{folder_name} folder does not exist,creating new one", log_file
                 )
 
-                folder_obj = folder_name + "/"
+                folder_obj = self.dir[folder_name] + "/"
 
-                self.s3_client.put_object(Bucket=bucket, Key=folder_obj)
+                self.s3_client.put_object(Bucket=self.bucket[bucket], Key=folder_obj)
 
                 self.log_writer.log(
                     f"{folder_name} folder created in {bucket} bucket", log_file
@@ -369,9 +367,11 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            copy_source = {"Bucket": from_bucket, "Key": from_fname}
+            copy_source = {"Bucket": self.bucket[from_bucket], "Key": from_fname}
 
-            self.s3_resource.meta.client.copy(copy_source, to_bucket, to_fname)
+            self.s3_resource.meta.client.copy(
+                copy_source, self.bucket[to_bucket], to_fname
+            )
 
             self.log_writer.log(
                 f"Copied data from bucket {from_bucket} to bucket {to_bucket}", log_file
@@ -398,7 +398,7 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            self.s3_resource.Object(bucket, fname).delete()
+            self.s3_resource.Object(self.bucket[bucket], fname).delete()
 
             self.log_writer.log(f"Deleted {fname} from bucket {bucket}", log_file)
 
@@ -452,7 +452,7 @@ class S3_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            lst = self.get_df_from_object(self.dir[folder_name], bucket, log_file)
+            lst = self.get_file_object(self.dir[folder_name], bucket, log_file)
 
             list_of_files = [object.key for object in lst]
 
