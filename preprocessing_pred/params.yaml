@@ -6,7 +6,7 @@ s3_bucket:
 files:
   pred_input: pred_input_file.csv
   pred_input_preprocess: pred_input_file_preprocess.csv
-  null_values: null_values.csv
+  null_values: pred_null_values.csv
   pred_file: predictions.csv
 
 target_col: Output
