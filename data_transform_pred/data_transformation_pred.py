@@ -51,7 +51,7 @@ class Data_Transform_Pred:
 
                 abs_f = f[2]
 
-                df.rename(colums={self.col[from_col]: self.col[to_col]}, inplace=True)
+                df.rename(columns={self.col[from_col]: self.col[to_col]}, inplace=True)
 
                 self.log_writer.log(
                     f"Renamed the output columns for the file {file}", "data_transform"
@@ -105,8 +105,8 @@ class Data_Transform_Pred:
                     f"Replaced missing values with null for the file {file}",
                     "data_transform",
                 )
-
-                self.s3.upload_file(df, abs_f, file, "pred_data", "data_transform")
+                
+                self.s3.upload_df_as_csv(df,abs_f,file,"pred_data","data_transform")
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, "data_transform"

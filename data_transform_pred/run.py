@@ -34,7 +34,7 @@ class Run:
         try:
             self.log_writer.log("Starting Data Transformation", "data_transform_main")
 
-            self.data_transform.rename_column("unamed", "wafer")
+            self.data_transform.rename_column("unnamed", "wafer")
 
             self.data_transform.rename_column("good_bad", "output")
 
