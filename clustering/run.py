@@ -75,8 +75,10 @@ class Run:
                 self.utils.upload_cluster_data(
                     i, cluster_label, "clustering", key="targets"
                 )
-                
-            self.log_writer.log("Clustering of training data is completed","clustering")
+
+            self.log_writer.log(
+                "Clustering of training data is completed", "clustering"
+            )
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, "clustering"

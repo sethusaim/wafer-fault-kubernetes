@@ -13,15 +13,13 @@ log:
   clustering: train_clustering.log
   upload: upload_train_cluster.log
 
-base:
-  random_state: 42
-
 dir:
   model_trained: trained
   log: clustering_logs
 
 KMeans:
   init: k-means++
+  random_state: 42
 
 max_clusters: 11
 
