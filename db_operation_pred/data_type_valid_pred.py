@@ -2,6 +2,7 @@ from mongo_db_operations import MongoDB_Operation
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
 
+
 class DB_Operation_Pred:
     """
     Description :    This class shall be used for handling all the db operations

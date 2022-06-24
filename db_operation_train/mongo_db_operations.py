@@ -73,9 +73,9 @@ class MongoDB_Operation:
 
         try:
             database = self.get_database(db_name, log_file)
-            
+
             collection = database.get_collection(self.mongo_config[collection_name])
-        
+
             df = DataFrame(list(collection.find()))
 
             if "_id" in df.columns.to_list():
@@ -113,7 +113,7 @@ class MongoDB_Operation:
             self.log_writer.log(f"Converted dataframe to json records", log_file)
 
             database = self.get_database(db_name, log_file)
-            
+
             collection = database.get_collection(self.mongo_config[collection_name])
 
             self.log_writer.log("Inserting records to MongoDB", log_file)

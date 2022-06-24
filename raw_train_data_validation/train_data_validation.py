@@ -236,7 +236,9 @@ class Raw_Train_Data_Validation:
                     pass
 
                 else:
-                    dest_f = self.utils.get_filename("train_bad_data", abs_f,"col_validation")
+                    dest_f = self.utils.get_filename(
+                        "train_bad_data", abs_f, "col_validation"
+                    )
 
                     self.s3.move_data(
                         file, "train_data", dest_f, "train_data", "col_validation",
@@ -301,7 +303,9 @@ class Raw_Train_Data_Validation:
                         break
 
                 if count == 0:
-                    dest_f = self.utils.get_filename("train_good_data", abs_f,"missing_values_in_col")
+                    dest_f = self.utils.get_filename(
+                        "train_good_data", abs_f, "missing_values_in_col"
+                    )
 
                     self.s3.upload_df_as_csv(
                         df, abs_f, dest_f, "train_data", "missing_values_in_col"
