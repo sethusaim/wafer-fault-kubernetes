@@ -219,15 +219,15 @@ class MLFlow_Operation:
             )
 
             train_model_file = self.utils.get_model_file(
-                "trained", model_name, self.log_file
+                "trained_model", model_name, self.log_file
             )
 
             stag_model_file = self.utils.get_model_file(
-                "stag", model_name, self.log_file
+                "stag_model", model_name, self.log_file
             )
 
             prod_model_file = self.utils.get_model_file(
-                "prod", model_name, self.log_file
+                "prod_model", model_name, self.log_file
             )
 
             self.log_writer.log(
