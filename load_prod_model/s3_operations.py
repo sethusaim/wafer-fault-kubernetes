@@ -44,18 +44,14 @@ class S3_Operation:
         """
         method_name = self.create_folder.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             self.s3_resource.Object(self.bucket[bucket], self.dir[folder_name]).load()
 
             self.log_writer.log(f"Folder {folder_name} already exists.", log_file)
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except ClientError as e:
             if e.response["Error"]["Code"] == "404":
@@ -73,12 +69,10 @@ class S3_Operation:
 
             else:
                 self.log_writer.log(
-                    log_file, f"Error occured in creating {folder_name} folder",
+                    f"Error occured in creating {folder_name} folder", log_file
                 )
 
-                self.log_writer.exception_log(
-                    e, self.class_name, method_name, log_file,
-                )
+                self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def copy_data(self, from_fname, from_bucket, to_fname, to_bucket, log_file):
         """
@@ -93,9 +87,7 @@ class S3_Operation:
         """
         method_name = self.copy_data.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             copy_source = {"Bucket": self.bucket[from_bucket], "Key": from_fname}
@@ -108,18 +100,12 @@ class S3_Operation:
                 f"Copied data from bucket {from_bucket} to bucket {to_bucket}", log_file
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, log_file,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, log_file,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def upload_file(
-        self, from_fname, to_fname, bucket, log_file, delete: bool = True,
-    ):
+    def upload_file(self, from_fname, to_fname, bucket, log_file, delete=True):
         """
         Method Name :   upload_file
         Description :   This method uploades a file to s3 bucket with kwargs

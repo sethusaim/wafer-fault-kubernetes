@@ -344,7 +344,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_best_models(self, runs, num_clusters, log_file):
+    def get_best_models(self, runs, num_clusters):
         """
         Method Name :   get_best_models
         Description :   This method get the best models from the runs dataframe and based on the number of clusters
@@ -357,7 +357,7 @@ class MLFlow_Operation:
         """
         method_name = self.get_best_models.__name__
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             reg_model_names = self.get_mlflow_models()
@@ -369,19 +369,19 @@ class MLFlow_Operation:
             ]
 
             self.log_writer.log(
-                "Created cols list based on registered models", log_file
+                "Created cols list based on registered models", self.log_file
             )
 
             runs_cols = runs.filter(cols).max().sort_values(ascending=False)
 
             self.log_writer.log(
                 "Filtered the runs dataframe based on the cols in descending order",
-                log_file,
+                self.log_file,
             )
 
             metrics_dict = runs_cols.to_dict()
 
-            self.log_writer.log("Converted runs_cols to dict", log_file)
+            self.log_writer.log("Converted runs_cols to dict", self.log_file)
 
             """ 
                         Eg-output: For 3 clusters, 
@@ -409,15 +409,15 @@ class MLFlow_Operation:
                     [
                         (file, metrics_dict[file])[0]
                         for file in metrics_dict
-                        if str(i) in file
+                        if str(i) in file.split("-")[0].split(".")[1]
                     ]
                 )
-                for i in range(0, num_clusters)
+                for i in range(0, 3)
             ]
 
             self.log_writer.log(
                 "Got the best metric names from the metrics_dict and number of clusters",
-                log_file,
+                self.log_file,
             )
 
             ## best_metrics will store the value of metrics, but we want the names of the models,
@@ -427,15 +427,21 @@ class MLFlow_Operation:
 
             ## top_mn_lst - will store the top 3 model names
 
-            top_mn_lst = [mn.split(".")[1].split("-")[0] for mn in best_metrics_names]
+            top_mn_lst = [
+                mn.split("-best_score")[0].split(".")[1] for mn in best_metrics_names
+            ]
 
             self.log_writer.log(
-                "Got the top model list from best_metrics names", log_file
+                "Got the top model list from best_metrics names", self.log_file
             )
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log(
+                "exit", self.class_name, method_name, self.log_file
+            )
 
             return top_mn_lst
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(
+                e, self.class_name, method_name, self.log_file
+            )

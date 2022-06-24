@@ -59,9 +59,7 @@ class Load_Prod_Model:
             Eg- metrics.XGBoost1-best_score
             """
 
-            top_mn_lst = self.mlflow_op.get_best_models(
-                runs, num_clusters, "load_prod_model"
-            )
+            top_mn_lst = self.mlflow_op.get_best_models(runs, num_clusters)
 
             self.log_writer.log(f"Got the top model names", "load_prod_model")
 
