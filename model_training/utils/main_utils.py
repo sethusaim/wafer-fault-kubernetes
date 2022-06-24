@@ -1,8 +1,10 @@
 from shutil import rmtree
 
+import xgboost
 from s3_operations import S3_Operation
 from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import GridSearchCV
+from sklearn.utils import all_estimators
 
 from utils.logger import App_Logger
 from utils.read_params import read_params
@@ -337,6 +339,68 @@ class Main_Utils:
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return model_grid.best_params_
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def get_base_model(self, model_name, log_file):
+        method_name = self.get_base_model.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            if model_name.lower().startswith("xgb") is True:
+                model = xgboost.__dict__[model_name]()
+
+            else:
+                model_idx = [model[0] for model in all_estimators()].index(model_name)
+
+                model = all_estimators().__getitem__(model_idx)[1]()
+
+            self.log_writer.log(
+                f"Got {model.__class__.__name__} as base model", log_file
+            )
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+            return model
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def get_tuned_model(self, model, train_x, train_y, log_file):
+        method_name = self.get_tuned_model.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            model_best_params = self.get_model_params(model, train_x, train_y, log_file)
+
+            self.log_writer.log(
+                f"Got best params for {model.__class__.__name__} model", log_file
+            )
+
+            model.set_params(**model_best_params)
+
+            self.log_writer.log(
+                "Set the best params for {model.__class__.__name__} model", log_file,
+            )
+
+            self.log_writer.log(
+                "Fitting the best parameters for {model.__class__.__name__} model",
+                log_file,
+            )
+
+            model.fit(train_x, train_y)
+
+            self.log_writer.log(
+                "{model.__class__.__name__} model is trained with best parameters",
+                log_file,
+            )
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+            return model
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)

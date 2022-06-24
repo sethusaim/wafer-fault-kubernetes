@@ -214,7 +214,7 @@ class MLFlow_Operation:
                 f"Got the model name as {base_model_name}", self.log_file
             )
 
-            model_params_list = list(self.config[base_model_name].keys())
+            model_params_list = list(self.config["train_model"][base_model_name].keys())
 
             self.log_writer.log(
                 f"Created a list of params based on {model_name}", self.log_file

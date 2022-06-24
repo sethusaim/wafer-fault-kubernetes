@@ -1,7 +1,5 @@
 from mlflow import end_run, start_run
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-from xgboost import XGBClassifier
 
 from mlflow_operations import MLFlow_Operation
 from s3_operations import S3_Operation
@@ -37,175 +35,32 @@ class Model_Finder:
 
         self.s3 = S3_Operation()
 
-        self.rf_model = RandomForestClassifier()
-
-        self.xgb_model = XGBClassifier(objective="binary:logistic")
-
-    def get_rf_model(self, train_x, train_y):
-        """
-        Method Name :   get_rf_model
-        Description :   get the parameters for Random Forest Algorithm which give the best accuracy.
-                        Use Hyper Parameter Tuning.
-        
-        Output      :   The model with the best parameters
-        On Failure  :   Write an exception log and then raise an exception
-        
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.get_rf_model.__name__
-
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
-
-        try:
-            rf_model_name = self.rf_model.__class__.__name__
-
-            rf_best_params = self.utils.get_model_params(
-                self.rf_model, train_x, train_y, self.log_file
-            )
-
-            self.log_writer.log(
-                f"{rf_model_name} model best params are {rf_best_params}",
-                self.log_file,
-            )
-
-            self.rf_model.set_params(**rf_best_params)
-
-            self.log_writer.log(
-                f"Initialized {rf_model_name} with {rf_best_params} as params",
-                self.log_file,
-            )
-
-            self.rf_model.fit(train_x, train_y)
-
-            self.log_writer.log(
-                f"Created {rf_model_name} based on the {rf_best_params} as params",
-                self.log_file,
-            )
-
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file
-            )
-
-            return self.rf_model
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
-
-    def get_xgb_model(self, train_x, train_y):
-        """
-        Method Name :   get_xgb_model
-        Description :   get the parameters for SVM model which give the best score.
-                        Use Hyper Parameter Tuning.
-
-        Output      :   The model with the best parameters
-        On Failure  :   Write an exception log and then raise an exception
-
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.get_xgb_model.__name__
-
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
-
-        try:
-            xgb_model_name = self.xgb_model.__class__.__name__
-
-            xgb_best_params = self.utils.get_model_params(
-                self.xgb_model, train_x, train_y, self.log_file
-            )
-
-            self.log_writer.log(
-                f"{xgb_model_name} model best params are {xgb_best_params}",
-                self.log_file,
-            )
-
-            self.xgb_model.set_params(**xgb_best_params)
-
-            self.log_writer.log(
-                f"Initialized {xgb_model_name} with {xgb_best_params} as params",
-                self.log_file,
-            )
-
-            self.xgb_model.fit(train_x, train_y)
-
-            self.log_writer.log(
-                f"Created {xgb_model_name} based on the {xgb_best_params} as params",
-                self.log_file,
-            )
-
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file
-            )
-
-            return self.xgb_model
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
-
-    def get_trained_models(self, train_x, train_y, test_x, test_y):
-        """
-        Method Name :   get_trained_models
-        Description :   Find out the Model which has the best score.
-        
-        Output      :   The best model name and the model object
-        On Failure  :   Write an exception log and then raise an exception
-
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
+    def get_trained_models(self, X_data, Y_data):
         method_name = self.get_trained_models.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            xgb_model = self.get_xgb_model(train_x, train_y)
+            models_lst = list(self.config["train_model"].keys())
 
-            self.log_writer.log(
-                f"Got trained {xgb_model.__class__.__name__} model", self.log_file,
+            x_train, x_test, y_train, y_test = train_test_split(
+                X_data, Y_data, **self.split_kwargs
             )
 
-            xgb_model_score = self.utils.get_model_score(
-                xgb_model, test_x, test_y, self.log_file
-            )
+            lst = []
 
-            self.log_writer.log(
-                f"{xgb_model.__class__.__name__} model score is {xgb_model_score}",
-                self.log_file,
-            )
+            for model_name in models_lst:
+                base_model = self.utils.get_base_model(model_name, self.log_file)
 
-            rf_model = self.get_rf_model(train_x, train_y)
+                tuned_model = self.utils.get_tuned_model(
+                    base_model, x_train, y_train, self.log_file
+                )
 
-            self.log_writer.log(
-                f"Got trained {rf_model.__class__.__name__} model", self.log_file
-            )
+                tuned_model_score = self.utils.get_model_score(
+                    tuned_model, x_test, y_test, self.log_file
+                )
 
-            rf_model_score = self.utils.get_model_score(
-                rf_model, test_x, test_y, self.log_file
-            )
-
-            self.log_writer.log(
-                f"{rf_model.__class__.__name__} model score is {rf_model_score}",
-                self.log_file,
-            )
-
-            lst = [
-                (xgb_model, xgb_model_score),
-                (rf_model, rf_model_score),
-            ]
-
-            self.log_writer.log(
-                "Got list of tuples consisting of trained models and model scores",
-                self.log_file,
-            )
-
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file
-            )
+                lst.append((tuned_model, tuned_model_score))
 
             return lst
 
@@ -229,17 +84,8 @@ class Model_Finder:
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
-        try:
-            x_train, x_test, y_train, y_test = train_test_split(
-                X_data, Y_data, **self.split_kwargs
-            )
-
-            self.log_writer.log(
-                f"Performed train test split with kwargs as {self.split_kwargs}",
-                self.log_file,
-            )
-
-            lst = self.get_trained_models(x_train, y_train, x_test, y_test)
+        try:            
+            lst = self.get_trained_models(X_data,Y_data)
 
             self.log_writer.log("Got trained models", self.log_file)
 
