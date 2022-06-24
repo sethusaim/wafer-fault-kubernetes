@@ -1,3 +1,4 @@
+from datetime import datetime
 from os import environ
 
 from mlflow import log_metric, log_param, set_experiment, set_tracking_uri
@@ -202,7 +203,12 @@ class MLFlow_Operation:
 
             base_model_name = model.__class__.__name__
 
-            model_name = base_model_name + str(idx)
+            model_name = (
+                base_model_name
+                + str(idx)
+                + "-"
+                + f"{datetime.now().strftime('%Y-%m-%d')}"
+            )
 
             self.log_writer.log(
                 f"Got the model name as {base_model_name}", self.log_file

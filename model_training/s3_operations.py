@@ -1,3 +1,4 @@
+from datetime import datetime
 from io import StringIO
 from os import listdir, remove
 from os.path import join
@@ -211,9 +212,16 @@ class S3_Operation:
             model_name = model.__class__.__name__
 
             func = (
-                lambda: model_name + self.save_format
+                lambda: model_name
+                + "- "
+                + f"{datetime.now().strftime('%Y-%m-%d')}"
+                + self.save_format
                 if model_name == "KMeans"
-                else model_name + str(idx) + self.save_format
+                else model_name
+                + str(idx)
+                + "-"
+                + f"{datetime.now().strftime('%Y-%m-%d')}"
+                + self.save_format
             )
 
             model_file = func()
