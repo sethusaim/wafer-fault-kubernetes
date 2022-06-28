@@ -95,34 +95,6 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def get_files_from_folder(self, folder_name, bucket, log_file):
-        """
-        Method Name :   get_files_from_folder
-        Description :   This method gets the files a folder in s3 bucket
-        
-        Output      :   A list of files is returned
-        On Failure  :   Write an exception log and then raise an exception
-        
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.get_files_from_folder.__name__
-
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
-
-        try:
-            lst = self.get_file_object(self.dir[folder_name], bucket, log_file)
-
-            list_of_files = [object.key for object in lst]
-
-            self.log_writer.log(f"Got list of files from bucket {bucket}", log_file)
-
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
-
-            return list_of_files
-
-        except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def load_model(self, model_name, bucket, log_file, model_dir=None):
         """
