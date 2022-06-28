@@ -225,7 +225,7 @@ class MLFlow_Operation:
             stag_model_file = self.utils.get_model_file(
                 "stag_model", model_name, self.log_file
             )
-
+            
             prod_model_file = self.utils.get_model_file(
                 "prod_model", model_name, self.log_file
             )
@@ -412,7 +412,7 @@ class MLFlow_Operation:
                         if str(i) in file.split("-")[0].split(".")[1]
                     ]
                 )
-                for i in range(0, 3)
+                for i in range(0, num_clusters)
             ]
 
             self.log_writer.log(
