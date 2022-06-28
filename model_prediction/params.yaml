@@ -3,7 +3,7 @@ log:
   upload: upload_model_prediction.log
 
 dir:
-  prod_model: production
+  train: trained
   log: model_prediction_logs
 
 save_format: .sav
