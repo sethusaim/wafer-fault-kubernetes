@@ -95,7 +95,6 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-
     def load_model(self, model_name, bucket, log_file, model_dir=None):
         """
         Method Name :   load_model
