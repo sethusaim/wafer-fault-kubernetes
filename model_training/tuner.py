@@ -84,8 +84,8 @@ class Model_Finder:
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
-        try:            
-            lst = self.get_trained_models(X_data,Y_data)
+        try:
+            lst = self.get_trained_models(X_data, Y_data)
 
             self.log_writer.log("Got trained models", self.log_file)
 
