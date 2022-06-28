@@ -4,7 +4,6 @@ from pandas import DataFrame
 from s3_operations import S3_Operation
 
 from utils.logger import App_Logger
-from utils.mlflow_operations import MLFlow_Operation
 from utils.read_params import read_params
 
 
@@ -22,8 +21,6 @@ class Main_Utils:
         self.log_writer = App_Logger()
 
         self.config = read_params()
-
-        self.mlflow_op = MLFlow_Operation()
 
         self.log_dir = self.config["dir"]["log"]
 
@@ -55,6 +52,47 @@ class Main_Utils:
 
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, "upload")
+
+    def find_correct_model_file(self, cluster_number, bucket, log_file):
+        """
+        Method Name :   find_correct_model_file
+        Description :   This method gets correct model file based on cluster number during prediction
+        
+        Output      :   A correct model file is found 
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.find_correct_model_file.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            list_of_files = self.s3.get_files_from_folder(
+                "prod_model", bucket, log_file
+            )
+
+            for file in list_of_files:
+                try:
+                    if file.index(str(cluster_number)) != -1:
+                        model_name = file
+
+                except:
+                    continue
+
+            model_name = model_name.split(".")[0]
+
+            self.log_writer.log(
+                f"Got {model_name} from prod model folder in {bucket} bucket", log_file
+            )
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+            return model_name
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def get_unique_clusters(self, log_file):
         """
@@ -146,13 +184,13 @@ class Main_Utils:
 
             self.log_writer.log("Got cluster data", log_file)
 
-            model_name = self.mlflow_op.find_correct_model_file(idx, "model", log_file)
+            model_name = self.find_correct_model_file(idx, "model", log_file)
 
             self.log_writer.log(
                 f"Found the correct model file based on {idx} cluster number", log_file
             )
 
-            model = self.s3.load_model(model_name, "model", log_file, "train")
+            model = self.s3.load_model(model_name, "model", log_file, "prod")
 
             result = list(model.predict(cluster_data))
 
