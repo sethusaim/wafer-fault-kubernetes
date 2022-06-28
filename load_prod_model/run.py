@@ -16,6 +16,8 @@ class Load_Prod_Model:
 
         self.log_writer = App_Logger()
 
+        self.utils = Main_Utils()
+
         self.mlflow_op = MLFlow_Operation("load_prod_model")
 
     def load_production_model(self):
@@ -36,11 +38,15 @@ class Load_Prod_Model:
         )
 
         try:
+            self.utils.create_prod_and_stag_dirs("model", "load_prod_model")
+
             self.mlflow_op.set_mlflow_tracking_uri()
 
             exp = self.mlflow_op.get_experiment("exp_name")
 
             runs = self.mlflow_op.get_runs_from_mlflow(exp.experiment_id)
+
+            num_clusters = self.utils.get_number_of_clusters("load_prod_model")
 
             """
             Code Explaination: 
@@ -53,7 +59,7 @@ class Load_Prod_Model:
             Eg- metrics.XGBoost1-best_score
             """
 
-            top_mn_lst = self.mlflow_op.get_best_models(runs)
+            top_mn_lst = self.mlflow_op.get_best_models(runs, num_clusters)
 
             self.log_writer.log(f"Got the top model names", "load_prod_model")
 

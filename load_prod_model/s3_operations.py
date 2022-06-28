@@ -1,7 +1,8 @@
 from os import listdir, remove
 from os.path import join
 
-from boto3 import resource
+from boto3 import client, resource
+from botocore.exceptions import ClientError
 
 from utils.logger import App_Logger
 from utils.read_params import read_params
@@ -22,9 +23,87 @@ class S3_Operation:
 
         self.class_name = self.__class__.__name__
 
+        self.s3_client = client("s3")
+
         self.s3_resource = resource("s3")
 
         self.bucket = self.config["s3_bucket"]
+
+        self.dir = self.config["dir"]
+
+    def create_folder(self, folder_name, bucket, log_file):
+        """
+        Method Name :   create_folder
+        Description :   This method creates a folder in s3 bucket
+        
+        Output      :   A folder is created in s3 bucket 
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.create_folder.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            self.s3_resource.Object(self.bucket[bucket], self.dir[folder_name]).load()
+
+            self.log_writer.log(f"Folder {folder_name} already exists.", log_file)
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+        except ClientError as e:
+            if e.response["Error"]["Code"] == "404":
+                self.log_writer.log(
+                    f"{folder_name} folder does not exist,creating new one", log_file
+                )
+
+                self.s3_client.put_object(
+                    Bucket=self.bucket[bucket], Key=(self.dir[folder_name] + "/")
+                )
+
+                self.log_writer.log(
+                    f"{folder_name} folder created in {bucket} bucket", log_file
+                )
+
+            else:
+                self.log_writer.log(
+                    f"Error occured in creating {folder_name} folder", log_file
+                )
+
+                self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+
+    def copy_data(self, from_fname, from_bucket, to_fname, to_bucket, log_file):
+        """
+        Method Name :   copy_data
+        Description :   This method copies the data from one bucket to another bucket
+        
+        Output      :   The data is copied from one bucket to another
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.copy_data.__name__
+
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+
+        try:
+            copy_source = {"Bucket": self.bucket[from_bucket], "Key": from_fname}
+
+            self.s3_resource.meta.client.copy(
+                copy_source, self.bucket[to_bucket], to_fname
+            )
+
+            self.log_writer.log(
+                f"Copied data from bucket {from_bucket} to bucket {to_bucket}", log_file
+            )
+
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+
+        except Exception as e:
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def upload_file(self, from_fname, to_fname, bucket, log_file, delete=True):
         """

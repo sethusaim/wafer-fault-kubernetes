@@ -3,6 +3,7 @@ from os import environ
 from mlflow import get_experiment_by_name, search_runs, set_tracking_uri
 from mlflow.tracking import MlflowClient
 
+from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
 from utils.read_params import read_params
@@ -24,6 +25,8 @@ class MLFlow_Operation:
         self.class_name = self.__class__.__name__
 
         self.log_writer = App_Logger()
+
+        self.s3 = S3_Operation()
 
         self.utils = Main_Utils()
 
@@ -191,7 +194,9 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def transition_mlflow_model(self, model_version, stage, model_name):
+    def transition_mlflow_model(
+        self, model_version, stage, model_name, from_bucket, to_bucket
+    ):
         """
         Method Name :   transition_mlflow_model
         Description :   This method transitions mlflow model from one stage to other stage, and does the same in s3 bucket
@@ -213,6 +218,22 @@ class MLFlow_Operation:
                 f"Got {current_version} as the current model version", self.log_file
             )
 
+            train_model_file = self.utils.get_model_file(
+                "trained_model", model_name, self.log_file
+            )
+
+            stag_model_file = self.utils.get_model_file(
+                "stag_model", model_name, self.log_file
+            )
+
+            prod_model_file = self.utils.get_model_file(
+                "prod_model", model_name, self.log_file
+            )
+
+            self.log_writer.log(
+                "Created trained,stag and prod model files", self.log_file
+            )
+
             if stage == "Production":
                 self.log_writer.log(
                     f"{stage} is selected for transition", self.log_file
@@ -226,6 +247,14 @@ class MLFlow_Operation:
                     f"Transitioned {model_name} to {stage} in mlflow", self.log_file
                 )
 
+                self.s3.copy_data(
+                    train_model_file,
+                    from_bucket,
+                    prod_model_file,
+                    to_bucket,
+                    self.log_file,
+                )
+
             elif stage == "Staging":
                 self.log_writer.log(
                     f"{stage} is selected for transition", self.log_file
@@ -237,6 +266,14 @@ class MLFlow_Operation:
 
                 self.log_writer.log(
                     f"Transitioned {model_name} to {stage} in mlflow", self.log_file
+                )
+
+                self.s3.copy_data(
+                    train_model_file,
+                    from_bucket,
+                    stag_model_file,
+                    to_bucket,
+                    self.log_file,
                 )
 
             else:
@@ -307,7 +344,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_best_models(self, runs):
+    def get_best_models(self, runs, num_clusters):
         """
         Method Name :   get_best_models
         Description :   This method get the best models from the runs dataframe and based on the number of clusters
@@ -323,8 +360,6 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            num_clusters = self.utils.get_number_of_clusters(self.log_file)
-
             reg_model_names = self.get_mlflow_models()
 
             cols = [
@@ -377,7 +412,7 @@ class MLFlow_Operation:
                         if str(i) in file.split("-")[0].split(".")[1]
                     ]
                 )
-                for i in range(0, num_clusters)
+                for i in range(0, 3)
             ]
 
             self.log_writer.log(
