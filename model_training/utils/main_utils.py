@@ -320,7 +320,7 @@ class Main_Utils:
         try:
             model_name = model.__class__.__name__
 
-            model_param_grid = self.config[model_name]
+            model_param_grid = self.config["train_model"][model_name]
 
             model_grid = GridSearchCV(model, model_param_grid, **self.tuner_kwargs)
 
