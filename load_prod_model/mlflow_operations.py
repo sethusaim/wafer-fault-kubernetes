@@ -3,7 +3,6 @@ from os import environ
 from mlflow import get_experiment_by_name, search_runs, set_tracking_uri
 from mlflow.tracking import MlflowClient
 
-from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
 from utils.read_params import read_params
@@ -25,8 +24,6 @@ class MLFlow_Operation:
         self.class_name = self.__class__.__name__
 
         self.log_writer = App_Logger()
-
-        self.s3 = S3_Operation()
 
         self.utils = Main_Utils()
 
