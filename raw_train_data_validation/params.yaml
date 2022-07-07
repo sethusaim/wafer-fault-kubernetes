@@ -24,7 +24,7 @@ log:
   missing_values_in_col: train_missing_values_in_column.log
 
 log_params:
-  filemode: "a"
-  format: "%(asctime)s;%(levelname)s;%(lineno)s;%(filename)s;%(class_name)s;%(method_name)s;%(message)s"
+  filemode: a
+  format: "%(asctime)s;%(levelname)s;%(file_name)s;%(class_name)s;%(method_name)s;%(message)s"
   datefmt: "%H:%M:%S"
-  level: "DEBUG"
+  level: INFO
