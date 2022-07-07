@@ -3,7 +3,7 @@ from shutil import rmtree
 from s3_operations import S3_Operation
 
 from utils.logger import App_Logger
-from utils.read_params import read_params
+from utils.read_params import read_params, get_log_dic
 
 
 class Main_Utils:
@@ -15,8 +15,6 @@ class Main_Utils:
     """
 
     def __init__(self):
-        self.class_name = self.__class__.__name__
-
         self.s3 = S3_Operation()
 
         self.log_writer = App_Logger()
@@ -38,21 +36,23 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.upload_logs.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.upload_logs.__name__, "upload"
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, "upload")
+        self.log_writer.start_log("start", **log_dic)
 
         try:
-            self.s3.upload_folder(self.log_dir, "logs", "upload")
+            self.s3.upload_folder(self.log_dir, "logs", log_dic["log_file"])
 
-            self.log_writer.log("Uploaded logs to logs bucket", "upload")
+            self.log_writer.log("Uploaded logs to logs bucket", **log_dic)
 
-            self.log_writer.start_log("exit", self.class_name, method_name, "upload")
+            self.log_writer.start_log("exit", **log_dic)
 
             rmtree(self.log_dir)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, "upload")
+            self.log_writer.exception_log(e, **log_dic)
 
     def get_filename(self, key, fname, log_file):
         """
@@ -65,21 +65,23 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_filename.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.get_filename.__name__, log_file
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             train_fname = self.dir[key] + "/" + fname
 
-            self.log_writer.log(f"Got the file name for {key}", log_file)
+            self.log_writer.log(f"Got the file name for {key}", **log_dic)
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
             return train_fname
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, **log_dic)
 
     def create_dirs_for_good_bad_data(self, log_file):
         """
@@ -92,20 +94,24 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.create_dirs_for_good_bad_data.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.create_dirs_for_good_bad_data.__name__,
+            log_file,
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
-            self.s3.create_folder("train_good_data", "train_data", log_file)
+            self.s3.create_folder("train_good_data", "train_data", log_dic["log_file"])
 
-            self.s3.create_folder("train_bad_data", "train_data", log_file)
+            self.s3.create_folder("train_bad_data", "train_data", log_dic["log_file"])
 
             self.log_writer.log(
-                f"Created folders for good and bad data in s3 bucket", log_file
+                f"Created folders for good and bad data in s3 bucket", **log_dic
             )
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, **log_dic)
