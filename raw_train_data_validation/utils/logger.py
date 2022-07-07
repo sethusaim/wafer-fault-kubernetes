@@ -1,5 +1,5 @@
 from datetime import datetime
-from logging import DEBUG, ERROR, basicConfig, error, info
+from logging import basicConfig, debug, error, info
 from os import makedirs
 from os.path import join, split
 from sys import exc_info
@@ -12,6 +12,8 @@ class App_Logger:
         self.config = read_params()
 
         self.log_dir = self.config["dir"]["log"]
+
+        self.log_params = self.config["log_params"]
 
         self.current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
 
@@ -29,13 +31,17 @@ class App_Logger:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_f = self.current_date + "-" + self.log_file[log_file]
+        try:
+            log_f = self.current_date + "-" + self.log_file[log_file]
 
-        log_file = join(self.log_dir, log_f)
+            log_file = join(self.log_dir, log_f)
 
-        return log_file
+            return log_file
 
-    def log(self, log_message, log_file):
+        except Exception as e:
+            raise e
+
+    def log(self, log_message, class_name, method_name, log_file):
         """
         Method Name :   log
         Description :   This method writes the log info using current date and time
@@ -49,15 +55,12 @@ class App_Logger:
         try:
             log_file = self.get_log_file(log_file)
 
-            basicConfig(
-                filename=log_file,
-                filemode="a",
-                format="%(asctime)s %(levelname)s %(message)s",
-                datefmt="%H:%M:%S",
-                level=DEBUG,
-            )
+            basicConfig(filename=log_file, **self.log_params)
 
-            info(log_message)
+            debug(
+                log_message,
+                extra={"class_name": class_name, "method_name": method_name},
+            )
 
         except Exception as e:
             raise e
@@ -73,20 +76,19 @@ class App_Logger:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-
-        start_method_name = self.start_log.__name__
-
         try:
             func = lambda: "Entered" if key == "start" else "Exited"
 
             log_msg = f"{func()} {method_name} method of class {class_name}"
 
-            self.log(log_msg, log_file)
+            log_file = self.get_log_file(log_file)
+
+            basicConfig(filename=log_file, **self.log_params)
+
+            info(log_msg, extra={"class_name": class_name, "method_name": method_name})
 
         except Exception as e:
-            error_msg = f"Exception occured in Class : {class_name}, Method : {start_method_name}, Error : {str(e)}"
-
-            raise Exception(error_msg)
+            raise e
 
     def exception_log(self, exception, class_name, method_name, log_file):
         """
@@ -103,18 +105,16 @@ class App_Logger:
 
         file_name = split(exc_tb.tb_frame.f_code.co_filename)[1]
 
-        exception_msg = f"- Class : {class_name}, Method : {method_name}, Script : {file_name}, Line : {exc_tb.tb_lineno}, Error : {str(exception)}"
+        log_f = self.get_log_file(log_file)
 
-        log_file = self.get_log_file(log_file)
+        basicConfig(filename=log_f, **self.log_params)
 
-        basicConfig(
-            filename=log_file,
-            filemode="a",
-            format="%(asctime)s %(levelname)s %(message)s",
-            datefmt="%H:%M:%S",
-            level=ERROR,
+        exception_msg = f"Exception occured in Class : {class_name}, Method : {method_name}, Script : {file_name}, Line : {exc_tb.tb_lineno}, Error : {str(exception)}"
+
+        self.start_log("exit", class_name, method_name, log_file)
+
+        error(
+            exception_msg, extra={"class_name": class_name, "method_name": method_name}
         )
-
-        error(exception_msg)
 
         raise Exception(exception_msg)
