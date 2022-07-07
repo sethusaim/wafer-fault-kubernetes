@@ -46,7 +46,7 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.read_object.__name__, log_file
+            self.__class__.__name__, self.read_object.__name__, __file__, log_file
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -87,7 +87,7 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.read_text.__name__, log_file
+            self.__class__.__name__, self.read_text.__name__, __file__, log_file
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -122,7 +122,7 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.read_json.__name__, log_file
+            self.__class__.__name__, self.read_json.__name__, __file__, log_file
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -155,7 +155,10 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.get_df_from_object.__name__, log_file
+            self.__class__.__name__,
+            self.get_df_from_object.__name__,
+            __file__,
+            log_file,
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -185,7 +188,9 @@ class S3_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(self.__class__.__name__, self.read_csv.__name__, log_file)
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.read_csv.__name__, __file__, log_file
+        )
 
         self.log_writer.start_log("start", **log_dic)
 
@@ -217,7 +222,10 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.read_csv_from_folder.__name__, log_file
+            self.__class__.__name__,
+            self.read_csv_from_folder.__name__,
+            __file__,
+            log_file,
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -226,7 +234,7 @@ class S3_Operation:
             files = self.get_files_from_folder(folder_name, bucket, log_dic["log_file"])
 
             lst = [
-                (self.read_csv(f, bucket, log_file), f, f.split("/")[-1])
+                (self.read_csv(f, bucket, log_dic["log_file"]), f, f.split("/")[-1])
                 for f in files
                 if f.endswith(".csv")
             ]
@@ -255,7 +263,7 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.create_folder.__name__, log_file
+            self.__class__.__name__, self.create_folder.__name__, __file__, log_file
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -303,7 +311,7 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.upload_file.__name__, log_file
+            self.__class__.__name__, self.upload_file.__name__, __file__, log_file
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -321,21 +329,11 @@ class S3_Operation:
                 f"Uploaded {from_fname} to s3 bucket {bucket}", **log_dic
             )
 
-            if delete is True:
-                self.log_writer.log(
-                    f"Option delete is set {delete}..deleting the file", **log_dic
-                )
+            del_func = lambda file: remove(file) if delete is True else None
 
-                remove(from_fname)
+            del_func(from_fname)
 
-                self.log_writer.log(
-                    f"Removed the local copy of {from_fname}", **log_dic
-                )
-
-            else:
-                self.log_writer.log(
-                    f"Option delete is set {delete}, not deleting the file", **log_dic
-                )
+            self.log_writer.log(f"Delete was set to {delete}", **log_dic)
 
             self.log_writer.start_log("exit", **log_dic)
 
@@ -354,7 +352,7 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.get_bucket.__name__, log_file
+            self.__class__.__name__, self.get_bucket.__name__, __file__, log_file
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -383,7 +381,7 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.copy_data.__name__, log_file
+            self.__class__.__name__, self.copy_data.__name__, __file__, log_file
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -417,7 +415,7 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.copy_data.__name__, log_file
+            self.__class__.__name__, self.delete_file.__name__, __file__, log_file
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -444,7 +442,7 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.move_data.__name__, log_file
+            self.__class__.__name__, self.move_data.__name__, __file__, log_file
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -454,7 +452,7 @@ class S3_Operation:
                 from_fname, from_bucket, to_fname, to_bucket, log_dic["log_file"]
             )
 
-            self.delete_file(from_fname, from_bucket, log_file)
+            self.delete_file(from_fname, from_bucket, log_dic["log_file"])
 
             self.log_writer.log(
                 f"Moved {from_fname} from bucket {from_bucket} to {to_bucket}",
@@ -478,7 +476,10 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.get_files_from_folder.__name__, log_file
+            self.__class__.__name__,
+            self.get_files_from_folder.__name__,
+            __file__,
+            log_file,
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -511,7 +512,7 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.get_file_object.__name__, log_file
+            self.__class__.__name__, self.get_file_object.__name__, __file__, log_file
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -548,7 +549,7 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.upload_df_as_csv.__name__, log_file
+            self.__class__.__name__, self.upload_df_as_csv.__name__, __file__, log_file
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -560,7 +561,7 @@ class S3_Operation:
                 f"Created a local copy of dataframe with name {local_fname}", **log_dic
             )
 
-            self.upload_file(local_fname, bucket_fname, bucket, log_dic[log_file])
+            self.upload_file(local_fname, bucket_fname, bucket, log_dic["log_file"])
 
             self.log_writer.log(
                 f"Uploaded dataframe as csv to {bucket} as {bucket_fname} file",
@@ -574,7 +575,7 @@ class S3_Operation:
 
     def upload_folder(self, folder, bucket, log_file):
         log_dic = get_log_dic(
-            self.__class__.__name__, self.upload_folder.__name__, log_file
+            self.__class__.__name__, self.upload_folder.__name__, __file__, log_file
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -589,7 +590,9 @@ class S3_Operation:
 
                 dest_f = folder + "/" + f
 
-                self.upload_file(local_f, dest_f, bucket, log_dic["log_file"])
+                self.upload_file(
+                    local_f, dest_f, bucket, log_dic["log_file"], delete=False
+                )
 
             self.log_writer.log("Uploaded folder to s3 bucket", **log_dic)
 

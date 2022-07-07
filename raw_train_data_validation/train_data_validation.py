@@ -35,6 +35,7 @@ class Raw_Train_Data_Validation:
         log_dic = get_log_dic(
             self.__class__.__name__,
             self.values_from_schema.__name__,
+            __file__,
             "values_from_schema",
         )
 
@@ -86,7 +87,10 @@ class Raw_Train_Data_Validation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.get_regex_pattern.__name__, "general"
+            self.__class__.__name__,
+            self.get_regex_pattern.__name__,
+            __file__,
+            "general",
         )
 
         try:
@@ -117,13 +121,16 @@ class Raw_Train_Data_Validation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.validate_raw_fname, "name_validation"
+            self.__class__.__name__,
+            self.validate_raw_fname.__name__,
+            __file__,
+            "name_validation",
         )
 
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            self.utils.create_dirs_for_good_bad_data()
+            self.utils.create_dirs_for_good_bad_data(log_dic["log_file"])
 
             onlyfiles = self.s3.get_files_from_folder(
                 "raw_train_batch_data", "raw_train_data", log_dic["log_file"],
@@ -208,7 +215,10 @@ class Raw_Train_Data_Validation:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.validate_col_length.__name__, "col_validation"
+            self.__class__.__name__,
+            self.validate_col_length.__name__,
+            __file__,
+            "col_validation",
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -256,6 +266,7 @@ class Raw_Train_Data_Validation:
         log_dic = get_log_dic(
             self.__class__.__name__,
             self.validate_missing_values_in_col.__name__,
+            __file__,
             "missing_values_in_col",
         )
 

@@ -31,6 +31,7 @@ class Run:
         log_dic = get_log_dic(
             self.__class__.__name__,
             self.raw_train_data_validation.__name__,
+            __file__,
             "raw_train_main",
         )
 

@@ -3,7 +3,7 @@ from shutil import rmtree
 from s3_operations import S3_Operation
 
 from utils.logger import App_Logger
-from utils.read_params import read_params, get_log_dic
+from utils.read_params import get_log_dic, read_params
 
 
 class Main_Utils:
@@ -21,9 +21,9 @@ class Main_Utils:
 
         self.config = read_params()
 
-        self.log_dir = self.config["dir"]["log"]
-
         self.dir = self.config["dir"]
+
+        self.log_dir = self.dir["log"]
 
     def upload_logs(self):
         """
@@ -37,7 +37,7 @@ class Main_Utils:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.upload_logs.__name__, "upload"
+            self.__class__.__name__, self.upload_logs.__name__, __file__, "upload"
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -48,6 +48,8 @@ class Main_Utils:
             self.log_writer.log("Uploaded logs to logs bucket", **log_dic)
 
             self.log_writer.start_log("exit", **log_dic)
+
+            self.log_writer.stop_log()
 
             rmtree(self.log_dir)
 
@@ -66,7 +68,7 @@ class Main_Utils:
         Revisions   :   moved setup to cloud
         """
         log_dic = get_log_dic(
-            self.__class__.__name__, self.get_filename.__name__, log_file
+            self.__class__.__name__, self.get_filename.__name__, __file__, log_file
         )
 
         self.log_writer.start_log("start", **log_dic)
@@ -97,6 +99,7 @@ class Main_Utils:
         log_dic = get_log_dic(
             self.__class__.__name__,
             self.create_dirs_for_good_bad_data.__name__,
+            __file__,
             log_file,
         )
 
