@@ -4,7 +4,7 @@ from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
 from s3_operations import S3_Operation
 
 from utils.logger import App_Logger
-from utils.read_params import read_params
+from utils.read_params import get_log_dic, read_params
 
 
 class Main_Utils:
@@ -26,8 +26,6 @@ class Main_Utils:
 
         self.log_dir = self.config["dir"]["log"]
 
-        self.class_name = self.__class__.__name__
-
     def upload_logs(self):
         """
         Method Name :   upload_logs
@@ -39,21 +37,25 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.upload_logs.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.upload_logs.__name__, __file__, "upload"
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, "upload")
+        self.log_writer.start_log("start", **log_dic)
 
         try:
-            self.s3.upload_folder(self.log_dir, "logs", "upload")
+            self.s3.upload_folder(self.log_dir, "logs", log_dic["log_file"])
 
-            self.log_writer.log(f"Uploaded logs to s3 bucket", "upload")
+            self.log_writer.log(f"Uploaded logs to s3 bucket", log_dic["log_file"])
 
-            self.log_writer.start_log("exit", self.class_name, method_name, "upload")
+            self.log_writer.start_log("exit", **log_dic)
+
+            self.log_writer.stop_log()
 
             rmtree(self.log_dir)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, "upload")
+            self.log_writer.exception_log(e, **log_dic)
 
     def get_cluster_fname(self, fname, idx, log_file):
         """
@@ -66,23 +68,25 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_cluster_fname.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.get_cluster_fname.__name__, __file__, log_file
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             cluster_fname = fname.replace(".csv", "-" + str(idx) + ".csv")
 
             self.log_writer.log(
-                f"Got cluster file name for cluster {idx} of file {fname}", log_file,
+                f"Got cluster file name for cluster {idx} of file {fname}", **log_dic,
             )
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
             return cluster_fname
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, **log_dic)
 
     def upload_cluster_data(self, idx, cluster_data, log_file, key=None):
         """
@@ -95,16 +99,23 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.upload_cluster_data.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.upload_cluster_data.__name__,
+            __file__,
+            log_file,
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
-            cluster_fname = self.get_cluster_fname(self.files[key], idx, log_file)
+            cluster_fname = self.get_cluster_fname(
+                self.files[key], idx, log_dic["log_file"]
+            )
 
             self.log_writer.log(
                 f"Got cluster file name for {key} and with cluster number as {idx}",
-                log_file,
+                **log_dic,
             )
 
             self.s3.upload_df_as_csv(
@@ -112,18 +123,18 @@ class Main_Utils:
                 cluster_fname,
                 cluster_fname,
                 "feature_store",
-                log_file,
+                log_dic["log_file"],
                 index=True,
             )
 
             self.log_writer.log(
-                f"Uploaded {cluster_fname} file to feature store bucket", log_file,
+                f"Uploaded {cluster_fname} file to feature store bucket", **log_dic,
             )
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, **log_dic)
 
     def get_training_data(self, key, log_file):
         """
@@ -136,29 +147,38 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_training_data.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.get_training_data.__name__, __file__, log_file
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
-            data = self.s3.read_csv(self.files[key], "feature_store", log_file)
+            data = self.s3.read_csv(
+                self.files[key], "feature_store", log_dic["log_file"]
+            )
 
             self.log_writer.log(
                 f"Got the training data based on {key} from feature store bucket",
-                log_file,
+                **log_dic,
             )
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
             return data
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, **log_dic)
 
     def save_and_upload_elbow_plot(self, max_clusters, wcss, log_file):
-        method_name = self.save_and_upload_elbow_plot.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.save_and_upload_elbow_plot.__name__,
+            __file__,
+            log_file,
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             plot(range(1, max_clusters), wcss)
@@ -172,14 +192,16 @@ class Main_Utils:
             savefig(self.files["elbow_plot"])
 
             self.log_writer.log(
-                "Saved elbow plot based on max_clusters and wcss", log_file
+                "Saved elbow plot based on max_clusters and wcss", **log_dic
             )
 
-            self.s3.upload_file("elbow_plot", "elbow_plot", "io_files", log_file)
+            self.s3.upload_file(
+                "elbow_plot", "elbow_plot", "io_files", log_dic["log_file"]
+            )
 
-            self.log_writer.log("Uploaded elbow plot to s3 bucket", log_file)
+            self.log_writer.log("Uploaded elbow plot to s3 bucket", **log_dic)
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, **log_dic)
