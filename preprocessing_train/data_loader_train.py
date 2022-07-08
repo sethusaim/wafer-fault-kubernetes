@@ -1,6 +1,7 @@
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
-from utils.read_params import read_params
+from utils.main_utils import Main_Utils
+from utils.read_params import get_log_dic, read_params
 
 
 class Data_Getter_Train:
@@ -16,11 +17,11 @@ class Data_Getter_Train:
 
         self.log_file = log_file
 
+        self.utils = Main_Utils()
+
         self.s3 = S3_Operation()
 
         self.log_writer = App_Logger()
-
-        self.class_name = self.__class__.__name__
 
     def get_data(self):
         """
@@ -33,24 +34,26 @@ class Data_Getter_Train:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_data.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.get_data.__name__, __file__, self.log_file
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
-            df = self.s3.read_csv("train_export", "feature_store", self.log_file)
+            ip_fname = self.utils.get_input_file("train_export", log_dic["log_file"])
+
+            df = self.s3.read_csv(
+                ip_fname, "feature_store", log_dic["log_file"], fidx=True
+            )
 
             self.log_writer.log(
-                "Training data loaded from feature store bucket", self.log_file
+                "Training data loaded from feature store bucket", **log_dic
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file
-            )
+            self.log_writer.start_log("exit", **log_dic)
 
             return df
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
+            self.log_writer.exception_log(e, **log_dic)

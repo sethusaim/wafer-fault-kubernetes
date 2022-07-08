@@ -2,6 +2,7 @@ from data_loader_train import Data_Getter_Train
 from preprocessing import Preprocessor
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
+from utils.read_params import get_log_dic
 
 
 class Run:
@@ -14,8 +15,6 @@ class Run:
 
     def __init__(self):
         self.utils = Main_Utils()
-
-        self.class_name = self.__class__.__name__
 
         self.preprocessor = Preprocessor("preprocess")
 
@@ -34,9 +33,14 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.run_preprocess.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.run_preprocess.__name__,
+            __file__,
+            "preprocess",
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, "preprocess")
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             data = self.data_getter_train.get_data()
@@ -56,20 +60,20 @@ class Run:
 
             Y = self.preprocessor.encode_target_col(Y)
 
-            self.utils.upload_data_to_feature_store(X, "wafer_features", "preprocess")
-
-            self.utils.upload_data_to_feature_store(Y, "wafer_targets", "preprocess")
-
-            self.log_writer.log(
-                "Completed preprocessing on training data", "preprocess"
+            self.utils.upload_data_to_feature_store(
+                X, "wafer_features", log_dic["log_file"]
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, "preprocess"
+            self.utils.upload_data_to_feature_store(
+                Y, "wafer_targets", log_dic["log_file"]
             )
+
+            self.log_writer.log("Completed preprocessing on training data", **log_dic)
+
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, "preprocess")
+            self.log_writer.exception_log(e, **log_dic)
 
 
 if __name__ == "__main__":
