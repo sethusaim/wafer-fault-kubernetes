@@ -5,6 +5,7 @@ from pandas import DataFrame
 from pymongo import MongoClient
 
 from utils.logger import App_Logger
+from utils.main_utils import Main_Utils
 from utils.read_params import get_log_dic, read_params
 
 
@@ -24,6 +25,8 @@ class MongoDB_Operation:
         self.mongo_config = self.config["mongodb"]
 
         self.client = MongoClient(self.DB_URL)
+
+        self.utils = Main_Utils()
 
         self.log_writer = App_Logger()
 
@@ -79,7 +82,11 @@ class MongoDB_Operation:
         try:
             database = self.get_database(db_name, log_dic["log_file"])
 
-            collection = database.get_collection(self.mongo_config[collection_name])
+            collection_name = self.utils.get_collection_with_timestamp(
+                collection_name, log_dic["log_file"]
+            )
+
+            collection = database.get_collection(collection_name)
 
             df = DataFrame(list(collection.find()))
 
@@ -124,7 +131,11 @@ class MongoDB_Operation:
 
             database = self.get_database(db_name, log_dic["log_file"])
 
-            collection = database.get_collection(self.mongo_config[collection_name])
+            collection_name = self.utils.get_collection_with_timestamp(
+                collection_name, log_dic["log_file"]
+            )
+            
+            collection = database.get_collection(collection_name)
 
             self.log_writer.log("Inserting records to MongoDB", **log_dic)
 
