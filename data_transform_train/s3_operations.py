@@ -1,4 +1,3 @@
-from cmath import log
 from io import StringIO
 from os import listdir, remove
 from os.path import join
@@ -129,7 +128,7 @@ class S3_Operation:
             df = self.get_df_from_object(csv_obj, log_dic["log_file"])
 
             self.log_writer.log(
-                f"Read {fname} csv file from {bucket} bucket", log_dic["log_file"]
+                f"Read {fname} csv file from {bucket} bucket", **log_dic
             )
 
             self.log_writer.start_log("exit", **log_dic)
@@ -346,9 +345,7 @@ class S3_Operation:
 
             lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
 
-            self.log_writer.log(
-                f"Got {fname} from bucket {bucket}", log_dic["log_file"]
-            )
+            self.log_writer.log(f"Got {fname} from bucket {bucket}", **log_dic)
 
             func = lambda x: x[0] if len(x) == 1 else x
 
@@ -409,7 +406,9 @@ class S3_Operation:
 
                 dest_f = folder + "/" + f
 
-                self.upload_file(local_f, dest_f, bucket, log_dic["log_file"])
+                self.upload_file(
+                    local_f, dest_f, bucket, log_dic["log_file"], delete=False
+                )
 
             self.log_writer.log("Uploaded folder to s3 bucket", **log_dic)
 

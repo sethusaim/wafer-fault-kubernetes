@@ -104,8 +104,7 @@ class Data_Transform_Train:
                 df["Wafer"] = df["Wafer"].str[6:]
 
                 self.log_writer.log(
-                    f"Replaced missing values with null for the file {file}",
-                    log_dic["log_file"],
+                    f"Replaced missing values with null for the file {file}", **log_dic,
                 )
 
                 self.s3.upload_df_as_csv(
