@@ -44,7 +44,7 @@ class Run:
 
             self.log_writer.log(
                 "Read the features file for training from feature store bucket",
-                log_dic["log_file"],
+                **log_dic,
             )
 
             Y = self.utils.get_training_data("targets", log_dic["log_file"])

@@ -160,7 +160,7 @@ class S3_Operation:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            self.log_writer.log(f"Uploading {from_fname} to s3 bucket", **log_file)
+            self.log_writer.log(f"Uploading {from_fname} to s3 bucket", **log_dic)
 
             func = (
                 lambda: (self.files[from_fname], self.files[to_fname])
@@ -173,7 +173,7 @@ class S3_Operation:
             )
 
             self.log_writer.log(
-                f"Uploaded {from_fname} to s3 bucket {self.bucket[bucket]}", **log_file
+                f"Uploaded {from_fname} to s3 bucket {self.bucket[bucket]}", **log_dic
             )
 
             if delete is True:
@@ -219,7 +219,7 @@ class S3_Operation:
         try:
             model_name = model.__class__.__name__
 
-            self.log_writer.log(f"Got {model_name} model name", **log_file)
+            self.log_writer.log(f"Got {model_name} model name", **log_dic)
 
             func = (
                 lambda: model_name + self.save_format
@@ -378,7 +378,14 @@ class S3_Operation:
 
                 dest_f = folder + "/" + f
 
-                self.upload_file(local_f, dest_f, bucket, log_dic["log_file"])
+                self.upload_file(
+                    local_f,
+                    dest_f,
+                    bucket,
+                    log_dic["log_file"],
+                    delete=False,
+                    index=True,
+                )
 
             self.log_writer.log("Uploaded folder to s3 bucket", **log_dic)
 
