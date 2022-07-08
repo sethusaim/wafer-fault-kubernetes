@@ -41,7 +41,9 @@ class Data_Getter_Train:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            ip_fname = self.utils.get_input_file("train_export", log_dic["log_file"])
+            ip_fname = self.utils.get_file_with_timestamp(
+                "train_export", log_dic["log_file"]
+            )
 
             df = self.s3.read_csv(
                 ip_fname, "feature_store", log_dic["log_file"], fidx=True

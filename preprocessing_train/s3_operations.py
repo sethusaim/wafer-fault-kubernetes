@@ -47,7 +47,7 @@ class S3_Operation:
 
         try:
             self.log_writer.log(
-                f"Uploading {from_fname} to s3 bucket {bucket}", log_file
+                f"Uploading {from_fname} to s3 bucket {bucket}", **log_dic
             )
 
             self.s3_resource.meta.client.upload_file(
@@ -55,21 +55,23 @@ class S3_Operation:
             )
 
             self.log_writer.log(
-                f"Uploaded {from_fname} to s3 bucket {bucket}", log_file
+                f"Uploaded {from_fname} to s3 bucket {bucket}", **log_dic
             )
 
             if delete is True:
                 self.log_writer.log(
-                    f"Option delete is set {delete}..deleting the file", log_file
+                    f"Option delete is set {delete}..deleting the file", **log_dic
                 )
 
                 remove(from_fname)
 
-                self.log_writer.log(f"Removed the local copy of {from_fname}", log_file)
+                self.log_writer.log(
+                    f"Removed the local copy of {from_fname}", **log_dic
+                )
 
             else:
                 self.log_writer.log(
-                    f"Option delete is set {delete}, not deleting the file", log_file
+                    f"Option delete is set {delete}, not deleting the file", **log_dic
                 )
 
             self.log_writer.start_log("exit", **log_dic)
@@ -78,7 +80,7 @@ class S3_Operation:
             self.log_writer.exception_log(e, **log_dic)
 
     def upload_df_as_csv(
-        self, data_frame, local_fname, bucket_fname, bucket, log_file,
+        self, data_frame, local_fname, bucket_fname, bucket, log_file, fidx=False
     ):
         """
         Method Name :   upload_df_as_csv
@@ -97,18 +99,19 @@ class S3_Operation:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            data_frame.to_csv(self.files[local_fname], index=None, header=True)
+            func = lambda fname: self.files[fname] if fidx is False else fname
+
+            local_fname = func(local_fname)
+
+            bucket_fname = func(bucket_fname)
+
+            data_frame.to_csv(local_fname, index=None, header=True)
 
             self.log_writer.log(
-                f"Created a local copy of dataframe with name {local_fname}", *log_dic
+                f"Created a local copy of dataframe with name {local_fname}", **log_dic
             )
 
-            self.upload_file(
-                self.files[local_fname],
-                self.files[bucket_fname],
-                bucket,
-                log_dic["log_file"],
-            )
+            self.upload_file(local_fname, bucket_fname, bucket, log_dic["log_file"])
 
             self.log_writer.log(
                 f"Uploaded dataframe as csv to {bucket} bucket with name as {bucket_fname}",
@@ -218,7 +221,7 @@ class S3_Operation:
                 f"Read the s3 object with decode as {decode}", **log_dic
             )
 
-            conv_func = lambda: StringIO(func() if make_readable is True else func())
+            conv_func = lambda: StringIO(func()) if make_readable is True else func()
 
             self.log_writer.log(
                 f"read the s3 object with make_readable as {make_readable}", **log_dic
@@ -319,7 +322,9 @@ class S3_Operation:
 
                 dest_f = folder + "/" + f
 
-                self.upload_file(local_f, dest_f, bucket, log_dic["log_file"])
+                self.upload_file(
+                    local_f, dest_f, bucket, log_dic["log_file"], delete=False
+                )
 
             self.log_writer.log("Uploaded folder to s3 bucket", **log_dic)
 

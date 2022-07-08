@@ -80,8 +80,10 @@ class Main_Utils:
         self.log_writer.start_log("start", **log_dic)
 
         try:
+            fname = self.get_file_with_timestamp(key, log_dic["log_file"])
+
             self.s3.upload_df_as_csv(
-                data, key, key, "feature_store", log_dic["log_file"]
+                data, fname, fname, "feature_store", log_dic["log_file"], fidx=True
             )
 
             self.log_writer.log(f"Uploaded {key} to feature store bucket", **log_dic)
@@ -121,9 +123,12 @@ class Main_Utils:
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
 
-    def get_input_file(self, file, log_file):
+    def get_file_with_timestamp(self, file, log_file):
         log_dic = get_log_dic(
-            self.__class__.__name__, self.get_input_file.__name__, __file__, log_file
+            self.__class__.__name__,
+            self.get_file_with_timestamp.__name__,
+            __file__,
+            log_file,
         )
 
         self.log_writer.start_log("start", **log_dic)
