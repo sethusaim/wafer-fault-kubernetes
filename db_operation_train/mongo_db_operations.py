@@ -134,7 +134,7 @@ class MongoDB_Operation:
             collection_name = self.utils.get_collection_with_timestamp(
                 collection_name, log_dic["log_file"]
             )
-            
+
             collection = database.get_collection(collection_name)
 
             self.log_writer.log("Inserting records to MongoDB", **log_dic)
