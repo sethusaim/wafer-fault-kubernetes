@@ -1,6 +1,6 @@
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
-from utils.read_params import read_params
+from utils.read_params import get_log_dic, read_params
 
 
 class Data_Transform_Train:
@@ -13,8 +13,6 @@ class Data_Transform_Train:
 
     def __init__(self):
         self.config = read_params()
-
-        self.class_name = self.__class__.__name__
 
         self.s3 = S3_Operation()
 
@@ -33,15 +31,18 @@ class Data_Transform_Train:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.rename_column.__name__
-
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, "data_transform"
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.rename_column.__name__,
+            __file__,
+            "data_transform",
         )
+
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             lst = self.s3.read_csv_from_folder(
-                "train_good_data", "train_data", "data_transform"
+                "train_good_data", "train_data", log_dic["log_file"]
             )
 
             for _, f in enumerate(lst):
@@ -54,21 +55,17 @@ class Data_Transform_Train:
                 df.rename(columns={self.col[from_col]: self.col[to_col]}, inplace=True)
 
                 self.log_writer.log(
-                    f"Renamed the output columns for the file {file}", "data_transform"
+                    f"Renamed the output columns for the file {file}", **log_dic
                 )
 
                 self.s3.upload_df_as_csv(
-                    df, abs_f, file, "train_data", "data_transform"
+                    df, abs_f, file, "train_data", log_dic["log_file"]
                 )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, "data_transform"
-            )
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, "data_transform"
-            )
+            self.log_writer.exception_log(e, **log_dic)
 
     def replace_missing_with_null(self):
         """
@@ -81,15 +78,18 @@ class Data_Transform_Train:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.replace_missing_with_null.__name__
-
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, "data_transform"
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.replace_missing_with_null.__name__,
+            __file__,
+            "data_transform",
         )
+
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             lst = self.s3.read_csv_from_folder(
-                "train_good_data", "train_data", "data_transform"
+                "train_good_data", "train_data", log_dic["log_file"]
             )
 
             for _, f in enumerate(lst):
@@ -105,18 +105,14 @@ class Data_Transform_Train:
 
                 self.log_writer.log(
                     f"Replaced missing values with null for the file {file}",
-                    "data_transform",
+                    log_dic["log_file"],
                 )
 
                 self.s3.upload_df_as_csv(
-                    df, abs_f, file, "train_data", "data_transform"
+                    df, abs_f, file, "train_data", log_dic["log_file"]
                 )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, "data_transform"
-            )
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, "data_transform"
-            )
+            self.log_writer.exception_log(e, **log_dic)
