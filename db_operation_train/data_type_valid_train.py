@@ -1,6 +1,7 @@
 from mongo_db_operations import MongoDB_Operation
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
+from utils.main_utils import Main_Utils
 from utils.read_params import get_log_dic
 
 
@@ -18,6 +19,8 @@ class DB_Operation_Train:
         self.mongo = MongoDB_Operation()
 
         self.log_writer = App_Logger()
+
+        self.utils = Main_Utils()
 
     def insert_good_data_as_record(self, good_data_db_name, good_data_collection_name):
         """
@@ -88,8 +91,16 @@ class DB_Operation_Train:
                 good_data_db_name, good_data_collection_name, log_dic["log_file"]
             )
 
+            export_fname = self.utils.get_file_with_timestamp(
+                "train_export", log_dic["log_file"]
+            )
             self.s3.upload_df_as_csv(
-                df, "train_export", "train_export", "feature_store", log_dic["log_file"]
+                df,
+                export_fname,
+                export_fname,
+                "feature_store",
+                log_dic["log_file"],
+                fidx=True,
             )
 
             self.log_writer.log("Exported dataframe to csv file", **log_dic)

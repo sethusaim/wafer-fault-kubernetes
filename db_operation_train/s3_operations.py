@@ -96,7 +96,7 @@ class S3_Operation:
 
             df = read_csv(content)
 
-            self.log_writer.log("Got the dataframe from object", **log_file)
+            self.log_writer.log("Got the dataframe from object", **log_dic)
 
             self.log_writer.start_log("exit", **log_dic)
 
@@ -334,7 +334,9 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
 
-    def upload_df_as_csv(self, data_frame, local_fname, bucket_fname, bucket, log_file):
+    def upload_df_as_csv(
+        self, data_frame, local_fname, bucket_fname, bucket, log_file, fidx=False
+    ):
         """
         Method Name :   upload_df_as_csv
         Description :   This method uploades a dataframe as csv file to s3 bucket
@@ -352,18 +354,19 @@ class S3_Operation:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            data_frame.to_csv(self.files[local_fname], index=None, header=True)
+            func = lambda fname: self.files[fname] if fidx is False else fname
+
+            local_fname = func(local_fname)
+
+            bucket_fname = func(bucket_fname)
+
+            data_frame.to_csv(local_fname, index=None, header=True)
 
             self.log_writer.log(
                 f"Created a local copy of dataframe with name {local_fname}", **log_dic
             )
 
-            self.upload_file(
-                self.files[local_fname],
-                self.files[bucket_fname],
-                bucket,
-                log_dic["log_file"],
-            )
+            self.upload_file(local_fname, bucket_fname, bucket, log_dic["log_file"])
 
             self.log_writer.start_log("exit", **log_dic)
 
@@ -387,7 +390,9 @@ class S3_Operation:
 
                 dest_f = folder + "/" + f
 
-                self.upload_file(local_f, dest_f, bucket, log_dic["log_file"])
+                self.upload_file(
+                    local_f, dest_f, bucket, log_dic["log_file"], delete=False
+                )
 
             self.log_writer.log("Uploaded folder to s3 bucket", **log_dic)
 
