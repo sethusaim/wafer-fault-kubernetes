@@ -411,7 +411,7 @@ class Main_Utils:
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
 
-    def get_tuned_model(self, model, train_x, train_y, log_file):
+    def get_tuned_model(self, model_name, train_x, train_y, test_x, test_y, log_file):
         log_dic = get_log_dic(
             self.__class__.__name__, self.get_tuned_model.__name__, __file__, log_file
         )
@@ -419,15 +419,17 @@ class Main_Utils:
         self.log_writer.start_log("start", **log_dic)
 
         try:
+            self.model = self.get_base_model(model_name, log_dic["log_file"])
+
             self.model_best_params = self.get_model_params(
-                model, train_x, train_y, log_dic["log_file"]
+                self.model, train_x, train_y, log_dic["log_file"]
             )
 
             self.log_writer.log(
-                f"Got best params for {model.__class__.__name__} model", **log_dic
+                f"Got best params for {self.model.__class__.__name__} model", **log_dic
             )
 
-            model.set_params(**self.model_best_params)
+            self.model.set_params(**self.model_best_params)
 
             self.log_writer.log(
                 "Set the best params for {model.__class__.__name__} model", **log_dic
@@ -438,16 +440,26 @@ class Main_Utils:
                 **log_dic,
             )
 
-            model.fit(train_x, train_y)
+            self.model.fit(train_x, train_y)
 
             self.log_writer.log(
                 "{model.__class__.__name__} model is trained with best parameters",
                 **log_dic,
             )
 
+            self.preds = self.model.predict(test_x)
+
+            self.log_writer.log(
+                "Used {self.model.__name__} model for getting predictions", **log_dic
+            )
+
+            self.model_score = self.get_model_score(
+                self.model, test_x, test_y, log_dic["log_file"]
+            )
+
             self.log_writer.start_log("exit", **log_dic)
 
-            return model
+            return self.model, self.model_score
 
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)

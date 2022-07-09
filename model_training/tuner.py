@@ -56,16 +56,8 @@ class Model_Finder:
             lst = []
 
             for model_name in models_lst:
-                self.base_model = self.utils.get_base_model(
-                    model_name, log_dic["log_file"]
-                )
-
-                self.tuned_model = self.utils.get_tuned_model(
-                    self.base_model, x_train, y_train, log_dic["log_file"]
-                )
-
-                self.tuned_model_score = self.utils.get_model_score(
-                    self.tuned_model, x_test, y_test, log_dic["log_file"]
+                self.tuned_model, self.tuned_model_score = self.utils.get_tuned_model(
+                    model_name, x_train, y_train, x_test, y_test, log_dic["log_file"]
                 )
 
                 lst.append((self.tuned_model, self.tuned_model_score))
