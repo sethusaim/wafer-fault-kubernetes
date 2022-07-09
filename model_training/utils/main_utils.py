@@ -319,22 +319,22 @@ class Main_Utils:
             )
 
             if len(test_y.unique()) == 1:
-                model_score = accuracy_score(test_y, preds)
+                self.model_score = accuracy_score(test_y, preds)
 
                 self.log_writer.log(
-                    f"Accuracy for {model_name} is {model_score}", **log_dic
+                    f"Accuracy for {model_name} is {self.model_score}", **log_dic
                 )
 
             else:
-                model_score = roc_auc_score(test_y, preds)
+                self.model_score = roc_auc_score(test_y, preds)
 
                 self.log_writer.log(
-                    f"AUC score for {model_name} is {model_score}", **log_dic
+                    f"AUC score for {model_name} is {self.model_score}", **log_dic
                 )
 
             self.log_writer.start_log("exit", **log_dic)
 
-            return model_score
+            return self.model_score
 
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
@@ -359,25 +359,27 @@ class Main_Utils:
         try:
             model_name = model.__class__.__name__
 
-            model_param_grid = self.config["train_model"][model_name]
+            self.model_param_grid = self.config["train_model"][model_name]
 
-            model_grid = GridSearchCV(model, model_param_grid, **self.tuner_kwargs)
+            self.model_grid = GridSearchCV(
+                model, self.model_param_grid, **self.tuner_kwargs
+            )
 
             self.log_writer.log(
-                f"Initialized {model_grid.__class__.__name__}  with {model_param_grid} as params",
+                f"Initialized {self.model_grid.__class__.__name__}  with {self.model_param_grid} as params",
                 **log_dic,
             )
 
-            model_grid.fit(x_train, y_train)
+            self.model_grid.fit(x_train, y_train)
 
             self.log_writer.log(
-                f"Found the best params for {model_name} model based on {model_param_grid} as params",
+                f"Found the best params for {model_name} model based on {self.model_param_grid} as params",
                 **log_dic,
             )
 
             self.log_writer.start_log("exit", **log_dic)
 
-            return model_grid.best_params_
+            return self.model_grid.best_params_
 
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
@@ -417,7 +419,7 @@ class Main_Utils:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            model_best_params = self.get_model_params(
+            self.model_best_params = self.get_model_params(
                 model, train_x, train_y, log_dic["log_file"]
             )
 
@@ -425,7 +427,7 @@ class Main_Utils:
                 f"Got best params for {model.__class__.__name__} model", **log_dic
             )
 
-            model.set_params(**model_best_params)
+            model.set_params(**self.model_best_params)
 
             self.log_writer.log(
                 "Set the best params for {model.__class__.__name__} model", **log_dic

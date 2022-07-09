@@ -1,5 +1,6 @@
 from mlflow import end_run, start_run
 from sklearn.model_selection import train_test_split
+from datetime import datetime
 
 from mlflow_operations import MLFlow_Operation
 from s3_operations import S3_Operation
@@ -33,6 +34,8 @@ class Model_Finder:
 
         self.s3 = S3_Operation()
 
+        self.current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
+
     def get_trained_models(self, X_data, Y_data):
         log_dic = get_log_dic(
             self.__class__.__name__,
@@ -53,17 +56,19 @@ class Model_Finder:
             lst = []
 
             for model_name in models_lst:
-                base_model = self.utils.get_base_model(model_name, self.log_file)
-
-                tuned_model = self.utils.get_tuned_model(
-                    base_model, x_train, y_train, self.log_file
+                self.base_model = self.utils.get_base_model(
+                    model_name, log_dic["log_file"]
                 )
 
-                tuned_model_score = self.utils.get_model_score(
-                    tuned_model, x_test, y_test, self.log_file
+                self.tuned_model = self.utils.get_tuned_model(
+                    self.base_model, x_train, y_train, log_dic["log_file"]
                 )
 
-                lst.append((tuned_model, tuned_model_score))
+                self.tuned_model_score = self.utils.get_model_score(
+                    self.tuned_model, x_test, y_test, log_dic["log_file"]
+                )
+
+                lst.append((self.tuned_model, self.tuned_model_score))
 
             return lst
 
@@ -96,15 +101,15 @@ class Model_Finder:
             self.log_writer.log("Got trained models", **log_dic)
 
             for _, tm in enumerate(lst):
-                model = tm[0]
+                self.model = tm[0]
 
-                model_score = tm[1]
+                self.model_score = tm[1]
 
                 self.s3.save_model(
-                    model, "train_model", "model", log_dic["log_file"], idx=idx
+                    self.model, "train_model", "model", log_dic["log_file"], idx=idx
                 )
 
-                self.mlflow_op.log_all_for_model(model, model_score, idx)
+                self.mlflow_op.log_all_for_model(self.model, self.model_score, idx)
 
             self.log_writer.log(
                 "Saved and logged all trained models to mlflow", **log_dic
@@ -130,7 +135,9 @@ class Model_Finder:
                 "KMeans", "model", log_dic["log_file"], model_dir="train_model"
             )
 
-            kmeans_model_name = kmeans_model.__class__.__name__
+            kmeans_model_name = (
+                self.current_date + "-" + kmeans_model.__class__.__name__
+            )
 
             self.mlflow_op.set_mlflow_tracking_uri()
 

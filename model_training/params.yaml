@@ -51,6 +51,7 @@ train_model:
     max_depth:
       - 2
       - 3
+      - 4
 
   XGBClassifier:
     learning_rate:

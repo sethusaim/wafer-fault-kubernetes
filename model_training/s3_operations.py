@@ -458,10 +458,12 @@ class S3_Operation:
         self.log_writer.start_log("start", **log_dic)
 
         try:
+            model_f = self.current_date + "-" + model_name + self.save_format
+
             func = (
-                lambda: model_name + self.save_format
+                lambda: model_f
                 if self.dir[model_dir] is None
-                else self.dir[model_dir] + "/" + model_name + self.save_format
+                else self.dir[model_dir] + "/" + model_f
             )
 
             model_file = func()

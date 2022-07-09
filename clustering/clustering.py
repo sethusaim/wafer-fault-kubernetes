@@ -100,8 +100,10 @@ class KMeans_Clustering:
         )
 
         self.log_writer.start_log("start", **log_dic)
+        
+        self.data = data
 
-        try:
+        try:            
             self.kmeans = KMeans(num_clusters, **self.kmeans_params)
 
             self.y_kmeans = self.kmeans.fit_predict(data)
@@ -110,7 +112,7 @@ class KMeans_Clustering:
                 self.kmeans, "model_trained", "model", log_dic["log_file"]
             )
 
-            data["Cluster"] = self.y_kmeans
+            self.data["Cluster"] = self.y_kmeans
 
             self.log_writer.log(
                 f"Successfully created {str(self.kn.knee)} clusters", **log_dic
@@ -118,7 +120,7 @@ class KMeans_Clustering:
 
             self.log_writer.start_log("exit", **log_dic)
 
-            return data
+            return self.data
 
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
