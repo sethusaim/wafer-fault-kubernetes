@@ -70,3 +70,9 @@ train_model:
       - 50
       - 100
       - 200
+
+log_params:
+  filemode: a
+  format: "%(asctime)s;%(levelname)s;%(file_name)s;%(class_name)s;%(method_name)s;%(message)s"
+  datefmt: "%H:%M:%S"
+  level: INFO
