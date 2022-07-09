@@ -5,7 +5,7 @@ from mlflow_operations import MLFlow_Operation
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
-from utils.read_params import read_params
+from utils.read_params import get_log_dic, read_params
 
 
 class Model_Finder:
@@ -18,8 +18,6 @@ class Model_Finder:
 
     def __init__(self, log_file):
         self.log_file = log_file
-
-        self.class_name = self.__class__.__name__
 
         self.config = read_params()
 
@@ -36,9 +34,14 @@ class Model_Finder:
         self.s3 = S3_Operation()
 
     def get_trained_models(self, X_data, Y_data):
-        method_name = self.get_trained_models.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.get_trained_models.__name__,
+            __file__,
+            self.log_file,
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             models_lst = list(self.config["train_model"].keys())
@@ -65,9 +68,7 @@ class Model_Finder:
             return lst
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
+            self.log_writer.exception_log(e, **log_dic)
 
     def train_and_log_models(self, X_data, Y_data, idx):
         """
@@ -80,14 +81,19 @@ class Model_Finder:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.train_and_log_models.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.train_and_log_models.__name__,
+            __file__,
+            self.log_file,
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             lst = self.get_trained_models(X_data, Y_data)
 
-            self.log_writer.log("Got trained models", self.log_file)
+            self.log_writer.log("Got trained models", **log_dic)
 
             for _, tm in enumerate(lst):
                 model = tm[0]
@@ -95,32 +101,33 @@ class Model_Finder:
                 model_score = tm[1]
 
                 self.s3.save_model(
-                    model, "train_model", "model", self.log_file, idx=idx
+                    model, "train_model", "model", log_dic["log_file"], idx=idx
                 )
 
                 self.mlflow_op.log_all_for_model(model, model_score, idx)
 
             self.log_writer.log(
-                "Saved and logged all trained models to mlflow", self.log_file
+                "Saved and logged all trained models to mlflow", **log_dic
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file
-            )
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
+            self.log_writer.exception_log(e, **log_dic)
 
     def perform_training(self, lst_clusters):
-        method_name = self.perform_training.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.perform_training.__name__,
+            __file__,
+            self.log_file,
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             kmeans_model = self.s3.load_model(
-                "KMeans", "model", self.log_file, model_dir="train_model"
+                "KMeans", "model", log_dic["log_file"], model_dir="train_model"
             )
 
             kmeans_model_name = kmeans_model.__class__.__name__
@@ -135,9 +142,9 @@ class Model_Finder:
                 end_run()
 
             for i in range(lst_clusters):
-                cluster_feat = self.utils.get_cluster_features(i, self.log_file)
+                cluster_feat = self.utils.get_cluster_features(i, log_dic["log_file"])
 
-                cluster_label = self.utils.get_cluster_targets(i, self.log_file)
+                cluster_label = self.utils.get_cluster_targets(i, log_dic["log_file"])
 
                 self.log_writer.log(
                     "Got cluster features and cluster labels", self.log_file
@@ -146,11 +153,7 @@ class Model_Finder:
                 with start_run(run_name=self.mlflow_config["run_name"] + str(i)):
                     self.train_and_log_models(cluster_feat, cluster_label, idx=i)
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file
-            )
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file
-            )
+            self.log_writer.exception_log(e, **log_dic)

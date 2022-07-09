@@ -1,6 +1,7 @@
 from tuner import Model_Finder
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
+from utils.read_params import get_log_dic
 
 
 class Run:
@@ -12,8 +13,6 @@ class Run:
     """
 
     def __init__(self):
-        self.class_name = self.__class__.__name__
-
         self.model = Model_Finder("model_train")
 
         self.utils = Main_Utils()
@@ -31,32 +30,33 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.training_model.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.training_model.__name__,
+            __file__,
+            "model_train",
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, "model_train")
+        self.log_writer.start_log("start", **log_dic)
 
         try:
-            lst_clusters = self.utils.get_number_of_clusters("model_train")
+            lst_clusters = self.utils.get_number_of_clusters(log_dic["log_file"])
 
             self.log_writer.log(
-                f"Found the number of cluster to be {lst_clusters}", "model_train"
+                f"Found the number of cluster to be {lst_clusters}", **log_dic
             )
 
             self.model.perform_training(lst_clusters)
 
             self.log_writer.log(
                 "Completed model and training and logging of the models to mlflow",
-                "model_train",
+                **log_dic,
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, "model_train"
-            )
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, "model_train"
-            )
+            self.log_writer.exception_log(e, **log_dic)
 
 
 if __name__ == "__main__":
