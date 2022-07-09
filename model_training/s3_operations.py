@@ -63,7 +63,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
 
-    def get_file_object(self, fname, bucket, log_file):
+    def get_file_object(self, fname, bucket, log_file, pattern=False):
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
@@ -83,7 +83,13 @@ class S3_Operation:
         try:
             bucket = self.get_bucket(bucket, log_dic["log_file"])
 
-            lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
+            if pattern is False:
+                lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
+
+            else:
+                lst_objs = [
+                    object for object in bucket.objects.all() if fname in object.key
+                ]
 
             self.log_writer.log(f"Got {fname} from bucket {bucket}", **log_dic)
 
@@ -173,7 +179,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
 
-    def read_csv(self, fname, bucket, log_file):
+    def read_csv(self, fname, bucket, log_file, pattern=False):
         """
         Method Name :   read_csv
         Description :   This method reads the csv data from s3 bucket
@@ -191,7 +197,9 @@ class S3_Operation:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            csv_obj = self.get_file_object(fname, bucket, log_dic["log_file"])
+            csv_obj = self.get_file_object(
+                fname, bucket, log_dic["log_file"], pattern=pattern
+            )
 
             df = self.get_df_from_object(csv_obj, log_dic["log_file"])
 
@@ -340,9 +348,11 @@ class S3_Operation:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            lst = self.get_file_object(folder_name, bucket, log_dic["log_file"])
+            lst = self.get_file_object(
+                folder_name, bucket, log_dic["log_file"], pattern=True
+            )
 
-            list_of_files = [object.key for object in lst]
+            list_of_files = [object for object in lst]
 
             self.log_writer.log(f"Got list of files from bucket {bucket}", **log_dic)
 
@@ -456,7 +466,7 @@ class S3_Operation:
 
             model_file = func()
 
-            self.log_writer.log(f"Got {model_file} as model file", **log_file)
+            self.log_writer.log(f"Got {model_file} as model file", **log_dic)
 
             f_obj = self.get_file_object(model_file, bucket, log_dic["log_file"])
 
@@ -490,7 +500,9 @@ class S3_Operation:
 
                 dest_f = folder + "/" + f
 
-                self.upload_file(local_f, dest_f, bucket, log_dic["log_file"])
+                self.upload_file(
+                    local_f, dest_f, bucket, log_dic["log_file"], delete=False
+                )
 
             self.log_writer.log("Uploaded folder to s3 bucket", **log_dic)
 

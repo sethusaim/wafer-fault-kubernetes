@@ -207,13 +207,11 @@ class MLFlow_Operation:
         )
 
         try:
-            self.log_writer.start_log(
-                "start", **log_dic,
-            )
+            self.log_writer.start_log("start", **log_dic)
 
             base_model_name = model.__class__.__name__
 
-            model_name = base_model_name + str(idx) + self.current_date
+            model_name = self.current_date + "-" + base_model_name + str(idx)
 
             self.log_writer.log(f"Got the model name as {base_model_name}", **log_dic)
 

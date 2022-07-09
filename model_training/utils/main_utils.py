@@ -58,6 +58,8 @@ class Main_Utils:
 
             self.log_writer.start_log("exit", **log_dic)
 
+            self.log_writer.stop_log()
+
             rmtree(self.log_dir)
 
         except Exception as e:
@@ -81,9 +83,7 @@ class Main_Utils:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            cluster_fname = (
-                self.current_date + "-" + "wafer_train_" + key + f"-{idx}.csv"
-            )
+            cluster_fname = "-wafer_train_" + key + f"-{idx}.csv"
 
             self.log_writer.log(f"Got the cluster file name for {key}", **log_dic)
 
@@ -112,7 +112,9 @@ class Main_Utils:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            df = self.s3.read_csv(fname, bucket, log_dic["log_file"])["Labels"]
+            df = self.s3.read_csv(fname, bucket, log_dic["log_file"], pattern=True)[
+                "Labels"
+            ]
 
             self.log_writer.log(
                 "Got dataframe from {bucket} with file as {fname}", **log_dic
@@ -145,7 +147,9 @@ class Main_Utils:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            df = self.s3.read_csv(fname, "feature_store", log_dic["log_file"])
+            df = self.s3.read_csv(
+                fname, "feature_store", log_dic["log_file"], pattern=True
+            )
 
             self.log_writer.log(
                 f"Got the dataframe from feature store with file name as {fname}",
@@ -311,7 +315,7 @@ class Main_Utils:
             preds = model.predict(test_x)
 
             self.log_writer.log(
-                f"Used {model_name} model to get predictions on test data", **log_file
+                f"Used {model_name} model to get predictions on test data", **log_dic
             )
 
             if len(test_y.unique()) == 1:
@@ -346,11 +350,11 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.start_log("start", **log_dic)
-
         log_dic = get_log_dic(
             self.__class__.__name__, self.get_model_params.__name__, __file__, log_file
         )
+
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             model_name = model.__class__.__name__
@@ -395,7 +399,7 @@ class Main_Utils:
                 model = all_estimators().__getitem__(model_idx)[1]()
 
             self.log_writer.log(
-                f"Got {model.__class__.__name__} as base model", **log_file
+                f"Got {model.__class__.__name__} as base model", **log_dic
             )
 
             self.log_writer.start_log("exit", **log_dic)
@@ -424,7 +428,7 @@ class Main_Utils:
             model.set_params(**model_best_params)
 
             self.log_writer.log(
-                "Set the best params for {model.__class__.__name__} model", **log_dic,
+                "Set the best params for {model.__class__.__name__} model", **log_dic
             )
 
             self.log_writer.log(

@@ -147,7 +147,7 @@ class Model_Finder:
                 cluster_label = self.utils.get_cluster_targets(i, log_dic["log_file"])
 
                 self.log_writer.log(
-                    "Got cluster features and cluster labels", self.log_file
+                    "Got cluster features and cluster labels", **log_dic
                 )
 
                 with start_run(run_name=self.mlflow_config["run_name"] + str(i)):

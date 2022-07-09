@@ -159,9 +159,9 @@ class Main_Utils:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            fname = self.current_date + "-" + self.files[key]
-
-            data = self.s3.read_csv(fname, "feature_store", log_dic["log_file"])
+            data = self.s3.read_csv(
+                self.files[key], "feature_store", log_dic["log_file"], pattern=True
+            )
 
             self.log_writer.log(
                 f"Got the training data based on {key} from feature store bucket",

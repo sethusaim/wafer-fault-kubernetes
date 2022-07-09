@@ -1,3 +1,4 @@
+import csv
 from datetime import datetime
 from io import StringIO
 from os import listdir, remove
@@ -33,7 +34,7 @@ class S3_Operation:
         self.save_format = self.config["model_save_format"]
 
         self.dir = self.config["dir"]
-        
+
         self.current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
 
     def get_bucket(self, bucket, log_file):
@@ -54,7 +55,7 @@ class S3_Operation:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            bucket = self.s3_resource.Bucket(bucket)
+            bucket = self.s3_resource.Bucket(self.bucket[bucket])
 
             self.log_writer.log(f"Got {bucket} bucket", **log_dic)
 
@@ -65,7 +66,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
 
-    def get_file_object(self, fname, bucket, log_file):
+    def get_file_object(self, fname, bucket, log_file, pattern=False):
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
@@ -85,7 +86,13 @@ class S3_Operation:
         try:
             bucket = self.get_bucket(bucket, log_dic["log_file"])
 
-            lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
+            if pattern is False:
+                lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
+
+            else:
+                lst_objs = [
+                    object for object in bucket.objects.all() if fname in object.key
+                ]
 
             self.log_writer.log(f"Got {fname} from bucket {bucket}", **log_dic)
 
@@ -223,7 +230,7 @@ class S3_Operation:
             model_name = model.__class__.__name__
 
             self.log_writer.log(f"Got {model_name} model name", **log_dic)
-            
+
             func = (
                 lambda: self.current_date + "-" + model_name + self.save_format
                 if model_name is "KMeans"
@@ -329,7 +336,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
 
-    def read_csv(self, fname, bucket, log_file):
+    def read_csv(self, fname, bucket, log_file, pattern=False):
         """
         Method Name :   read_csv
         Description :   This method reads the csv data from s3 bucket
@@ -348,7 +355,7 @@ class S3_Operation:
 
         try:
             csv_obj = self.get_file_object(
-                fname, self.bucket[bucket], log_dic["log_file"]
+                fname, bucket, log_dic["log_file"], pattern=pattern
             )
 
             df = self.get_df_from_object(csv_obj, log_dic["log_file"])

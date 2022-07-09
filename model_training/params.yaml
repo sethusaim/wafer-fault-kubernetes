@@ -19,7 +19,7 @@ dir:
   train_model: trained
   log: model_training_logs
 
-file_pattern: wafer_train_features-
+file_pattern: -wafer_train_features-
 
 log:
   model_train: model_training.log
