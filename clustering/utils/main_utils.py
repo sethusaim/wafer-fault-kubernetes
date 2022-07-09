@@ -194,14 +194,16 @@ class Main_Utils:
 
             ylabel("WCSS")
 
-            savefig(self.files["elbow_plot"])
+            fname = self.current_date + "-" + self.files["elbow_plot"]
+
+            savefig(fname)
 
             self.log_writer.log(
                 "Saved elbow plot based on max_clusters and wcss", **log_dic
             )
 
             self.s3.upload_file(
-                "elbow_plot", "elbow_plot", "io_files", log_dic["log_file"]
+                fname, fname, "io_files", log_dic["log_file"], index=True
             )
 
             self.log_writer.log("Uploaded elbow plot to s3 bucket", **log_dic)
