@@ -25,6 +25,8 @@ class Main_Utils:
 
         self.log_dir = self.dir["log"]
 
+        self.col = self.config["col"]
+
     def upload_logs(self):
         """
         Method Name :   upload_logs
@@ -115,6 +117,25 @@ class Main_Utils:
             )
 
             self.log_writer.start_log("exit", **log_dic)
+
+        except Exception as e:
+            self.log_writer.exception_log(e, **log_dic)
+
+    def rename_column(self, df, from_col, to_col, log_file):
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.rename_column.__name__, __file__, log_file
+        )
+
+        self.log_writer.start_log("start", **log_dic)
+
+        try:
+            df.rename(columns={self.col[from_col]: self.col[to_col]}, inplace=True)
+
+            self.log_writer.log(f"Renamed {from_col} col to {to_col} col", **log_dic)
+
+            self.log_writer.start_log("exit", **log_dic)
+
+            return df
 
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)

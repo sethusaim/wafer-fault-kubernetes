@@ -14,6 +14,10 @@ files:
   train_schema: wafer-schema_training.json
   regex: wafer-regex.txt
 
+col:
+  wafer: "Wafer"
+  unnamed: "Unnamed: 0"
+
 log:
   upload: upload_raw_train_data_validation.log
   raw_train_main: raw_train_main.log

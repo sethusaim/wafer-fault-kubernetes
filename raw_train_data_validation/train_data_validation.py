@@ -305,6 +305,10 @@ class Raw_Train_Data_Validation:
                         break
 
                 if count == 0:
+                    df = self.utils.rename_column(
+                        df, "wafer", "unnamed", log_dic["log_file"]
+                    )
+
                     dest_f = self.utils.get_filename(
                         "train_good_data", abs_f, log_dic["log_file"]
                     )
