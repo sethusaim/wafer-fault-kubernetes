@@ -112,8 +112,10 @@ class Main_Utils:
 
             self.log_writer.log("Created dataframe of null values", **log_dic)
 
+            fname = self.get_file_with_timestamp("null_values", log_dic["log_file"])
+
             self.s3.upload_df_as_csv(
-                null_df, "null_values", "null_values", "io_files", log_dic["log_file"]
+                null_df, fname, fname, "io_files", log_dic["log_file"], fidx=True
             )
 
             self.log_writer.log("Uploaded null values csv file to s3 bucket", **log_dic)
