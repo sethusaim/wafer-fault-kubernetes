@@ -50,9 +50,13 @@ class Preprocessor:
         )
 
         self.log_writer.start_log("start", **log_dic)
+        
+        self.data = data
+        
+        self.columns = columns
 
         try:
-            self.useful_data = data.drop(labels=columns, axis=1)
+            self.useful_data = self.data.drop(labels=self.columns, axis=1)
 
             self.log_writer.log("Column removal Successful", **log_dic)
 
@@ -118,10 +122,10 @@ class Preprocessor:
         )
 
         self.log_writer.start_log("start", **log_dic)
+        
+        self.null_present = False
 
         try:
-            self.null_present = False
-
             self.null_counts = data.isna().sum()
 
             for i in self.null_counts:
@@ -166,13 +170,15 @@ class Preprocessor:
         )
 
         self.log_writer.start_log("start", **log_dic)
+        
+        self.data = data
 
         try:
             imputer = KNNImputer(missing_values=np.nan, **self.imputer_params)
 
-            self.new_array = imputer.fit_transform(data)
+            self.new_array = imputer.fit_transform(self.data)
 
-            self.new_data = DataFrame(data=self.new_array, columns=data.columns)
+            self.new_data = DataFrame(data=self.new_array, columns=self.data.columns)
 
             self.log_writer.log("Imputing missing values Successful", **log_dic)
 
@@ -204,11 +210,15 @@ class Preprocessor:
         )
 
         self.log_writer.start_log("start", **log_dic)
+        
+        self.columns = data.columns
+        
+        self.data_n = data.describe()
+        
+        self.col_to_drop = []
 
         try:
-            data_n = data.describe()
-
-            self.col_to_drop = [x for x in data.columns if data_n[x]["std"] == 0]
+            self.col_to_drop = [x for x in self.columns if self.data_n[x]["std"] == 0]
 
             self.log_writer.log(
                 "Column search for Standard Deviation of Zero Successful.", **log_dic
