@@ -14,8 +14,6 @@ log:
 col:
   output: Output
   good_bad: Good/Bad
-  wafer: "Wafer"
-  unnamed: "Unnamed: 0"
 
 log_params:
   filemode: a

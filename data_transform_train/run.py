@@ -38,6 +38,8 @@ class Run:
         try:
             self.log_writer.log("Starting Data Transformation", **log_dic)
 
+            self.data_transform.rename_column("good_bad", "output")
+
             self.data_transform.replace_missing_with_null()
 
             self.log_writer.log("Data Transformation completed !!", **log_dic)
