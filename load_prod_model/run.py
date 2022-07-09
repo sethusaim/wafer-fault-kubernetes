@@ -1,6 +1,7 @@
 from mlflow_operations import MLFlow_Operation
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
+from utils.read_params import get_log_dic
 
 
 class Load_Prod_Model:
@@ -12,8 +13,6 @@ class Load_Prod_Model:
     """
 
     def __init__(self):
-        self.class_name = self.__class__.__name__
-
         self.log_writer = App_Logger()
 
         self.utils = Main_Utils()
@@ -31,14 +30,17 @@ class Load_Prod_Model:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.load_production_model.__name__
-
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, "load_prod_model"
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.load_production_model.__name__,
+            __file__,
+            "load_prod_model",
         )
 
+        self.log_writer.start_log("start", **log_dic)
+
         try:
-            self.utils.create_prod_and_stag_dirs("model", "load_prod_model")
+            self.utils.create_prod_and_stag_dirs("model", log_dic["log_file"])
 
             self.mlflow_op.set_mlflow_tracking_uri()
 
@@ -46,7 +48,7 @@ class Load_Prod_Model:
 
             runs = self.mlflow_op.get_runs_from_mlflow(exp.experiment_id)
 
-            num_clusters = self.utils.get_number_of_clusters("load_prod_model")
+            num_clusters = self.utils.get_number_of_clusters(log_dic["log_file"])
 
             """
             Code Explaination: 
@@ -61,7 +63,7 @@ class Load_Prod_Model:
 
             top_mn_lst = self.mlflow_op.get_best_models(runs, num_clusters)
 
-            self.log_writer.log(f"Got the top model names", "load_prod_model")
+            self.log_writer.log(f"Got the top model names", **log_dic)
 
             results = self.mlflow_op.search_mlflow_models("DESC")
 
@@ -77,18 +79,13 @@ class Load_Prod_Model:
             ]
 
             self.log_writer.log(
-                "Transitioning of models based on scores successfully done",
-                "load_prod_model",
+                "Transitioning of models based on scores successfully done", **log_dic
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, "load_prod_model"
-            )
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, "load_prod_model"
-            )
+            self.log_writer.exception_log(e, **log_dic)
 
 
 if __name__ == "__main__":
