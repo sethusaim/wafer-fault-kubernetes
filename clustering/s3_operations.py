@@ -1,3 +1,4 @@
+from datetime import datetime
 from io import StringIO
 from os import listdir, remove
 from os.path import join
@@ -32,6 +33,8 @@ class S3_Operation:
         self.save_format = self.config["model_save_format"]
 
         self.dir = self.config["dir"]
+        
+        self.current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
 
     def get_bucket(self, bucket, log_file):
         """
@@ -220,11 +223,11 @@ class S3_Operation:
             model_name = model.__class__.__name__
 
             self.log_writer.log(f"Got {model_name} model name", **log_dic)
-
+            
             func = (
-                lambda: model_name + self.save_format
-                if model_name == "KMeans"
-                else model_name + str(idx) + self.save_format
+                lambda: self.current_date + "-" + model_name + self.save_format
+                if model_name is "KMeans"
+                else self.current_date + "-" + model_name + str(idx) + self.save_format
             )
 
             model_file = func()
