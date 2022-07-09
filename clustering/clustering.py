@@ -100,10 +100,10 @@ class KMeans_Clustering:
         )
 
         self.log_writer.start_log("start", **log_dic)
-        
+
         self.data = data
 
-        try:            
+        try:
             self.kmeans = KMeans(num_clusters, **self.kmeans_params)
 
             self.y_kmeans = self.kmeans.fit_predict(data)
