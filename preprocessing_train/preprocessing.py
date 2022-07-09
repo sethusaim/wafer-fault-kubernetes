@@ -50,9 +50,9 @@ class Preprocessor:
         )
 
         self.log_writer.start_log("start", **log_dic)
-        
+
         self.data = data
-        
+
         self.columns = columns
 
         try:
@@ -122,7 +122,7 @@ class Preprocessor:
         )
 
         self.log_writer.start_log("start", **log_dic)
-        
+
         self.null_present = False
 
         try:
@@ -170,7 +170,7 @@ class Preprocessor:
         )
 
         self.log_writer.start_log("start", **log_dic)
-        
+
         self.data = data
 
         try:
@@ -210,11 +210,11 @@ class Preprocessor:
         )
 
         self.log_writer.start_log("start", **log_dic)
-        
+
         self.columns = data.columns
-        
+
         self.data_n = data.describe()
-        
+
         self.col_to_drop = []
 
         try:

@@ -17,7 +17,7 @@ class Data_Transform_Train:
         self.s3 = S3_Operation()
 
         self.log_writer = App_Logger()
-        
+
         self.col = self.config["col"]
 
     def replace_missing_with_null(self):
@@ -104,7 +104,7 @@ class Data_Transform_Train:
                 df.rename(columns={self.col[from_col]: self.col[to_col]}, inplace=True)
 
                 self.log_writer.log(
-                    f"Renamed the output columns for the file {file}",**log_dic
+                    f"Renamed the output columns for the file {file}", **log_dic
                 )
 
                 self.s3.upload_df_as_csv(
