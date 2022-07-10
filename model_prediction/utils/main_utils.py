@@ -258,7 +258,7 @@ class Main_Utils:
             fname = self.get_file_with_timestamp("pred_output", log_dic["log_file"])
 
             self.s3.upload_df_as_csv(
-                result_df, fname, fname, "io_files", log_dic["log_file"],fidx=True
+                result_df, fname, fname, "io_files", log_dic["log_file"], fidx=True
             )
 
             self.log_writer.log("Uploaded results as csv file to s3 bucket", **log_dic)
