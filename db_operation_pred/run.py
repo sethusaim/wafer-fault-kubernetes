@@ -38,9 +38,7 @@ class Run:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            self.log_writer.log(
-                "Data type validation operation started !!", log_dic["log_file"]
-            )
+            self.log_writer.log("Data type validation operation started !!", **log_dic)
 
             self.db_operation.insert_good_data_as_record("db_name", "collection_name")
 

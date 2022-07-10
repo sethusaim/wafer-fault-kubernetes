@@ -5,6 +5,7 @@ from pandas import DataFrame
 from pymongo import MongoClient
 
 from utils.logger import App_Logger
+from utils.main_utils import Main_Utils
 from utils.read_params import get_log_dic, read_params
 
 
@@ -19,11 +20,13 @@ class MongoDB_Operation:
     def __init__(self):
         self.config = read_params()
 
-        self.mongo_config = self.config["mongodb"]
-
         self.DB_URL = environ["MONGODB_URL"]
 
+        self.mongo_config = self.config["mongodb"]
+
         self.client = MongoClient(self.DB_URL)
+
+        self.utils = Main_Utils()
 
         self.log_writer = App_Logger()
 
@@ -56,37 +59,6 @@ class MongoDB_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
 
-    def get_collection(self, database, collection_name, log_file):
-        """
-        Method Name :   get_collection
-        Description :   This method gets collection from the particular database and collection name
-
-        Output      :   A collection is returned from database with name as collection name
-        On Failure  :   Write an exception log and then raise an exception
-
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.get_collection.__name__, __file__, log_file
-        )
-
-        self.log_writer.start_log("start", **log_dic)
-
-        try:
-            collection = database[self.mongo_config[collection_name]]
-
-            self.log_writer.log(
-                f"Created {collection_name} collection in mongodb", **log_dic
-            )
-
-            self.log_writer.start_log("exit", **log_dic)
-
-            return collection
-
-        except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
-
     def get_collection_as_dataframe(self, db_name, collection_name, log_file):
         """
         Method Name :   get_collection_as_dataframe
@@ -110,9 +82,11 @@ class MongoDB_Operation:
         try:
             database = self.get_database(db_name, log_dic["log_file"])
 
-            collection = self.get_collection(
-                database, collection_name, log_dic["log_file"]
+            collection_name = self.utils.get_collection_with_timestamp(
+                collection_name, log_dic["log_file"]
             )
+
+            collection = database.get_collection(collection_name)
 
             df = DataFrame(list(collection.find()))
 
@@ -157,9 +131,11 @@ class MongoDB_Operation:
 
             database = self.get_database(db_name, log_dic["log_file"])
 
-            collection = self.get_collection(
-                database, collection_name, log_dic["log_file"]
+            collection_name = self.utils.get_collection_with_timestamp(
+                collection_name, log_dic["log_file"]
             )
+
+            collection = database.get_collection(collection_name)
 
             self.log_writer.log("Inserting records to MongoDB", **log_dic)
 
