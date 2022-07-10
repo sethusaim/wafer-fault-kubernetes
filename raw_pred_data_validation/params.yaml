@@ -22,3 +22,9 @@ log:
   name_validation: pred_name_validation.log
   col_validation: pred_col_validation.log
   missing_values_in_col: pred_missing_values_in_column.log
+
+log_params:
+  filemode: a
+  format: "%(asctime)s;%(levelname)s;%(file_name)s;%(class_name)s;%(method_name)s;%(message)s"
+  datefmt: "%H:%M:%S"
+  level: INFO
