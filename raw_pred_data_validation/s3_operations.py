@@ -600,7 +600,7 @@ class S3_Operation:
 
                 dest_f = folder + "/" + f
 
-                self.upload_file(local_f, dest_f, bucket, log_dic["log_file"])
+                self.upload_file(local_f, dest_f, bucket, log_dic["log_file"],delete=False)
 
             self.log_writer.log("Uploaded folder to s3 bucket", **log_dic)
 
