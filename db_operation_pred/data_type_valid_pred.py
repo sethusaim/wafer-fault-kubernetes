@@ -1,6 +1,7 @@
 from mongo_db_operations import MongoDB_Operation
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
+from utils.read_params import get_log_dic
 
 
 class DB_Operation_Pred:
@@ -12,8 +13,6 @@ class DB_Operation_Pred:
     """
 
     def __init__(self):
-        self.class_name = self.__class__.__name__
-
         self.s3 = S3_Operation()
 
         self.mongo = MongoDB_Operation()
@@ -31,30 +30,38 @@ class DB_Operation_Pred:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.insert_good_data_as_record.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.insert_good_data_as_record.__name__,
+            __file__,
+            "db_insert",
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, "db_insert")
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             lst = self.s3.read_csv_from_folder(
-                "pred_good_data", "pred_data", "db_insert"
+                "pred_good_data", "pred_data", log_dic["log_file"]
             )
 
             for _, f in enumerate(lst):
                 df = f[0]
 
                 self.mongo.insert_dataframe_as_record(
-                    df, good_data_db_name, good_data_collection_name, "db_insert"
+                    df,
+                    good_data_db_name,
+                    good_data_collection_name,
+                    log_dic["log_file"],
                 )
 
                 self.log_writer.log(
-                    "Inserted dataframe as collection record in mongodb", "db_insert"
+                    "Inserted dataframe as collection record in mongodb", **log_dic
                 )
 
-            self.log_writer.start_log("exit", self.class_name, method_name, "db_insert")
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, "db_insert")
+            self.log_writer.exception_log(e, **log_dic)
 
     def export_collection_to_csv(self, good_data_db_name, good_data_collection_name):
         """
@@ -67,24 +74,27 @@ class DB_Operation_Pred:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.export_collection_to_csv.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.export_collection_to_csv.__name__,
+            __file__,
+            "export_csv",
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, "export_csv")
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             df = self.mongo.get_collection_as_dataframe(
-                good_data_db_name, good_data_collection_name, "export_csv"
+                good_data_db_name, good_data_collection_name, log_dic["log_file"]
             )
 
             self.s3.upload_df_as_csv(
-                df, "pred_export", "pred_export", "feature_store", "export_csv"
+                df, "pred_export", "pred_export", "feature_store", log_dic["log_file"]
             )
 
-            self.log_writer.log("Exported dataframe to csv file", "export_csv")
+            self.log_writer.log("Exported dataframe to csv file", **log_dic)
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, "export_csv"
-            )
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, "export_csv")
+            self.log_writer.exception_log(e, **log_dic)
