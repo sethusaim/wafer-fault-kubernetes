@@ -2,6 +2,7 @@ from data_loader_pred import Data_Getter_Pred
 from preprocessing import Preprocessor
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
+from utils.read_params import get_log_dic
 
 
 class Run:
@@ -13,8 +14,6 @@ class Run:
     """
 
     def __init__(self):
-        self.class_name = self.__class__.__name__
-
         self.utils = Main_Utils()
 
         self.data_getter_pred = Data_Getter_Pred("preprocess_pred")
@@ -34,14 +33,17 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.run_preprocess.__name__
-
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, "preprocess_pred"
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.run_preprocess.__name__,
+            __file__,
+            "preprocess_pred",
         )
 
+        self.log_writer.start_log("start", **log_dic)
+
         try:
-            self.utils.delete_pred_file("preprocess_pred")
+            self.utils.delete_pred_file(log_dic["log_file"])
 
             data = self.data_getter_pred.get_data()
 
@@ -49,46 +51,36 @@ class Run:
 
             self.log_writer.log(
                 f"Preprocessing function is_null_present returned null values present to be {is_null_present}",
-                "preprocess_pred",
+                **log_dic,
             )
 
-            self.log_writer.log(
-                "Imputing missing values for the data", "preprocess_pred"
-            )
+            self.log_writer.log("Imputing missing values for the data", **log_dic)
 
             if is_null_present:
                 data = self.preprocess.impute_missing_values(data)
 
-            self.log_writer.log(
-                "Imputed missing values for the data", "preprocess_pred"
-            )
+            self.log_writer.log("Imputed missing values for the data", **log_dic)
 
             cols_to_drop = self.preprocess.get_columns_with_zero_std_deviation(data)
 
-            self.log_writer.log(
-                "Got columns with zero standard deviation", "preprocess_pred"
-            )
+            self.log_writer.log("Got columns with zero standard deviation", **log_dic)
 
             data = self.preprocess.remove_columns(data, cols_to_drop)
 
             self.log_writer.log(
-                "Removed columns with zero standard deviation", "preprocess_pred"
+                "Removed columns with zero standard deviation", **log_dic
             )
 
-            self.utils.upload_preprocessed_data(data, "preprocess_pred")
+            self.utils.upload_preprocessed_data(data, log_dic["log_file"])
 
             self.log_writer.log(
-                "Completed preprocessing for prediction data", "preprocess_pred"
+                "Completed preprocessing for prediction data", **log_dic
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, "preprocess_pred"
-            )
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, "preprocess_pred"
-            )
+            self.log_writer.exception_log(e, **log_dic)
 
 
 if __name__ == "__main__":

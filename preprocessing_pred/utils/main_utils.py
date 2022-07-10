@@ -7,7 +7,7 @@ from pandas import DataFrame
 from s3_operations import S3_Operation
 
 from utils.logger import App_Logger
-from utils.read_params import read_params
+from utils.read_params import get_log_dic, read_params
 
 
 class Main_Utils:
@@ -33,8 +33,6 @@ class Main_Utils:
 
         self.log_dir = self.config["dir"]["log"]
 
-        self.class_name = self.__class__.__name__
-
     def upload_logs(self):
         """
         Method Name :   upload_logs
@@ -46,21 +44,25 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.upload_logs.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.upload_logs.__name__, __file__, "upload"
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, "upload")
+        self.log_writer.start_log("start", **log_dic)
 
         try:
-            self.s3.upload_folder(self.log_dir, "logs", "upload")
+            self.s3.upload_folder(self.log_dir, "logs", log_dic["log_dic"])
 
-            self.log_writer.log("Uploaded logs to logs bucket", "upload")
+            self.log_writer.log("Uploaded logs to logs bucket", **log_dic)
 
-            self.log_writer.start_log("exit", self.class_name, method_name, "upload")
+            self.log_writer.start_log("exit", **log_dic)
+
+            self.log_writer.stop_log()
 
             rmtree(self.log_dir)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, "upload")
+            self.log_writer.exception_log(e, **log_dic)
 
     def delete_pred_file(self, log_file):
         """
@@ -73,9 +75,11 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.delete_pred_file.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.delete_pred_file.__name__, __file__, log_file
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             self.s3_resource.Object(
@@ -83,24 +87,29 @@ class Main_Utils:
             ).load()
 
             self.log_writer.log(
-                f"Found existing Prediction batch file. Deleting it.", log_file
+                f"Found existing Prediction batch file. Deleting it.", **log_dic
             )
 
-            self.s3.delete_file("pred_file", "io_files", log_file)
+            self.s3.delete_file("pred_file", "io_files", log_dic["log_file"])
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
         except ClientError as e:
             if e.response["Error"]["Code"] == "404":
                 pass
 
             else:
-                self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+                self.log_writer.exception_log(e, **log_dic)
 
     def upload_null_values_file(self, data, log_file):
-        method_name = self.upload_null_values_file.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.upload_null_values_file.__name__,
+            __file__,
+            log_file,
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             null_df = DataFrame()
@@ -109,23 +118,28 @@ class Main_Utils:
 
             null_df["missing values count"] = np.asarray(data.isna().sum())
 
-            self.log_writer.log("Created dataframe of null values", log_file)
+            self.log_writer.log("Created dataframe of null values", **log_dic)
 
             self.s3.upload_df_as_csv(
-                null_df, "null_values", "null_values", "io_files", log_file
+                null_df, "null_values", "null_values", "io_files", log_dic["log_file"]
             )
 
-            self.log_writer.log("Uploaded null values csv file to s3 bucket", log_file)
+            self.log_writer.log("Uploaded null values csv file to s3 bucket", **log_dic)
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, **log_dic)
 
     def upload_preprocessed_data(self, data, log_file):
-        method_name = self.upload_preprocessed_data.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.upload_preprocessed_data.__name__,
+            __file__,
+            log_file,
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             self.s3.upload_df_as_csv(
@@ -133,12 +147,12 @@ class Main_Utils:
                 "pred_input_preprocess",
                 "pred_input_preprocess",
                 "feature_store",
-                log_file,
+                log_dic["log_file"],
             )
 
-            self.log_writer.log("Uploaded preprocessed data to s3 bucket", log_file)
+            self.log_writer.log("Uploaded preprocessed data to s3 bucket", **log_dic)
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, **log_dic)
