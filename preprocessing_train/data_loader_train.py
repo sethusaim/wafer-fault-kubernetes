@@ -1,7 +1,7 @@
 from s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic, read_params
+from utils.read_params import get_log_dic
 
 
 class Data_Getter_Train:
@@ -13,8 +13,6 @@ class Data_Getter_Train:
     """
 
     def __init__(self, log_file):
-        self.config = read_params()
-
         self.log_file = log_file
 
         self.utils = Main_Utils()
