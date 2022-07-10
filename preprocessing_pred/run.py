@@ -43,8 +43,6 @@ class Run:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            self.utils.delete_pred_file(log_dic["log_file"])
-
             data = self.data_getter_pred.get_data()
 
             is_null_present = self.preprocess.is_null_present(data)

@@ -1,9 +1,7 @@
 from datetime import datetime
 from shutil import rmtree
-from numpy import asarray
 
-from boto3 import resource
-from botocore.exceptions import ClientError
+from numpy import asarray
 from pandas import DataFrame
 from s3_operations import S3_Operation
 
@@ -26,11 +24,7 @@ class Main_Utils:
 
         self.config = read_params()
 
-        self.s3_resource = resource("s3")
-
         self.files = self.config["files"]
-
-        self.bucket = self.config["s3_bucket"]
 
         self.log_dir = self.config["dir"]["log"]
 
@@ -64,43 +58,6 @@ class Main_Utils:
 
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
-
-    def delete_pred_file(self, log_file):
-        """
-        Method Name :   delete_pred_file
-        Description :   This method deletes the existing prediction file for the model prediction starts
-        
-        Output      :   An existing prediction file is deleted
-        On Failure  :   Write an exception log and then raise an exception
-        
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.delete_pred_file.__name__, __file__, log_file
-        )
-
-        self.log_writer.start_log("start", **log_dic)
-
-        try:
-            self.s3_resource.Object(
-                self.bucket["io_files"], self.files["pred_file"]
-            ).load()
-
-            self.log_writer.log(
-                f"Found existing Prediction batch file. Deleting it.", **log_dic
-            )
-
-            self.s3.delete_file("pred_file", "io_files", log_dic["log_file"])
-
-            self.log_writer.start_log("exit", **log_dic)
-
-        except ClientError as e:
-            if e.response["Error"]["Code"] == "404":
-                pass
-
-            else:
-                self.log_writer.exception_log(e, **log_dic)
 
     def upload_null_values_file(self, data, log_file):
         log_dic = get_log_dic(
