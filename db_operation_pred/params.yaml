@@ -2,7 +2,7 @@ s3_bucket:
   pred_data: wafer-pred-data-2648352
   logs: wafer-logs-4e1f3bd
   feature_store: wafer-feature-store-02126f6
-  
+
 files:
   pred_export: pred_input_file.csv
 
@@ -19,3 +19,9 @@ log:
 mongodb:
   db_name: wafer-data
   collection_name: wafer-pred-data
+
+log_params:
+  filemode: a
+  format: "%(asctime)s;%(levelname)s;%(file_name)s;%(class_name)s;%(method_name)s;%(message)s"
+  datefmt: "%H:%M:%S"
+  level: INFO
