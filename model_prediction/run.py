@@ -34,18 +34,20 @@ class Run:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            unique_clusters = self.utils.get_unique_clusters(log_dic["log_file"])
+            unique_clusters, data = self.utils.get_unique_clusters(log_dic["log_file"])
+
+            self.log_writer.log(f"Got {unique_clusters} clusters", **log_dic)
 
             for i in unique_clusters:
-                result = self.utils.get_predictions(i, log_dic["log_file"])
+                result = self.utils.get_predictions(i, data, log_dic["log_file"])
 
                 self.utils.upload_results(result, log_dic["log_file"])
 
             self.log_writer.log(
-                "Prediction file is created in io_files bucket", log_dic["log_file"]
+                "Prediction file is created in io_files bucket", **log_dic
             )
 
-            self.log_writer.log("End of prediction", log_dic["log_file"])
+            self.log_writer.log("End of prediction", **log_dic)
 
             self.log_writer.start_log("exit", **log_dic)
 

@@ -64,7 +64,9 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
 
-    def get_file_object(self, fname, bucket, log_file):
+    def get_file_object(
+        self, fname, bucket, log_file, model_pattern=False, model_pattern_key=None
+    ):
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
@@ -84,7 +86,15 @@ class S3_Operation:
         try:
             bucket = self.get_bucket(bucket, log_dic["log_file"])
 
-            lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
+            if model_pattern is True:
+                lst_objs = [
+                    object
+                    for object in bucket.objects.all()
+                    if fname in object.key and object.key.startswith(model_pattern_key)
+                ]
+
+            else:
+                lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
 
             self.log_writer.log(f"Got {fname} from bucket {bucket}", **log_dic)
 
@@ -135,7 +145,9 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
 
-    def load_model(self, model_name, bucket, log_file, model_dir=None):
+    def load_model(
+        self, model_name, bucket, log_file, model_dir=None, model_pattern=False
+    ):
         """
         Method Name :   load_model
         Description :   This method loads the model from s3 bucket
@@ -165,7 +177,13 @@ class S3_Operation:
 
             self.log_writer.log(f"Got {model_file} as model file", **log_dic)
 
-            f_obj = self.get_file_object(model_file, bucket, log_dic["log_file"])
+            f_obj = self.get_file_object(
+                model_f,
+                bucket,
+                log_dic["log_file"],
+                model_pattern=model_pattern,
+                model_pattern_key=self.dir[model_dir],
+            )
 
             model_obj = self.read_object(f_obj, log_dic["log_file"], decode=False)
 
@@ -176,41 +194,6 @@ class S3_Operation:
             self.log_writer.start_log("exit", **log_dic)
 
             return model
-
-        except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
-
-    def get_file_object(self, fname, bucket, log_file):
-        """
-        Method Name :   get_file_object
-        Description :   This method gets the file object from s3 bucket
-        
-        Output      :   A file object is returned
-        On Failure  :   Write an exception log and then raise an exception
-        
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.get_file_object.__name__, __file__, log_file
-        )
-
-        self.log_writer.start_log("start", **log_dic)
-
-        try:
-            bucket = self.get_bucket(bucket, log_dic["log_file"])
-
-            lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
-
-            self.log_writer.log(f"Got {fname} from bucket {bucket}", **log_dic)
-
-            func = lambda x: x[0] if len(x) == 1 else x
-
-            file_objs = func(lst_objs)
-
-            self.log_writer.start_log("exit", **log_dic)
-
-            return file_objs
 
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
@@ -288,7 +271,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
 
-    def read_csv(self, fname, bucket, log_file):
+    def read_csv(self, fname, bucket, log_file, fidx=False):
         """
         Method Name :   read_csv
         Description :   This method reads the csv data from s3 bucket
@@ -306,9 +289,11 @@ class S3_Operation:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            csv_obj = self.get_file_object(
-                self.files[fname], bucket, log_dic["log_file"]
-            )
+            func = lambda fname: self.files[fname] if fidx is False else fname
+
+            filename = func(fname)
+
+            csv_obj = self.get_file_object(filename, bucket, log_dic["log_file"])
 
             df = self.get_df_from_object(csv_obj, log_dic["log_file"])
 
@@ -374,7 +359,9 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
 
-    def upload_df_as_csv(self, data_frame, local_fname, bucket_fname, bucket, log_file):
+    def upload_df_as_csv(
+        self, data_frame, local_fname, bucket_fname, bucket, log_file, fidx=False
+    ):
         """
         Method Name :   upload_df_as_csv
         Description :   This method uploades a dataframe as csv file to s3 bucket
@@ -392,6 +379,12 @@ class S3_Operation:
         self.log_writer.start_log("start", **log_dic)
 
         try:
+            func = lambda fname: self.files[fname] if fidx is False else fname
+
+            local_fname = func(local_fname)
+
+            bucket_fname = func(bucket_fname)
+
             data_frame.to_csv(local_fname, index=None, header=True)
 
             self.log_writer.log(
@@ -422,7 +415,9 @@ class S3_Operation:
 
                 dest_f = folder + "/" + f
 
-                self.upload_file(local_f, dest_f, bucket, log_dic["log_file"])
+                self.upload_file(
+                    local_f, dest_f, bucket, log_dic["log_file"], delete=False
+                )
 
             self.log_writer.log("Uploaded folder to s3 bucket", **log_dic)
 

@@ -1,4 +1,5 @@
 from shutil import rmtree
+from datetime import datetime
 
 from pandas import DataFrame
 from s3_operations import S3_Operation
@@ -24,6 +25,8 @@ class Main_Utils:
 
         self.log_dir = self.config["dir"]["log"]
 
+        self.files = self.config["files"]
+
     def upload_logs(self):
         """
         Method Name :   upload_logs
@@ -42,7 +45,7 @@ class Main_Utils:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            self.s3.upload_folder(self.log_dir, log_dic["log_file"])
+            self.s3.upload_folder(self.log_dir, "logs", log_dic["log_file"])
 
             self.log_writer.log(f"Uploaded logs to logs s3 bucket", **log_dic)
 
@@ -82,13 +85,13 @@ class Main_Utils:
 
             for file in list_of_files:
                 try:
-                    if file.index(str(cluster_number)) != -1:
+                    if file.split("-")[-1].index(str(cluster_number)) != -1:
                         model_name = file
 
                 except:
                     continue
 
-            model_name = model_name.split(".")[0]
+            model_name = model_name.split("/")[1].split(".")[0]
 
             self.log_writer.log(
                 f"Got {model_name} from prod model folder in {bucket} bucket", **log_dic
@@ -122,12 +125,16 @@ class Main_Utils:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            data = self.get_pred_input_file(log_file)
+            data = self.get_pred_input_file(log_dic["log_file"])
 
             self.log_writer.log("Got the prediction input csv file", **log_dic)
 
             kmeans_model = self.s3.load_model(
-                "KMeans", "model", log_file, log_dic["log_file"]
+                "KMeans",
+                "model",
+                log_dic["log_file"],
+                model_dir="prod_model",
+                model_pattern=True,
             )
 
             self.log_writer.log("Got kmeans model", **log_dic)
@@ -146,7 +153,7 @@ class Main_Utils:
 
             self.log_writer.start_log("exit", **log_dic)
 
-            return unique_clusters
+            return unique_clusters, data
 
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
@@ -172,8 +179,12 @@ class Main_Utils:
         self.log_writer.start_log("start", **log_dic)
 
         try:
+            fname = self.get_file_with_timestamp(
+                "pred_input_file_preprocess", log_dic["log_file"]
+            )
+
             data = self.s3.read_csv(
-                "pred_input_file_preprocess", "feature_store", log_dic["log_file"]
+                fname, "feature_store", log_dic["log_file"], fidx=True
             )
 
             self.log_writer.log("Got the prediction input file", **log_dic)
@@ -185,9 +196,7 @@ class Main_Utils:
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
 
-    def get_predictions(self, idx, log_file):
-        method_name = self.get_predictions.__name__
-
+    def get_predictions(self, idx, data, log_file):
         log_dic = get_log_dic(
             self.__class__.__name__, self.get_predictions.__name__, __file__, log_file
         )
@@ -195,8 +204,6 @@ class Main_Utils:
         self.log_writer.start_log("start", **log_dic)
 
         try:
-            data = self.get_pred_input_file(log_dic["log_file"])
-
             cluster_data = data[data["clusters"] == idx]
 
             wafer_names = list(cluster_data["Wafer"])
@@ -214,7 +221,11 @@ class Main_Utils:
             )
 
             model = self.s3.load_model(
-                model_name, "model", log_file, log_dic["log_file"]
+                model_name,
+                "model",
+                log_dic["log_file"],
+                model_dir="prod_model",
+                model_pattern=True,
             )
 
             result = list(model.predict(cluster_data))
@@ -231,7 +242,7 @@ class Main_Utils:
 
             self.log_writer.start_log("exit", **log_dic)
 
-            return result, wafer_names
+            return result
 
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
@@ -244,13 +255,41 @@ class Main_Utils:
         self.log_writer.start_log("start", **log_dic)
 
         try:
+            fname = self.get_file_with_timestamp("pred_output", log_dic["log_file"])
+
             self.s3.upload_df_as_csv(
-                result_df, "pred_output", "pred_output", "io_files", log_dic["log_file"]
+                result_df, fname, fname, "io_files", log_dic["log_file"],fidx=True
             )
 
             self.log_writer.log("Uploaded results as csv file to s3 bucket", **log_dic)
 
             self.log_writer.start_log("exit", **log_dic)
+
+        except Exception as e:
+            self.log_writer.exception_log(e, **log_dic)
+
+    def get_file_with_timestamp(self, file, log_file):
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.get_file_with_timestamp.__name__,
+            __file__,
+            log_file,
+        )
+
+        self.log_writer.start_log("start", **log_dic)
+
+        try:
+            current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
+
+            ip_fname = current_date + "-" + self.files[file]
+
+            self.log_writer.log(
+                "Got input file from s3 bucket based on the time stamp", **log_dic
+            )
+
+            self.log_writer.start_log("exit", **log_dic)
+
+            return ip_fname
 
         except Exception as e:
             self.log_writer.exception_log(e, **log_dic)
