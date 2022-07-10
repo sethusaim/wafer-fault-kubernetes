@@ -109,7 +109,9 @@ class Data_Transform_Pred:
                     f"Replaced missing values with null for the file {file}", **log_dic
                 )
 
-                self.s3.upload_df_as_csv(df, abs_f, file, "pred_data", **log_dic)
+                self.s3.upload_df_as_csv(
+                    df, abs_f, file, "pred_data", log_dic["log_file"]
+                )
 
             self.log_writer.start_log("exit", **log_dic)
 

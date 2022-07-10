@@ -253,7 +253,7 @@ class S3_Operation:
         try:
             bucket = self.s3_resource.Bucket(bucket)
 
-            self.log_writer.log(f"Got {bucket} bucket", **log_file)
+            self.log_writer.log(f"Got {bucket} bucket", **log_dic)
 
             self.log_writer.start_log("exit", **log_dic)
 
