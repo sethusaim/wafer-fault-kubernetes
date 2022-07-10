@@ -17,3 +17,9 @@ s3_bucket:
   logs: wafer-logs-4e1f3bd
   model: wafer-model-3e502a3
   io_files: wafer-io-files-03e0100
+
+log_params:
+  filemode: a
+  format: "%(asctime)s;%(levelname)s;%(file_name)s;%(class_name)s;%(method_name)s;%(message)s"
+  datefmt: "%H:%M:%S"
+  level: INFO
