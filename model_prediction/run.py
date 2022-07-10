@@ -1,5 +1,6 @@
 from utils.logger import App_Logger
 from utils.main_utils import Main_Utils
+from utils.read_params import get_log_dic
 
 
 class Run:
@@ -11,8 +12,6 @@ class Run:
     """
 
     def __init__(self):
-        self.class_name = self.__class__.__name__
-
         self.log_writer = App_Logger()
 
         self.utils = Main_Utils()
@@ -28,26 +27,30 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.predict_from_model.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.predict_from_model.__name__, __file__, "pred"
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, "pred")
+        self.log_writer.start_log("start", **log_dic)
 
         try:
-            unique_clusters = self.utils.get_unique_clusters("pred")
+            unique_clusters = self.utils.get_unique_clusters(log_dic["log_file"])
 
             for i in unique_clusters:
-                result = self.utils.get_predictions(i, "pred")
+                result = self.utils.get_predictions(i, log_dic["log_file"])
 
-                self.utils.upload_results(result, "pred")
+                self.utils.upload_results(result, log_dic["log_file"])
 
-            self.log_writer.log("Prediction file is created in io_files bucket", "pred")
+            self.log_writer.log(
+                "Prediction file is created in io_files bucket", log_dic["log_file"]
+            )
 
-            self.log_writer.log("End of prediction", "pred")
+            self.log_writer.log("End of prediction", log_dic["log_file"])
 
-            self.log_writer.start_log("exit", self.class_name, method_name, "pred")
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, "pred")
+            self.log_writer.exception_log(e, **log_dic)
 
 
 if __name__ == "__main__":

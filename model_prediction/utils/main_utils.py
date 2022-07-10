@@ -4,7 +4,7 @@ from pandas import DataFrame
 from s3_operations import S3_Operation
 
 from utils.logger import App_Logger
-from utils.read_params import read_params
+from utils.read_params import get_log_dic, read_params
 
 
 class Main_Utils:
@@ -24,8 +24,6 @@ class Main_Utils:
 
         self.log_dir = self.config["dir"]["log"]
 
-        self.class_name = self.__class__.__name__
-
     def upload_logs(self):
         """
         Method Name :   upload_logs
@@ -37,21 +35,25 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.upload_logs.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.upload_logs.__name__, __file__, "upload"
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, "upload")
+        self.log_writer.start_log("start", **log_dic)
 
         try:
-            self.s3.upload_folder(self.log_dir, "upload")
+            self.s3.upload_folder(self.log_dir, log_dic["log_file"])
 
-            self.log_writer.log(f"Uploaded logs to logs s3 bucket", "upload")
+            self.log_writer.log(f"Uploaded logs to logs s3 bucket", **log_dic)
 
-            self.log_writer.start_log("exit", self.class_name, method_name, "upload")
+            self.log_writer.start_log("exit", **log_dic)
+
+            self.log_writer.stop_log()
 
             rmtree(self.log_dir)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, "upload")
+            self.log_writer.exception_log(e, **log_dic)
 
     def find_correct_model_file(self, cluster_number, bucket, log_file):
         """
@@ -64,13 +66,18 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.find_correct_model_file.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.find_correct_model_file.__name__,
+            __file__,
+            log_file,
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             list_of_files = self.s3.get_files_from_folder(
-                "prod_model", bucket, log_file
+                "prod_model", bucket, log_dic["log_file"]
             )
 
             for file in list_of_files:
@@ -84,15 +91,15 @@ class Main_Utils:
             model_name = model_name.split(".")[0]
 
             self.log_writer.log(
-                f"Got {model_name} from prod model folder in {bucket} bucket", log_file
+                f"Got {model_name} from prod model folder in {bucket} bucket", **log_dic
             )
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
             return model_name
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, **log_dic)
 
     def get_unique_clusters(self, log_file):
         """
@@ -105,37 +112,44 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_unique_clusters.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.get_unique_clusters.__name__,
+            __file__,
+            log_file,
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             data = self.get_pred_input_file(log_file)
 
-            self.log_writer.log("Got the prediction input csv file", log_file)
+            self.log_writer.log("Got the prediction input csv file", **log_dic)
 
-            kmeans_model = self.s3.load_model("KMeans", "model", log_file, "prod")
+            kmeans_model = self.s3.load_model(
+                "KMeans", "model", log_file, log_dic["log_file"]
+            )
 
-            self.log_writer.log("Got kmeans model", log_file)
+            self.log_writer.log("Got kmeans model", **log_dic)
 
             clusters = kmeans_model.predict(data.drop(["Wafer"], axis=1))
 
-            self.log_writer.log("*Used kmeans model to predict clusters", log_file)
+            self.log_writer.log("*Used kmeans model to predict clusters", **log_dic)
 
             data["clusters"] = clusters
 
             unique_clusters = data["clusters"].unique()
 
             self.log_writer.log(
-                "GOt unique clusters from the prediction data", log_file
+                "GOt unique clusters from the prediction data", **log_dic
             )
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
             return unique_clusters
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, **log_dic)
 
     def get_pred_input_file(self, log_file):
         """
@@ -148,31 +162,40 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_pred_input_file.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__,
+            self.get_pred_input_file.__name__,
+            __file__,
+            log_file,
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             data = self.s3.read_csv(
-                "pred_input_file_preprocess", "feature_store", log_file
+                "pred_input_file_preprocess", "feature_store", log_dic["log_file"]
             )
 
-            self.log_writer.log("Got the prediction input file", log_file)
+            self.log_writer.log("Got the prediction input file", **log_dic)
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
             return data
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, **log_dic)
 
     def get_predictions(self, idx, log_file):
         method_name = self.get_predictions.__name__
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.get_predictions.__name__, __file__, log_file
+        )
+
+        self.log_writer.start_log("start", **log_dic)
 
         try:
-            data = self.get_pred_input_file(log_file)
+            data = self.get_pred_input_file(log_dic["log_file"])
 
             cluster_data = data[data["clusters"] == idx]
 
@@ -182,48 +205,52 @@ class Main_Utils:
 
             cluster_data = cluster_data.drop(["clusters"], axis=1)
 
-            self.log_writer.log("Got cluster data", log_file)
+            self.log_writer.log("Got cluster data", **log_dic)
 
-            model_name = self.find_correct_model_file(idx, "model", log_file)
+            model_name = self.find_correct_model_file(idx, "model", log_dic["log_file"])
 
             self.log_writer.log(
-                f"Found the correct model file based on {idx} cluster number", log_file
+                f"Found the correct model file based on {idx} cluster number", **log_dic
             )
 
-            model = self.s3.load_model(model_name, "model", log_file, "prod")
+            model = self.s3.load_model(
+                model_name, "model", log_file, log_dic["log_file"]
+            )
 
             result = list(model.predict(cluster_data))
 
             self.log_writer.log(
-                "Got the list of predictions for the cluster data", log_file
+                "Got the list of predictions for the cluster data", **log_dic
             )
 
             result = DataFrame(
                 list(zip(wafer_names, result)), columns=["Wafer", "Prediction"]
             )
 
-            self.log_writer.log("Created a dataframe of results", log_file)
+            self.log_writer.log("Created a dataframe of results", **log_dic)
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
             return result, wafer_names
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, **log_dic)
 
     def upload_results(self, result_df, log_file):
-        method_name = self.upload_results.__name__
+        log_dic = get_log_dic(
+            self.__class__.__name__, self.upload_results.__name__, __file__, log_file
+        )
 
-        self.log_writer.start_log("start", self.class_name, method_name, log_file)
+        self.log_writer.start_log("start", **log_dic)
 
         try:
             self.s3.upload_df_as_csv(
-                result_df, "pred_output", "pred_output", "io_files", log_file
+                result_df, "pred_output", "pred_output", "io_files", log_dic["log_file"]
             )
 
-            self.log_writer.log("Uploaded results as csv file to s3 bucket", log_file)
+            self.log_writer.log("Uploaded results as csv file to s3 bucket", **log_dic)
 
-            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
+            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
+            self.log_writer.exception_log(e, **log_dic)
