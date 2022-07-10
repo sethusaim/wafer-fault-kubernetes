@@ -22,16 +22,16 @@ module "eks_cluster" {
   source = "./wafer_eks_cluster"
 }
 
+module "application_instance" {
+  source = "./wafer_application_instance"
+}
+
 module "feature_store_bucket" {
   source = "./wafer_feature_store_bucket"
 }
 
 module "io_files_bucket" {
   source = "./wafer_io_files_bucket"
-}
-
-module "application_instance" {
-  source = "./wafer_application_instance"
 }
 
 module "logs_bucket" {
