@@ -4,7 +4,7 @@ s3_bucket:
   feature_store: wafer-feature-store-02126f6
 
 files:
-  pred_input: pred_input_file.csv
+  pred_export: pred_input_file.csv
   pred_input_preprocess: pred_input_file_preprocess.csv
   null_values: pred_null_values.csv
   pred_file: predictions.csv
