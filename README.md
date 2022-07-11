@@ -2,6 +2,12 @@
 
 This is an end to end machine learning system for predicting the failure of the wafer sensors based on the training data. This entire solution is built using AWS Services like AWS S3 buckets (for storing the data), AWS Elastic Container Registry (for storing the container images), and AWS Elastic Kubernetes Service (for running the container image). Apart from AWS services, MLFlow was used for experiment tracking and model versioning and model staging with artifacts stored in AWS S3 bucket. Docker for containerization of application. Jenkins was used for CI builds. ArgoCD for CD deployments. Tekton pipelines for pipeline orchestration. Terraform for managing infrastructure as code. Flask as web server.MongoDB for data storage.
 
+## Project Practical Demo
+
+- Theory Explanation - https://drive.google.com/file/d/17THCUvwkhVvGS-HlF2bIVh77kmaezjYc/view?usp=sharing
+
+- Practical Implementation - https://drive.google.com/file/d/1Qf2sHB9uBidAPtPSY9AHb-4n3PlTJq4Y/view?usp=sharing
+
 ### Problem Statement 
 To build a classification methodology to predict the failure of wafer sensors on the basis of given training data. 
 
