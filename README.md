@@ -6,7 +6,7 @@ This is an end to end machine learning system for predicting the failure of the 
 
 - Theory Explanation - https://drive.google.com/file/d/17THCUvwkhVvGS-HlF2bIVh77kmaezjYc/view?usp=sharing
 
-- Practical Implementation - https://drive.google.com/file/d/1Qf2sHB9uBidAPtPSY9AHb-4n3PlTJq4Y/view?usp=sharing
+- Practical Implementation - https://drive.google.com/file/d/1Qf2sHB9uBidAPtPSY9AHb-4n3PlTJq4Y/view?usp=sharing [Long Video]
 
 ### Problem Statement 
 To build a classification methodology to predict the failure of wafer sensors on the basis of given training data. 
