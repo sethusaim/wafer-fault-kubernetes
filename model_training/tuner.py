@@ -53,14 +53,19 @@ class Model_Finder:
                 X_data, Y_data, **self.split_kwargs
             )
 
-            lst = []
-
-            for model_name in models_lst:
-                self.tuned_model, self.tuned_model_score = self.utils.get_tuned_model(
-                    model_name, x_train, y_train, x_test, y_test, log_dic["log_file"]
+            lst = [
+                (
+                    self.utils.get_tuned_model(
+                        model_name,
+                        x_train,
+                        y_train,
+                        x_test,
+                        y_test,
+                        log_dic["log_file"],
+                    )
                 )
-
-                lst.append((self.tuned_model, self.tuned_model_score))
+                for model_name in models_lst
+            ]
 
             return lst
 
