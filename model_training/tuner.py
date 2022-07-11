@@ -1,6 +1,7 @@
+from datetime import datetime
+
 from mlflow import end_run, start_run
 from sklearn.model_selection import train_test_split
-from datetime import datetime
 
 from mlflow_operations import MLFlow_Operation
 from s3_operations import S3_Operation
