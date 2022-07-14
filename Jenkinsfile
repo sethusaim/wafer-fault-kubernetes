@@ -15,7 +15,7 @@ pipeline {
 
       steps {
         sshagent(['ssh_key']) {
-          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu YOUR_APP_IP wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/application_cicd.sh'
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu YOUR_APP_IP wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/scripts/application_cicd.sh'
 
           sh 'ssh -o StrictHostKeyChecking=no -l ubuntu YOUR_APP_IP bash application_cicd.sh'
         }
