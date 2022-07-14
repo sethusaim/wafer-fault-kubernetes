@@ -458,6 +458,20 @@ pipeline {
       }
     }
 
+    stage('Run Ansible Playbooks') {
+      when {
+        changeset 'playbooks/*'
+      }
+
+      steps {
+        sshagent(['ssh_key']) {
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu ANSIBLE_IP wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/scripts/run_ansible.sh'
+
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu ANSIBLE_IP bash run_ansible.sh'
+        }
+      }
+    }
+
     stage('Plan and Apply new infrastructure') {
       environment {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
