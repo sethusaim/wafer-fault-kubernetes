@@ -166,7 +166,7 @@ sudo apt update
 
 Install Jenkins Dependencies
 ```bash
-sudo apt install openjdk-8-jre -y
+sudo apt install openjdk-11-jdk -y
 ```
 
 ```bash
