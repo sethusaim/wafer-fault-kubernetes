@@ -10,4 +10,6 @@ git fetch origin
 
 git checkout origin/main -- playbooks
 
+git checkout origin/main -- vars
+
 sudo ansible-playbook playbooks/main.yml
