@@ -1,0 +1,13 @@
+mlflow:
+  env_name: YOUR_ENV_NAME
+  username: YOUR_USERNAME
+  password: YOUR_PASSWORD
+
+application:
+  username: YOUR_APP_USERNAME
+  password: YOUR_APP_PASSWORD
+
+k8s:
+  cluster_name: YOUR_CLUSTER_NAME
+  argocd:
+    password: YOUR_ARGOCD_PASSWORD
