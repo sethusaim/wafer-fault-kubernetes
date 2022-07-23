@@ -18,6 +18,10 @@ module "mlflow_instance" {
   source = "./wafer_mlflow_instance"
 }
 
+module "ansible_instance"{
+  source = "./wafer_ansible_instance"
+}
+
 module "eks_cluster" {
   source = "./wafer_eks_cluster"
 }
