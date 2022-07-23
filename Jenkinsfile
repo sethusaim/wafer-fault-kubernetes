@@ -460,7 +460,7 @@ pipeline {
 
     stage('Run Ansible Playbooks') {
       when {
-        changeset 'playbooks/*'
+        changeset 'ansible_playbooks/*'
       }
 
       steps {
