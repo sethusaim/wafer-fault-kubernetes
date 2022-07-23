@@ -1,0 +1,17 @@
+- name: Setup Jenkins
+  import_playbook: jenkins.yml
+
+- name: Setup MLFlow
+  import_playbook: mlflow.yml
+
+- name: Setup Application
+  import_playbook: application.yml
+
+- name: Setup Tekton cli
+  import_playbook: tektoncli.yml
+
+- name: Setup Tekton
+  import_playbook: tekton.yml
+
+- name: Setup ArgoCD
+  import_playbook: argocd.yml
