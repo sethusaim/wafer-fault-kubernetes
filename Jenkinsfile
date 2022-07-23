@@ -8,16 +8,30 @@ pipeline {
       }
     }
 
-    stage("Install Application Service on EC2") {
+    stage("Make changes in Application Server") {
       when {
         changeset 'application/*'
       }
 
       steps {
-        sshagent(['ssh_key']) {
-          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu YOUR_APP_IP wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/scripts/application_cicd.sh'
+        sshagent(['ansible_ssh_key']) {
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu ANSIBLE_IP wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/scripts/run_ansible.sh'
 
-          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu YOUR_APP_IP bash application_cicd.sh'
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu ANSIBLE_IP bash run_ansible.sh'
+        }
+      }
+    }
+
+    stage('Run Ansible Playbooks') {
+      when {
+        changeset 'ansible_playbooks/*'
+      }
+
+      steps {
+        sshagent(['ansible_ssh_key']) {
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu ANSIBLE_IP wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/scripts/run_ansible.sh'
+
+          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu ANSIBLE_IP bash run_ansible.sh'
         }
       }
     }
@@ -455,20 +469,6 @@ pipeline {
         }
 
         build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER), string(name: 'REPO_NAME', value: env.REPO_NAME), string(name: 'COMP_FILE', value: env.COMP_FILE)]
-      }
-    }
-
-    stage('Run Ansible Playbooks') {
-      when {
-        changeset 'ansible_playbooks/*'
-      }
-
-      steps {
-        sshagent(['ssh_key']) {
-          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu ANSIBLE_IP wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/scripts/run_ansible.sh'
-
-          sh 'ssh -o StrictHostKeyChecking=no -l ubuntu ANSIBLE_IP bash run_ansible.sh'
-        }
       }
     }
 
