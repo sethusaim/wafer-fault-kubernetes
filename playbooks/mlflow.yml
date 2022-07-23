@@ -1,0 +1,174 @@
+- name: MLFlow Installation
+  hosts: MLFlow_Group
+  vars_files:
+    - /home/ubuntu/vars/variables.yml
+  become: true
+  tasks:
+    - name: Update using apt
+      apt:
+        update_cache: true
+
+    - name: Update using apt-get
+      apt:
+        update_cache: true
+        force_apt_get: yes
+
+    - name: Check whether conda folder exists or not
+      stat:
+        path: /home/ubuntu/anaconda3
+      register: anaconda_folder
+
+    - name: Setup Anaconda3
+      block:
+        - name: Get anaconda bash script
+          get_url:
+            url: https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
+            dest: /home/ubuntu/install-anaconda.sh
+
+        - name: Create conda folder
+          become: True
+          file:
+            path: /home/ubuntu/anaconda3
+            state: directory
+            owner: ubuntu
+            mode: 755
+            recurse: yes
+
+        - name: Run the conda installer
+          shell: bash /home/ubuntu/install-anaconda.sh -b -u -p /home/ubuntu/anaconda3
+          args:
+            executable: /usr/bin/bash
+
+        - name: Remove the conda installer
+          file:
+            state: absent
+            path: /home/ubuntu/install-anaconda.sh
+
+        - name: Add anaconda bin to path
+          become: True
+          shell: echo 'export PATH=/home/ubuntu/anaconda3/bin:$PATH' >> /etc/profile
+          args:
+            executable: /usr/bin/bash
+
+        - name: Set read permission for all
+          become: True
+          file:
+            path: /home/ubuntu/anaconda3
+            mode: +r
+            recurse: yes
+
+        - name: Set execution permission for all
+          become: True
+          file:
+            path: /home/ubuntu/anaconda3/bin
+            mode: +x
+            recurse: yes
+
+        - name: Get conda init data
+          get_url:
+            url: https://raw.githubusercontent.com/sethusaim/Ansible-AWS-Demo/main/scripts/conda_init.txt
+            dest: /home/ubuntu/conda_init.txt
+
+        - name: Put conda init data in bashrc file
+          become: true
+          shell: cat /home/ubuntu/conda_init.txt >> /home/ubuntu/.bashrc
+          args:
+            executable: /usr/bin/bash
+
+        - name: Reboot instance
+          ansible.builtin.reboot:
+
+        - name: Check conda version
+          shell: "/home/ubuntu/anaconda3/bin/conda --version"
+          register: conda_version
+          args:
+            executable: /usr/bin/bash
+
+        - debug:
+            var: conda_version.stdout
+
+        - name: Remove downloaded conda init file
+          file:
+            state: absent
+            path: /home/ubuntu/conda_init.txt
+
+        - name: Initialize conda to use bash
+          shell: "/home/ubuntu/anaconda3/bin/conda init bash"
+          args:
+            executable: /usr/bin/bash
+
+        - name: Reboot instance
+          ansible.builtin.reboot:
+
+      when: anaconda_folder.stat.exists == False
+      become: true
+
+    - name: Create mlflow environment
+      shell: "/home/ubuntu/anaconda3/bin/conda create -n '{{mlflow.env_name}}' python=3.7.6 -y"
+      args:
+        executable: /usr/bin/bash
+
+    - name: Activate mlflow environment
+      shell: "source /home/ubuntu/anaconda3/bin/activate '{{mlflow.env_name}}'"
+      args:
+        executable: /usr/bin/bash
+
+    - name: Install pip3
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install mlflow pkg
+      ansible.builtin.pip:
+        name: mlflow
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        update_cache: yes
+
+    - name: Install Apache Utils
+      apt:
+        name: apache2-utils
+        update_cache: yes
+        force_apt_get: yes
+
+    - name: Install passlib
+      ansible.builtin.pip:
+        name: passlib
+        state: present
+
+    - name: Set user name and password for nginx
+      community.general.htpasswd:
+        path: /etc/nginx/.htpasswd
+        name: "{{mlflow.username}}"
+        password: "{{mlflow.password}}"
+
+    - name: Copy the nginx configuration file
+      ansible.builtin.copy:
+        src: /home/ubuntu/mlflow
+        dest: /etc/nginx/sites-enabled/
+
+    - name: Restart nginx service
+      service:
+        name: nginx
+        state: restarted
+
+    - name: Copy the mlflow service file
+      ansible.builtin.copy:
+        src: /home/ubuntu/mlflow-tracking.service
+        dest: /etc/systemd/system/
+
+    - name: Reload the daemon
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable mlflow tracking service
+      systemd:
+        name: mlflow-tracking
+        enabled: yes
+
+    - name: Start mlflow tracking service
+      systemd:
+        name: mlflow-tracking
+        state: started
