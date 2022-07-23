@@ -1,0 +1,133 @@
+- name: Setup application in instance
+  hosts: Application_Group
+  become: true
+  vars_files:
+    - /home/ubuntu/vars/variables.yml
+  tasks:
+    - name: Update using apt
+      apt:
+        update_cache: yes
+
+    - name: Update using apt get
+      apt:
+        update_cache: yes
+        force_apt_get: true
+
+    - name: Install pip3
+      apt:
+        name: python3-pip
+        state: present
+        
+    - name: Initialize git
+      shell: git init
+      args:
+        executable: /usr/bin/bash
+
+    - name: Configure git
+      shell: git config --global --add safe.directory /home/ubuntu
+
+    # - name: Remove remote origin
+    #   shell: git remote remove origin
+    #   args:
+    #     executable: /usr/bin/bash
+
+    - name: Add remote origin
+      shell: git remote add origin https://github.com/sethusaim/Wafer-Fault-Kubernetes.git
+      args:
+        executable: /usr/bin/bash
+
+    - name: Fetch origin
+      shell: git fetch origin
+      args:
+        executable: /usr/bin/bash
+
+    - name: Check out application folder
+      shell: git checkout origin/main -- application
+      args:
+        executable: /usr/bin/bash
+
+    - name: Install requirements
+      ansible.builtin.pip:
+        requirements: /home/ubuntu/application/requirements.txt
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        update_cache: yes
+
+    - name: Install gunicorn via pip3
+      ansible.builtin.pip:
+        name: gunicorn
+        state: present
+
+    - name: Install gunicorn via apt
+      apt:
+        name: gunicorn
+        update_cache: yes
+
+    - name: Install passlib
+      ansible.builtin.pip:
+        name: passlib
+        state: present
+
+    - name: Install Apache Utils
+      apt:
+        name: apache2-utils
+        update_cache: yes
+        force_apt_get: yes
+
+    - name: Set user name and password for nginx
+      community.general.htpasswd:
+        path: /etc/nginx/.htpasswd
+        name: "{{application.username}}"
+        password: "{{application.password}}"
+
+    - name: Copy the nginx configuration file
+      ansible.builtin.copy:
+        src: /home/ubuntu/flaskapp
+        dest: /etc/nginx/sites-enabled/
+
+    - name: Restart nginx service
+      service:
+        name: nginx
+        state: restarted
+
+    - name: Copy the application service file
+      ansible.builtin.copy:
+        src: /home/ubuntu/app.service
+        dest: /etc/systemd/system/
+
+    - name: Change permissions for sock file
+      shell: sudo chown ubuntu:www-data /home/ubuntu/application/
+
+    - name: Reload the daemon
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable app service
+      systemd:
+        name: app
+        enabled: yes
+
+    - name: Restart app service
+      systemd:
+        name: app
+        state: restarted
+
+    - name: Copy the secure app nginx file
+      ansible.builtin.copy:
+        src: /home/ubuntu/app
+        dest: /etc/nginx/sites-enabled/
+
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+    - name: Restart app service
+      service:
+        name: app
+        state: restarted
+    - name: Update using apt
+      apt:
+        update_cache: yes
