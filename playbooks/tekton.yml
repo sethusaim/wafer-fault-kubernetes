@@ -1,0 +1,32 @@
+- name: Setup Tekton in application instance
+  hosts: Application_Group
+  become: true
+  tasks:
+    - name: Install tekton pipelines
+      become: false
+      shell: kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+
+    - name: Install tekton dashboard
+      become: false
+      shell: kubectl apply --filename https://github.com/tektoncd/dashboard/releases/latest/download/tekton-dashboard-release.yaml
+
+    - name: Patch load balancer to tekton dashboard
+      become: false
+      shell: kubectl patch svc tekton-dashboard -n tekton-pipelines -p '{"spec":{"type":"LoadBalancer"}}'
+
+    - name: Wait till load balancer ip address is available
+      shell: sleep 5
+
+    - name: Install jq
+      become: true
+      apt:
+        name: jq
+        state: present
+
+    - name: Get load balancer url of tekton dashboard
+      become: false
+      shell: kubectl get svc tekton-dashboard -n tekton-pipelines -o json | jq .status.loadBalancer.ingress[0].hostname
+      register: tekton_load_balancer_url
+
+    - debug:
+        var: tekton_load_balancer_url.stdout
