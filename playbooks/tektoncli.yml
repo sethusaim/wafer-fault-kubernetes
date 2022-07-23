@@ -1,0 +1,117 @@
+- name: Setup Tekton cli for AWS EKS cluster
+  hosts: Application_Group
+  become: true
+  tasks: 
+    - name: Install boto3
+      become: true
+      ansible.builtin.pip:
+        name: boto3
+        state: present
+
+    - name: Install awscli by using --upgrade option
+      become: true
+      ansible.builtin.pip:
+        name: awscli
+        state: present
+        extra_args: --upgrade
+
+    - name: Check whether aws creds folder
+      stat:
+        path: /home/ubuntu/.aws
+      register: aws_creds_folder
+
+    - name: Setup aws creds
+      block:
+        - name: Make directory for aws creds
+          shell: "mkdir /home/ubuntu/.aws"
+
+        - name: Copy AWS creds
+          ansible.builtin.copy:
+            src: /home/ubuntu/.aws/credentials
+            dest: /home/ubuntu/.aws/credentials
+
+        - name: Copy AWS config file
+          ansible.builtin.copy:
+            src: /home/ubuntu/.aws/config
+            dest: /home/ubuntu/.aws/config
+
+      when: aws_creds_folder.stat.exists == False
+      become: true
+    - name: Update using apt  
+      apt: 
+        update_cache: yes
+
+    - name: Update using apt get
+      apt:
+        update_cache: yes
+        force_apt_get: true
+
+    - name: Install awscli
+      become: true
+      apt:
+        name: awscli
+        state: present
+
+    - name: Get kubectl binary
+      become: true
+      get_url:
+        url: https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
+        dest: /usr/local/bin/kubectl
+
+    - name: Set execution permissions for kubectl
+      become: true
+      file:
+        path: /usr/local/bin/kubectl
+        mode: +x
+
+    - name: Get kubectl version
+      shell: kubectl version --short --client
+      register: kubectl_version
+
+    - debug:
+        var: kubectl_version.stdout
+
+    - name: Update kubeconfig file
+      shell: aws eks update-kubeconfig --name '{{k8s.cluster_name}}'
+      become: false
+
+    - name: Get nodes from kubectl
+      become: false
+      shell: kubectl get nodes
+      register: kubectl_nodes
+
+    - debug:
+        var: kubectl_nodes.stdout
+
+    - name: Update using apt
+      apt:
+        update_cache: yes
+
+    - name: Install gnupg
+      apt:
+        name: gnupg
+        state: present
+
+    - name: Add tekton keys
+      shell: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3EFE0E0A2F2F60AA
+
+    - name: Add tekton cli to apt list
+      become: true
+      shell: echo "deb http://ppa.launchpad.net/tektoncd/cli/ubuntu eoan main"|sudo tee /etc/apt/sources.list.d/tektoncd-ubuntu-cli.list
+
+    - name: Update using apt
+      apt:
+        update_cache: yes
+
+    - name: Install tektoncd cli
+      become: true
+      apt:
+        name: tektoncd-cli
+        state: present
+
+    - name: Check tekton version
+      shell: "tkn version"
+      register: tekton_version
+
+    - debug:
+        var: tekton_version.stdout
