@@ -1,0 +1,104 @@
+- name: Setup Jenkins
+  hosts: Jenkins_Group
+  become: true
+  tasks:
+    - name: Update apt
+      become: true
+      apt:
+        update_cache: yes
+
+    - name: Install Java
+      become: true
+      apt:
+        name: openjdk-11-jdk
+        state: present
+
+    - name: Add Jenkins Repositry Key
+      become: true
+      apt_key: 
+        url: https://pkg.jenkins.io/debian-stable/jenkins.io.key 
+        state: present
+      
+    - name: Configure Jenkins Repositry
+      become: true
+      apt_repository: 
+        repo: 'deb https://pkg.jenkins.io/debian-stable binary/' 
+        state: present
+
+    - name: Install Jenkins
+      apt:
+        name: jenkins
+        update_cache: yes
+        become: true
+
+    - name: Check Jenkins Installation
+      service:
+        name: jenkins
+        state: started
+
+    - name: Get Jenkins initial password
+      shell: sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+      register: jenkins_initial_password
+      run_once: true
+
+    - debug:
+        var: jenkins_initial_password.stdout
+
+    - name: Get convenience script
+      shell: curl -fsSL https://get.docker.com -o get-docker.sh
+
+    - name: Execute convenience script
+      shell: sudo sh get-docker.sh
+
+    - name: Set permission for ubuntu user
+      shell: sudo usermod -aG docker ubuntu
+
+    - name: Get docker version
+      shell: docker --version
+      register: docker_version
+
+    - debug:
+        var: docker_version.stdout
+
+    - name: Update using apt-get
+      become: true
+      apt:
+        update_cache: true
+        force_apt_get: yes
+
+    - name: Install other packages
+      apt:
+        name:
+          - gnupg
+          - software-properties-common
+          - curl
+        state: present
+        force_apt_get: yes
+
+    - name: Get Terraform Repository key
+      apt_key:
+        url: https://apt.releases.hashicorp.com/gpg
+        state: present
+
+    - name: Add Terraform Repository key
+      shell: sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+
+    - name: Update using apt-get
+      become: true
+      apt:
+        update_cache: true
+        force_apt_get: yes
+
+    - name: Install Terraform
+      become: true
+      apt:
+        name: terraform
+        state: present
+        force_apt_get: yes
+
+    - name: Check Terraform version
+      shell: terraform --version
+      register: terraform_version
+
+    - debug:
+        var: terraform_version.stdout
