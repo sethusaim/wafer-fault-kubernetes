@@ -55,7 +55,7 @@
     - name: Get kubectl binary
       become: true
       get_url:
-        url: https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
+        url: curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.23.6/bin/linux/amd64/kubectl
         dest: /usr/local/bin/kubectl
 
     - name: Set execution permissions for kubectl
@@ -64,24 +64,9 @@
         path: /usr/local/bin/kubectl
         mode: +x
 
-    - name: Get kubectl version
-      shell: kubectl version --short --client
-      register: kubectl_version
-
-    - debug:
-        var: kubectl_version.stdout
-
     - name: Update kubeconfig file
       shell: aws eks update-kubeconfig --name '{{k8s.cluster_name}}'
       become: false
-
-    - name: Get nodes from kubectl
-      become: false
-      shell: kubectl get nodes
-      register: kubectl_nodes
-
-    - debug:
-        var: kubectl_nodes.stdout
 
     - name: Update using apt
       apt:
@@ -108,10 +93,3 @@
       apt:
         name: tektoncd-cli
         state: present
-
-    - name: Check tekton version
-      shell: "tkn version"
-      register: tekton_version
-
-    - debug:
-        var: tekton_version.stdout
