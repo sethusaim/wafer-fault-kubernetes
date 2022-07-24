@@ -10,4 +10,5 @@ application:
 k8s:
   cluster_name: YOUR_CLUSTER_NAME
   argocd:
+    admin: admin
     password: YOUR_ARGOCD_PASSWORD
