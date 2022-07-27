@@ -6,11 +6,11 @@
   tasks:
     - name: Update using apt
       apt:
-        update_cache: yes
+        update_cache: true
 
     - name: Update using apt get
       apt:
-        update_cache: yes
+        update_cache: true
         force_apt_get: true
 
     - name: Install pip3,nginx,gunicorn
@@ -63,7 +63,7 @@
     - name: Install Apache Utils
       apt:
         name: apache2-utils
-        update_cache: yes
+        update_cache: true
         force_apt_get: yes
 
     - name: Set user name and password for nginx
@@ -118,6 +118,3 @@
       service:
         name: app
         state: restarted
-    - name: Update using apt
-      apt:
-        update_cache: yes
