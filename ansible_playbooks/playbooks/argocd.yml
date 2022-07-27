@@ -21,7 +21,6 @@
       shell: sleep 5
 
     - name: Install jq
-      become: true
       apt:
         name: jq
         state: present
@@ -43,7 +42,6 @@
         dest: /usr/local/bin/argocd
 
     - name: Set execution permissions for argocd cli binary file
-      become: True
       file:
         path: /usr/local/bin/argocd
         mode: +x
@@ -58,4 +56,4 @@
       run_once: yes
 
     - debug:
-        var: argocd_url.stdout
+        msg: "Open this url with https,ArgoCD url : {{argocd_url.stdout}}"
