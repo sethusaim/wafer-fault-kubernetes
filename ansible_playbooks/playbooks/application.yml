@@ -13,9 +13,12 @@
         update_cache: yes
         force_apt_get: true
 
-    - name: Install pip3
+    - name: Install pip3,nginx,gunicorn
       apt:
-        name: python3-pip
+        name: 
+          - python3-pip
+          - nginx
+          - gunicorn
         state: present
         
     - name: Initialize git
@@ -50,24 +53,11 @@
       ansible.builtin.pip:
         requirements: /home/ubuntu/application/requirements.txt
 
-    - name: Install nginx
-      apt:
-        name: nginx
-        update_cache: yes
-
-    - name: Install gunicorn via pip3
+    - name: Install gunicorn,passlib via pip3
       ansible.builtin.pip:
-        name: gunicorn
-        state: present
-
-    - name: Install gunicorn via apt
-      apt:
-        name: gunicorn
-        update_cache: yes
-
-    - name: Install passlib
-      ansible.builtin.pip:
-        name: passlib
+        name: 
+          - gunicorn
+          - passlib
         state: present
 
     - name: Install Apache Utils
