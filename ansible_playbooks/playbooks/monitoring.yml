@@ -84,10 +84,7 @@
       register: prometheus_url
 
     - debug:
-        var: prometheus_url.stdout
+        msg: "Open this url with port 9090,Prometheus url : {{prometheus_url.stdout}}"
     
     - debug:
-        var: grafana_url.stdout
-
-
-    
+        msg: "Grafana url : {{grafana_url.stdout}}"
