@@ -1,3 +1,9 @@
+- name: Setup Docker in Jenkins instance
+  import_playbook: docker.yml
+
+- name: Setup Terraform in Jenkins instance
+  import_playbook: terraform.yml
+
 - name: Setup Jenkins
   import_playbook: jenkins.yml
 
@@ -10,8 +16,8 @@
 - name: Setup Tekton cli
   import_playbook: tektoncli.yml
 
-- name: Setup Tekton
+- name: Setup Tekton Dashboard
   import_playbook: tekton.yml
 
-- name: Setup ArgoCD
+- name: Setup ArgoCD Dashboard
   import_playbook: argocd.yml
