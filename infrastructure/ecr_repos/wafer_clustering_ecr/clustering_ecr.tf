@@ -6,5 +6,3 @@ resource "aws_ecr_repository" "clustering_ecr_repo" {
     scan_on_push = var.scan_on_push
   }
 }
-
-

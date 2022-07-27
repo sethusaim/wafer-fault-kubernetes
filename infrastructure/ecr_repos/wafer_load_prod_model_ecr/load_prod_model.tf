@@ -6,5 +6,3 @@ resource "aws_ecr_repository" "load_prod_model" {
     scan_on_push = var.scan_on_push
   }
 }
-
-

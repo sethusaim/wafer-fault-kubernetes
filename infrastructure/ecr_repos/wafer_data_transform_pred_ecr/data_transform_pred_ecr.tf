@@ -6,5 +6,3 @@ resource "aws_ecr_repository" "data_transform_pred" {
     scan_on_push = var.scan_on_push
   }
 }
-
-

@@ -6,5 +6,3 @@ resource "aws_ecr_repository" "preprocessing_train" {
     scan_on_push = var.scan_on_push
   }
 }
-
-

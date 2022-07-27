@@ -6,5 +6,3 @@ resource "aws_ecr_repository" "raw_pred_data_validation" {
     scan_on_push = var.scan_on_push
   }
 }
-
-

@@ -6,5 +6,3 @@ resource "aws_ecr_repository" "db_operation_train" {
     scan_on_push = var.scan_on_push
   }
 }
-
-
