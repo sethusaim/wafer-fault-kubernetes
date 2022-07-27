@@ -26,7 +26,6 @@
             dest: /home/ubuntu/install-anaconda.sh
 
         - name: Create conda folder
-          become: True
           file:
             path: /home/ubuntu/anaconda3
             state: directory
@@ -45,20 +44,17 @@
             path: /home/ubuntu/install-anaconda.sh
 
         - name: Add anaconda bin to path
-          become: True
           shell: echo 'export PATH=/home/ubuntu/anaconda3/bin:$PATH' >> /etc/profile
           args:
             executable: /usr/bin/bash
 
         - name: Set read permission for all
-          become: True
           file:
             path: /home/ubuntu/anaconda3
             mode: +r
             recurse: yes
 
         - name: Set execution permission for all
-          become: True
           file:
             path: /home/ubuntu/anaconda3/bin
             mode: +x
@@ -70,7 +66,6 @@
             dest: /home/ubuntu/conda_init.txt
 
         - name: Put conda init data in bashrc file
-          become: true
           shell: cat /home/ubuntu/conda_init.txt >> /home/ubuntu/.bashrc
           args:
             executable: /usr/bin/bash
@@ -90,9 +85,8 @@
 
         - name: Reboot instance
           ansible.builtin.reboot:
-
+          
       when: anaconda_folder.stat.exists == False
-      become: true
 
     - name: Create mlflow environment
       shell: "/home/ubuntu/anaconda3/bin/conda create -n '{{mlflow.env_name}}' python=3.7.6 -y"
@@ -121,7 +115,7 @@
     - name: Install Apache Utils
       apt:
         name: apache2-utils
-        update_cache: yes
+        update_cache: true
         force_apt_get: yes
 
     - name: Set user name and password for nginx
