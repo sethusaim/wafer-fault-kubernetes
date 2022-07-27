@@ -104,30 +104,25 @@
       args:
         executable: /usr/bin/bash
 
-    - name: Install pip3
+    - name: Install pip3,nginx
       apt:
-        name: python3-pip
+        name: 
+          - python3-pip
+          - nginx
         state: present
 
-    - name: Install mlflow pkg
+    - name: Install mlflow,passlib via pip3
       ansible.builtin.pip:
-        name: mlflow
-
-    - name: Install nginx
-      apt:
-        name: nginx
-        update_cache: yes
+        name: 
+          - mlflow
+          - passlib
+        state: present
 
     - name: Install Apache Utils
       apt:
         name: apache2-utils
         update_cache: yes
         force_apt_get: yes
-
-    - name: Install passlib
-      ansible.builtin.pip:
-        name: passlib
-        state: present
 
     - name: Set user name and password for nginx
       community.general.htpasswd:
