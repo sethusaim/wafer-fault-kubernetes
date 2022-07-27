@@ -1,0 +1,61 @@
+- name: Setup ArgoCD in EKS cluster
+  hosts: Application_Group
+  become: true
+  vars_files:
+    - /home/ubuntu/vars/variables.yml
+  tasks:
+    - name: Create argocd namespace
+      become: false
+      shell: kubectl create namespace argocd
+      run_once: yes
+
+    - name: Install ArgoCD manifest files
+      become: false
+      shell: kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+    - name: Patch load balancer to argocd server
+      become: false
+      shell: kubectl patch svc argocd-server -n argocd -p '{"spec":{"type":"LoadBalancer"}}'
+
+    - name: Wait till load balancer ip address is available
+      shell: sleep 5
+
+    - name: Install jq
+      become: true
+      apt:
+        name: jq
+        state: present
+
+    - name: Get load balancer url for argocd server
+      become: false
+      shell: kubectl get svc argocd-server -n argocd -o json | jq .status.loadBalancer.ingress[0].hostname
+      register: argocd_url
+
+    - name: Get argocd server initial password
+      become: false
+      shell: kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+      run_once: yes
+      register: argocd_init_password
+      
+    - name: Get the argocd cli binary file
+      get_url:
+        url: https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+        dest: /usr/local/bin/argocd
+
+    - name: Set execution permissions for argocd cli binary file
+      become: True
+      file:
+        path: /usr/local/bin/argocd
+        mode: +x
+        recurse: yes
+
+    - name: Login to argocd server with initial password
+      shell: argocd login {{argocd_url}} --username '{{k8s.argocd.username}}' --password {{argocd_init_password}} --insecure
+      run_once: yes
+    
+    - name: Update argocd server password
+      shell: argocd account update-password --current-password {{argocd_init_password}} --new-password '{{k8s.argocd.password}}' --insecure
+      run_once: yes
+
+    - debug:
+        var: argocd_url.stdout
