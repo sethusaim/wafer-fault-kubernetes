@@ -61,7 +61,7 @@
         update_cache: true
         force_apt_get: yes
 
-    - name: Install other packages
+    - name: Install gnupg,software-properties-common,curl
       apt:
         name:
           - gnupg
