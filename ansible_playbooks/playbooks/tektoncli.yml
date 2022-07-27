@@ -8,7 +8,7 @@
         name: boto3
         state: present
 
-    - name: Install awscli by using --upgrade option
+    - name: Upgrade awscli
       become: true
       ansible.builtin.pip:
         name: awscli
@@ -37,6 +37,7 @@
 
       when: aws_creds_folder.stat.exists == False
       become: true
+
     - name: Update using apt  
       apt: 
         update_cache: yes
@@ -46,10 +47,12 @@
         update_cache: yes
         force_apt_get: true
 
-    - name: Install awscli
+    - name: Install awscli,gnupg
       become: true
       apt:
-        name: awscli
+        name: 
+          - awscli
+          - gnupg
         state: present
 
     - name: Get kubectl binary
@@ -65,17 +68,12 @@
         mode: +x
 
     - name: Update kubeconfig file
-      shell: aws eks update-kubeconfig --name '{{k8s.cluster_name}}'
       become: false
+      shell: aws eks update-kubeconfig --name '{{k8s.cluster_name}}'
 
     - name: Update using apt
       apt:
         update_cache: yes
-
-    - name: Install gnupg
-      apt:
-        name: gnupg
-        state: present
 
     - name: Add tekton keys
       shell: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3EFE0E0A2F2F60AA
