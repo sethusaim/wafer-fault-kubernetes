@@ -1,7 +1,6 @@
 variable "aws_region" {
   type    = string
   default = "us-east-1"
-
 }
 
 variable "application_ami" {
@@ -12,7 +11,6 @@ variable "application_ami" {
 variable "application_instance_type" {
   type    = string
   default = "t2.medium"
-
 }
 
 variable "application_key_pair_name" {
@@ -28,7 +26,6 @@ variable "application_tag_name" {
 variable "application_eip_name" {
   type    = string
   default = "application_ip"
-
 }
 
 variable "application_sg_group_name" {
@@ -44,7 +41,6 @@ variable "application_ingress_from_port" {
 variable "application_cidr_block" {
   type    = list(string)
   default = ["0.0.0.0/0"]
-
 }
 
 variable "application_protocol" {

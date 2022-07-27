@@ -1,7 +1,6 @@
 variable "aws_region" {
   type    = string
   default = "us-east-1"
-
 }
 
 variable "jenkins_ami" {
@@ -27,7 +26,6 @@ variable "tag_name" {
 variable "jenkins_eip_name" {
   type    = string
   default = "jenkins-ip"
-
 }
 
 variable "jenkins_sg_group_name" {
@@ -43,7 +41,6 @@ variable "jenkins_ingress_from_port" {
 variable "jenkins_cidr_block" {
   type    = list(any)
   default = ["0.0.0.0/0"]
-
 }
 
 variable "jenkins_protocol" {

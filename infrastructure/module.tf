@@ -18,7 +18,7 @@ module "mlflow_instance" {
   source = "./ec2_instances/wafer_mlflow_instance"
 }
 
-module "ansible_instance"{
+module "ansible_instance" {
   source = "./ec2_instances/wafer_ansible_instance"
 }
 

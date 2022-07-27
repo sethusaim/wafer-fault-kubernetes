@@ -11,7 +11,6 @@ variable "mlflow_ami" {
 variable "mlflow_instance_type" {
   type    = string
   default = "t2.small"
-
 }
 
 variable "mlflow_key_pair_name" {
@@ -27,7 +26,6 @@ variable "mlflow_tag_name" {
 variable "mlflow_eip_name" {
   type    = string
   default = "MLFlow_Elastic_IP"
-
 }
 
 variable "mlflow_sg_group_name" {
@@ -48,7 +46,6 @@ variable "mlflow_ingress_to_port" {
 variable "mlflow_cidr_block" {
   type    = list(string)
   default = ["0.0.0.0/0"]
-
 }
 
 variable "mlflow_protocol" {

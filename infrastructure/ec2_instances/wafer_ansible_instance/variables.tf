@@ -1,7 +1,6 @@
 variable "aws_region" {
   type    = string
   default = "us-east-1"
-
 }
 
 variable "ansible_ami" {
@@ -12,7 +11,6 @@ variable "ansible_ami" {
 variable "ansible_instance_type" {
   type    = string
   default = "t2.medium"
-
 }
 
 variable "ansible_key_pair_name" {
@@ -28,7 +26,6 @@ variable "ansible_tag_name" {
 variable "ansible_eip_name" {
   type    = string
   default = "ansible_ip"
-
 }
 
 variable "ansible_sg_group_name" {
@@ -44,7 +41,6 @@ variable "ansible_ingress_from_port" {
 variable "ansible_cidr_block" {
   type    = list(string)
   default = ["0.0.0.0/0"]
-
 }
 
 variable "ansible_protocol" {
