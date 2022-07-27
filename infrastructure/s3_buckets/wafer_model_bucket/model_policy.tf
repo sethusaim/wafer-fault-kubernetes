@@ -3,7 +3,6 @@ resource "aws_s3_bucket_policy" "allow_full_access" {
   policy = data.aws_iam_policy_document.allow_full_access.json
 }
 
-
 data "aws_iam_policy_document" "allow_full_access" {
   statement {
     principals {
