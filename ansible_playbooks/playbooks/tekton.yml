@@ -28,4 +28,4 @@
       register: tekton_load_balancer_url
 
     - debug:
-        msg: "Tekton Dashboard url : {{tekton_load_balancer_url.stdout}}"
+        msg: "Open with port 9097,Tekton Dashboard url : {{tekton_load_balancer_url.stdout}}"
