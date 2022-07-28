@@ -32,7 +32,6 @@
           ansible.builtin.copy:
             src: /home/ubuntu/.aws/config
             dest: /home/ubuntu/.aws/config
-
       when: aws_creds_folder.stat.exists == False
 
     - name: Update using apt  
