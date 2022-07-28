@@ -7,11 +7,13 @@
     - name: Create argocd namespace
       become: false
       shell: kubectl create namespace argocd
-      run_once: yes
 
     - name: Install ArgoCD manifest files
       become: false
       shell: kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+    - name: Wait till all pods reach running status
+      shell: sleep 180
 
     - name: Patch load balancer to argocd server
       become: false
@@ -28,12 +30,11 @@
     - name: Get load balancer url for argocd server
       become: false
       shell: kubectl get svc argocd-server -n argocd -o json | jq .status.loadBalancer.ingress[0].hostname
-      register: argocd_url
+      register: argocd_loadbalancer_url
 
     - name: Get argocd server initial password
       become: false
       shell: kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
-      run_once: yes
       register: argocd_init_password
       
     - name: Get the argocd cli binary file
@@ -45,15 +46,16 @@
       file:
         path: /usr/local/bin/argocd
         mode: +x
-        recurse: yes
-
+        
     - name: Login to argocd server with initial password
-      shell: argocd login {{argocd_url}} --username '{{k8s.argocd.username}}' --password {{argocd_init_password}} --insecure
-      run_once: yes
-    
-    - name: Update argocd server password
-      shell: argocd account update-password --current-password {{argocd_init_password}} --new-password '{{k8s.argocd.password}}' --insecure
-      run_once: yes
+      shell: argocd login {{ argocd_loadbalancer_url.stdout }} --username {{ k8s.argocd.username }} --password {{ argocd_init_password.stdout }} --insecure
+      register: login_status
+      until: "login_status is not failed"
+      retries: 10
+      delay: 10
 
+    - name: Update argocd server password
+      shell: argocd account update-password --current-password {{ argocd_init_password.stdout }} --new-password '{{ k8s.argocd.password }}' --insecure
+    
     - debug:
-        msg: "Open this url with https,ArgoCD url : {{argocd_url.stdout}}"
+        msg: "ArgoCD url is {{ argocd_loadbalancer_url.stdout }}"
