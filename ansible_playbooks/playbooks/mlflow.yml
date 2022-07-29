@@ -72,7 +72,7 @@
 
         - name: Reboot instance
           ansible.builtin.reboot:
-          
+
         - name: Remove downloaded conda init file
           file:
             state: absent
@@ -86,7 +86,7 @@
         - name: Reboot instance
           ansible.builtin.reboot:
       when: anaconda_folder.stat.exists == False
-
+      
     - name: Create mlflow environment
       shell: "/home/ubuntu/anaconda3/bin/conda create -n '{{mlflow.env_name}}' python=3.7.6 -y"
       args:
@@ -114,7 +114,7 @@
     - name: Install Apache Utils
       apt:
         name: apache2-utils
-        update_cache: true
+        update_cache: yes
         force_apt_get: yes
 
     - name: Set user name and password for nginx
