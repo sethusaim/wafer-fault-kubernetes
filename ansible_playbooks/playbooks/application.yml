@@ -29,11 +29,6 @@
     - name: Configure git
       shell: git config --global --add safe.directory /home/ubuntu
 
-    # - name: Remove remote origin
-    #   shell: git remote remove origin
-    #   args:
-    #     executable: /usr/bin/bash
-
     - name: Get remote origin status
       shell: git remote show
       register: origin_status
