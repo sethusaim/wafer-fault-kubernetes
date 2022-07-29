@@ -4,6 +4,15 @@
     - /home/ubuntu/vars/variables.yml
   become: true
   tasks:
+    - name: Update using apt
+      apt:
+        update_cache: yes
+
+    - name: Update using apt-get
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+
     - name: Get the helm installer bash script
       shell: curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
   
@@ -39,10 +48,12 @@
         state: present
       
     - name: Get awscli zip file
-      shell: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /home/ubuntu/awscliv2.zip
 
     - name: Unzip awscli zip file
-      shell: unzip awscliv2.zip
+      shell: unzip /home/ubuntu/awscliv2.zip
 
     - name: Install awscli from source
       shell: sudo ./aws/install
