@@ -4,6 +4,15 @@
   vars_files:
     - /home/ubuntu/vars/variables.yml
   tasks:
+    - name: Update using apt
+      apt:
+        update_cache: yes
+
+    - name: Update using apt-get
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+
     - name: Create argocd namespace
       become: false
       shell: kubectl create namespace argocd
@@ -13,11 +22,11 @@
       shell: kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
     - name: Wait till all pods reach running status
-      shell: sleep 180
+      shell: sleep 60
 
     - name: Patch load balancer to argocd server
       become: false
-      shell: kubectl patch svc argocd-server -n argocd -p '{"spec":{"type":"LoadBalancer"}}'
+      shell: kubectl patch svc argocd-server -n argocd -p '{"spec":{"ports":[{"name":"custom","port":9096,"protocol":"TCP","targetPort":8080}],"type":"LoadBalancer"}}'
 
     - name: Wait till load balancer ip address is available
       shell: sleep 5
@@ -58,4 +67,4 @@
       shell: argocd account update-password --current-password {{ argocd_init_password.stdout }} --new-password '{{ k8s.argocd.password }}' --insecure
     
     - debug:
-        msg: "ArgoCD url is {{ argocd_loadbalancer_url.stdout }}"
+        msg: "Open with port 9096,ArgoCD url is {{ argocd_loadbalancer_url.stdout }}"
