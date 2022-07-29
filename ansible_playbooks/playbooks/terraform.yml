@@ -2,8 +2,11 @@
   hosts: Jenkins_Group
   become: true
   tasks:
+    - name: Update using apt
+      apt:
+        update_cache: yes
+        
     - name: Update using apt-get
-      become: true
       apt:
         update_cache: true
         force_apt_get: yes
