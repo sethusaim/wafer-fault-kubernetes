@@ -62,7 +62,7 @@
 
         - name: Get conda init data
           get_url:
-            url: https://raw.githubusercontent.com/sethusaim/Ansible-AWS-Demo/main/others/conda_init.txt
+            url: https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/others/conda_init.txt
             dest: /home/ubuntu/conda_init.txt
 
         - name: Put conda init data in bashrc file
@@ -85,7 +85,6 @@
 
         - name: Reboot instance
           ansible.builtin.reboot:
-          
       when: anaconda_folder.stat.exists == False
 
     - name: Create mlflow environment
