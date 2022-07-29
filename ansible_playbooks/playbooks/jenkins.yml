@@ -6,6 +6,11 @@
       apt:
         update_cache: true
 
+    - name: Update using apt-get
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+
     - name: Install Java
       apt:
         name: openjdk-11-jdk
