@@ -1,5 +1,7 @@
 - name: Setup Jenkins
   hosts: Jenkins_Group
+  roles:
+  - cloudalchemy.node_exporter
   become: true
   tasks:
     - name: Update using apt
