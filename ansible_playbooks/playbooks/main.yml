@@ -22,6 +22,8 @@
 - name: Setup ArgoCD Dashboard
   import_playbook: argocd.yml
 
-- name: Setup Prometheus and Grafana 
+- name: Setup Prometheus and Grafana in Kubernetes 
   import_playbook: monitoring.yml
 
+- name: Setup Prometheus EC2 monitoring
+  import_playbook: prometheus_ec2.yml
