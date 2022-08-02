@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+  external_labels:
+    monitor: 'prometheus'
+
+scrape_configs:
+
+  - job_name: 'node_exporter'
+
+    static_configs:
+
+      - targets: ['3.235.213.201:9100']
