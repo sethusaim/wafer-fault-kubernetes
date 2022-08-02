@@ -21,3 +21,7 @@
 
 - name: Setup ArgoCD Dashboard
   import_playbook: argocd.yml
+
+- name: Setup Prometheus and Grafana 
+  import_playbook: monitoring.yml
+
