@@ -34,8 +34,8 @@ variable "ansible_sg_group_name" {
 }
 
 variable "ansible_ingress_from_port" {
-  type    = number
-  default = 22
+  type    = list(number)
+  default = [22, 9100, 9090]
 }
 
 variable "ansible_cidr_block" {
@@ -49,8 +49,8 @@ variable "ansible_protocol" {
 }
 
 variable "ansible_ingress_to_port" {
-  type    = number
-  default = 22
+  type    = list(number)
+  default = [22, 9090, 9100]
 }
 
 variable "ansible_egress_from_port" {
