@@ -1,5 +1,7 @@
 - name: MLFlow Installation
   hosts: MLFlow_Group
+  roles:
+  - cloudalchemy.node_exporter
   vars_files:
     - /home/ubuntu/vars/variables.yml
   become: true
