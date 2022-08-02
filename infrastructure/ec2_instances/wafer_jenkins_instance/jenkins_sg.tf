@@ -16,6 +16,20 @@ resource "aws_security_group" "jenkins_security_group" {
     cidr_blocks = var.jenkins_cidr_block
   }
 
+  ingress {
+    from_port   = var.jenkins_ingress_from_port[2]
+    to_port     = var.jenkins_ingress_to_port[2]
+    protocol    = var.jenkins_protocol
+    cidr_blocks = var.jenkins_cidr_block
+  }
+
+  ingress {
+    from_port   = var.jenkins_ingress_from_port[3]
+    to_port     = var.jenkins_ingress_to_port[3]
+    protocol    = var.jenkins_protocol
+    cidr_blocks = var.jenkins_cidr_block
+  }
+
   egress {
     from_port   = var.jenkins_egress_from_port
     to_port     = var.jenkins_egress_to_port

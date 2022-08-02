@@ -35,7 +35,7 @@ variable "jenkins_sg_group_name" {
 
 variable "jenkins_ingress_from_port" {
   type    = list(any)
-  default = [22, 8080]
+  default = [22, 8080, 9090, 9100]
 }
 
 variable "jenkins_cidr_block" {
@@ -50,7 +50,7 @@ variable "jenkins_protocol" {
 
 variable "jenkins_ingress_to_port" {
   type    = list(any)
-  default = [22, 8080]
+  default = [22, 8080, 9090, 9100]
 }
 
 variable "jenkins_egress_from_port" {
