@@ -1,5 +1,7 @@
 - name: Setup application in instance
   hosts: Application_Group
+  roles:
+  - cloudalchemy.node_exporter
   become: true
   vars_files:
     - /home/ubuntu/vars/variables.yml
