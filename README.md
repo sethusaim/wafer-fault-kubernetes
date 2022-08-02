@@ -114,8 +114,42 @@ git clone https://github.com/sethusaim/Wafer-Fault-Kubernetes.git
 ```
 
 ### Setup Ansible Server in EC2 instance
+First go to aws ec2 console, and click on launch instance type the below configuration
 
+Name - Ansible Server
 
+AMI - Ubuntu 20.04
+
+Instance Type - t2.medium
+
+Key Pair - your_key_pair
+
+Network Setting : ports - 22,9090,9100, source_type - anywhere
+
+After the configuration is done, click on launch instance. Once the instance is up and running. SSH into instance using the selected key using any SSH tools, like Putty, MobaXterm,etc (your choice)
+
+Once the ssh connection is done, run the following commands to setup ansible and other packages in the ansible instance
+
+```bash
+wget https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/scripts/setup_ansible.sh
+```
+
+```bash
+bash setup_ansible.sh
+```
+On successfull execution of the script,we shall see that ansible,terraform,awscli got installed and infrastructure and ansible_playbooks folders are created.
+
+#### Setup AWS credentials
+```bash
+aws configure
+```
+
+#### Setup variables.yml
+Run the following and edit the values based on your choice
+
+```bash
+sudo nano ansible_playbooks/vars/variables.yml
+```
 
 ### Jenkins Setup in EC2 instance
 First SSH into ansible server run the commands to provision the jenkins instance
