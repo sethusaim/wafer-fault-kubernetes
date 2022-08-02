@@ -47,7 +47,7 @@
       apt: 
         update_cache: true
 
-    - name: Update using apt get
+    - name: Update using apt-get
       apt:
         update_cache: true
         force_apt_get: true
@@ -61,7 +61,7 @@
 
     - name: Get kubectl binary
       get_url:
-        url: curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.23.6/bin/linux/amd64/kubectl
+        url: https://storage.googleapis.com/kubernetes-release/release/v1.23.6/bin/linux/amd64/kubectl
         dest: /usr/local/bin/kubectl
 
     - name: Set execution permissions for kubectl
