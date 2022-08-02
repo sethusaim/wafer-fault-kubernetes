@@ -1,0 +1,115 @@
+- name: Setup Prometheus on EC2 instance
+  hosts: Prometheus_Group
+  become: true
+  tasks:
+    - name: Update using apt
+      apt:
+        update_cache: true
+
+    - name: Update using apt-get
+      apt:
+        update_cache: true
+        force_apt_get: yes
+
+    - name: Ensure prometheus group exists
+      ansible.builtin.group:
+        name: prometheus
+        state: present
+
+    - name: Check whether /etc/prometheus folder
+      stat:
+        path: /etc/prometheus
+      register: etc_prometheus_folder
+
+    - name: Remove /etc/prometheus folder
+      block:
+        - name: Remove /etc/prometheus folder
+          file:
+            state: absent
+            path: /etc/prometheus
+      when: etc_prometheus_folder.stat.exists == True
+      
+    - name: Create /etc/prometheus folder
+      file:
+        path: /etc/prometheus/
+        state: directory
+        recurse: yes
+
+    - name: Check whether /var/lib/prometheus folder exists or not
+      stat: 
+        path: /var/lib/prometheus
+      register: var_lib_prometheus_folder
+
+    - name: Remove /var/lib/prometheus folder
+      block:
+        - name: Remove /var/lib/prometheus folder
+          file:
+            path: /var/lib/prometheus
+            state: absent
+      when: var_lib_prometheus_folder.stat.exists
+
+    - name: Create /var/lib/prometheus folder
+      file:
+        path: /var/lib/prometheus/
+        state: directory
+      
+    - name: Get the prometheus tar file
+      get_url:
+        url: https://github.com/prometheus/prometheus/releases/download/v2.37.0/prometheus-2.37.0.linux-amd64.tar.gz
+        dest: /home/ubuntu
+
+    - name: Untar the prometheus tar file 
+      shell: tar xvfz prometheus-2.37.0.linux-amd64.tar.gz
+        
+    - name: Copy prometheus folder to /usr/local/bin
+      shell: sudo cp prometheus-2.37.0.linux-amd64/prometheus /usr/local/bin
+
+    - name: Copy promotool to /usr/local/bin
+      shell: sudo cp prometheus-2.37.0.linux-amd64/promtool /usr/local/bin/
+
+    - name: Copy consoles to /etc/prometheus
+      shell: sudo cp -r prometheus-2.37.0.linux-amd64/consoles /etc/prometheus
+
+    - name: Copy console libraries to /etc/prometheus
+      shell: sudo cp -r prometheus-2.37.0.linux-amd64/console_libraries /etc/prometheus
+
+    - name: Remove the prometheus tar file and extracted folder
+      shell: sudo rm -rf prometheus-2.37.0.linux-amd64.tar.gz prometheus-2.37.0.linux-
+
+    - name: Get the prometheus_final configuration file
+      get_url:
+        url: https://raw.githubusercontent.com/sethusaim/Ansible-AWS-Demo/main/others/prometheus_final.yml
+        dest: /home/ubuntu/
+
+    - name: Edit the prometheus.yml file
+      shell: cat /home/ubuntu/prometheus_final.yml > /etc/prometheus/prometheus.yml
+
+    - name: Copy the prometheus service file
+      ansible.builtin.copy:
+        src: /home/ubuntu/prometheus.service
+        dest: /etc/systemd/system
+
+    - name: Reload the daemon
+      systemd:
+        daemon_reload: yes
+
+    - name: Start and Enable the prometheus service
+      systemd:  
+        name: prometheus
+        state: started
+        enabled: yes
+
+    - name: Remove the final prometheus configuration file
+      file:
+        path: /home/ubuntu/prometheus_final.yml
+        state: absent
+
+    - name: Restart the prometheus server
+      systemd:
+        name: prometheus
+        state: restarted
+
+    - name: Remove the prometheus unziped folder
+      file:
+        path: /home/ubuntu/prometheus-2.37.0.linux-amd64
+        state: absent
