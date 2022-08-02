@@ -49,6 +49,9 @@ The solution application is exposed as API using Flask and application is contai
 - Docker is used for container builds
 - Infrastructure is managed by using terraform  
 - Jenkins is used as CI tool 
+- Ansible is used as configuration management tool
+- Prometheus is used for metrics collection
+- Grafana is used for metrics visulization
 - Argo CD for continuous delivery tool
 
 ### Algorithms Used 
@@ -110,145 +113,44 @@ Once the repositories are created, in the CI repository, clone this repository u
 git clone https://github.com/sethusaim/Wafer-Fault-Kubernetes.git
 ```
 
+### Setup Ansible Server in EC2 instance
+
+
+
 ### Jenkins Setup in EC2 instance
-Previously install terraform in your local machine, be Linux,Mac or Windows. https://www.terraform.io/downloads
-
-Install AWS CLI
+First SSH into ansible server run the commands to provision the jenkins instance
 
 ```bash
-pip install awscli
-```
-Configure aws creds
-
-```bash
-aws configure
-```
-
-Open your code editor in the infrastructure folder. In module.tf file comment all modules expect jenkins instance and execute the following commands.
-
-Before we proceed create a key pair in aws console by which you will connect to the EC2 instance
-
-Make sure to change the key pair name from sethu (which is mine) to your own key pair name.
-
-Then execute this command, which will initialize all backend required by terraform to function
-
-```bash
-terraform init 
-```
-
-This command applies the uncommented modules which are required by us 
-
-```bash
-terraform apply
-```
-Once the instance provisioning is done, SSH into the instance using any SSH tool like Putty, Mobaxterm,etc and execute the following commands
-
-```bash
-sudo apt update
-```
-```bash
-sudo apt-get update
-```
-
-Add Repository Key
-```bash
-wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
-```
-
-Add Package Repository
-```bash
-sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+terraform -chdir=infrastructure init
 ```
 
 ```bash
-sudo apt update
+terraform -chdir=infrastructure apply -target=module.jenkins_instance --auto-approve
 ```
 
-Install Jenkins Dependencies
-```bash
-sudo apt install openjdk-11-jdk -y
-```
+Before proceeding,make sure that you have setup ansible server in EC2 instance. Once that is done, run the following commands
 
 ```bash
-sudo apt install jenkins -y
+sudo ansible-playbook playbooks/jenkins.yml
 ```
+Once the playbook execution is done, you shall see the initial password in the terminal,copy the password and login to Jenkins server. Next click on the install suggested plugins and wait for installation to complete. Create a username and password for jenkins authentication.
 
-Enable the Jenkins service to start at boot:
-```bash
-sudo systemctl enable jenkins
-```
+Finally you can access the Jenkins Dashboard in EC2 instance on port 8080
 
-Start Jenkins as a service
-```bash
-sudo systemctl start jenkins
-```
-
-You can check the status of the Jenkins service using the command
-```bash
-sudo systemctl status jenkins
-```
-
-Now that Jenkins is setup in this EC2 instance use public ip of the EC2 instance with port 8080, and click enter. (public_ip:8080)
-
-On successfull login, we shall see jenkins should be unlocked using the initial password which can accessed using 
+#### Install Docker in Jenkins Instance
+Before we install docker in jenkins instance, we need to have jenkins instance up and running. Once the jenkins instance is up and running, run the following commands, for docker installation
 
 ```bash
-sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+sudo ansible-playbook playbooks/docker.yml
 ```
 
-Copy the password and login to Jenkins server. Next click on the install suggested plugins and wait for installation to complete. Create a username and password for jenkins authentication.
-
-Finally you can access the Jenkins Dashboard in EC2 instance.
-
-Before we configure Jenkins for our usage, we have install awscli,docker and terraform in EC2 instance
-
-#### Install Docker
-```bash
-curl -fsSL https://get.docker.com -o get-docker.sh
-```
+#### Install Terraform in Jenkins Instance
+Before we install docker in jenkins instance, we need to have jenkins instance up and running. Once the jenkins instance is up and running, run the following commands, for terraform installation
 
 ```bash
-sudo sh get-docker.sh
+sudo ansible-playbook playbooks/terraform.yml
 ```
 
-```bash
-sudo groupadd docker
-```
-
-```bash
-sudo usermod -aG docker $USER
-```
-
-```bash
-sudo usermod -aG docker jenkins
-```
-
-```bash
-newgrp docker
-```
-
-#### Install AWS CLI
-```bash
-sudo apt install awscli
-```
-
-Install Terraform 
-
-```bash
-sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
-```
-
-```bash
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-```
-
-```bash
-sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-```
-
-```bash
-sudo apt-get update && sudo apt-get install terraform
-```
 Restart the instance to make sure that the changes are reflected.
 
 Now we have to configure our aws creds to Jenkins for image builds and push to AWS ECR.
@@ -273,283 +175,33 @@ We shall require kubernetes config file for controlling the cluster, tekton cli 
 
 EKS cluster provisioning takes around 13min to 15min. After the provisioning of the EKS cluster along 3 node groups.Execute the following commands to add kubeconfig to application instance
 
-#### Launch the application instance
-Open code editor in infrastructure folder and execute the following commands.
+#### Setup Application instance
+SSH into ansible server and run the commands to provision the application instance
 
 ```bash
-terraform init
+terraform -chdir=infrastructure init
 ```
 
 ```bash
-terraform apply -target=module.application_instance
+terraform -chdir=infrastructure apply -target=module.application_instance --auto-approve
 ```
-
-#### Updating the kubeconfig file
-```bash
-sudo apt update
-```
-
-```bash
-sudo apt-get update
-```
-
-```bash
-sudo apt install awscli
-```
-
-```bash
-aws configure
-```
-On prompt give your aws creds with default output as json. Once the install kubectl in EC2 instance
-
-```bash
-curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
-```
-
-```bash
-chmod +x ./kubectl
-```
-
-```bash
-sudo mv ./kubectl /usr/local/bin 
-```
-
-```bash
-kubectl version --short --client
-```
-
-```bash
-aws eks update-kubeconfig --name EKS_CLUSTER_NAME
-```
-To check whether kubeconfig is updated or not, run the following commnands, and you shall see that 5 nodes are shown in console
-
-```bash
-kubectl get nodes
-```
-This means that kubeconfig of cluster is updated in EC2 instance and can be accessed from EC2 instance as a master node.
 
 #### Installing Tekton CLI
-```bash
-sudo apt update
-```
+Before setting up tekton cli, make sure that application instance is up and runnning. Once that is done, run the playbook using the following command
 
 ```bash
-sudo apt install -y gnupg
-```
-
-```bash
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3EFE0E0A2F2F60AA
-```
-
-```bash
-echo "deb http://ppa.launchpad.net/tektoncd/cli/ubuntu eoan main"|sudo tee /etc/apt/sources.list.d/tektoncd-ubuntu-cli.list
-```
-
-```bash
-sudo apt update && sudo apt install -y tektoncd-cli
-```
-
-These commands install the tekton cli, to verify the installation execute
-
-```bash
-tkn version
+sudo ansible-playbook playbooks/tektoncli.yml
 ```
 
 ### Setup application as service 
 We need to run the application in the EC2 instance continuously without us running the start or stop commands. So, how do we achieve this ?
-The approach is simple we need to run the application as service inside EC2 instance. In order to do so we need perform some operations and the commands to do so are
+The approach is simple we need to run the application as service inside EC2 instance. In order to do so we need run the application.yml playbook
 
 ```bash
-sudo apt update
+sudo ansible-playbook playbooks/application.yml
 ```
 
-```bash
-sudo apt-get update
-```
-
-```bash
-sudo apt install python3-pip -y
-```
-
-```bash
-git init 
-```
-
-```bash
-git remote add origin https://github.com/sethusaim/Wafer-Fault-Kubernetes.git
-```
-
-Replace my repo url with your repo url
-
-```bash
-git fetch origin
-```
-
-```bash
-git checkout origin/main -- application
-```
-
-```bash
-cd application
-```
-
-```bash
-pip3 install -r requirements.txt
-```
-
-On installation of flask, you will get PATH warning, to prevent that add flask to PATH
-
-```bash
-cd /home/ubuntu/.local/bin
-```
-
-```bash
-sudo mv flask /usr/bin
-```
-
-```bash
-cd /home/ubuntu
-```
-
-```bash
-sudo apt-get install nginx -y
-```
-
-```bash
-pip3 install gunicorn
-```
-or use
-
-```bash
-sudo apt install gunicorn
-```
-
-For authentication of web server
-```bash
-sudo apt-get install -y apache2-utils
-```
-
-You will be prompted to give password for USERNAME, input them and remember it for accessing the webserver
-```bash
-sudo htpasswd -c /etc/nginx/.htpasswd USERNAME
-```
-
-```bash
-cd /etc/nginx/sites-enabled
-```
-
-```bash
-sudo nano flaskapp
-```
-
-NGINX server configuration for authentication
-```bash
-server {
-    listen 8080;
-    server_name YOUR_IP_OR_DOMAIN;
-    auth_basic “Administrator-Area”;
-    auth_basic_user_file /etc/nginx/.htpasswd; 
-
-    location / {
-        proxy_pass http://localhost:8000;
-        include /etc/nginx/proxy_params;
-        proxy_redirect off;
-    }
-}
-```
-```bash
-sudo service nginx restart
-```
-On successfull setup, nginx will restart without any errors
-
-```bash
-cd /home/ubuntu/
-```
-
-Creating the application as service
-
-```bash
-cd  /etc/systemd/system
-```
-
-```bash
-sudo nano app.service
-```
-
-```bash
-[Unit]
-Description=Application Service
-After=network.target
-
-[Service]
-User=ubuntu
-Group=www-data
-WorkingDirectory=/home/ubuntu/application
-Restart=on-failure
-RestartSec=30
-
-ExecStart=/usr/bin/gunicorn3 --workers 3 --bind unix:flaskapp.sock -m 007 app:app
-
-[Install]
-WantedBy=multi-user.target
-```
-
-```bash
-sudo systemctl daemon-reload
-```
-
-```bash
-sudo systemctl enable app
-```
-
-```bash
-sudo systemctl start app
-```
-Now that the application service is created, we need to tell nginx that use that flaskapp.sock file. Before we do that lets check if flaskapp.sock file is created or not
-
-```bash
-cd /home/ubuntu/application
-```
-
-In this directory we shall see that flaskapp.sock file is created and can be used. Coming to the nginx configuration, execute these commands
-
-```bash
-cd /etc/nginx/sites-enabled/
-```
-
-```bash
-sudo nano app
-```
-
-```bash
-server {
-    listen 8080;
-    server_name YOUR_IP_OR_DOMAIN;
-    auth_basic “Administrator-Area”;
-    auth_basic_user_file /etc/nginx/.htpasswd; 
-
-    location / {
-        proxy_pass http://unix:/home/ubuntu/application/flaskapp.sock;
-        include /etc/nginx/proxy_params;
-        proxy_redirect off;
-    }
-}
-```
-Replace the server configuration or edit the file accordingly
-
-```bash
-cd /home/ubuntu
-```
-
-```bash
-sudo service nginx restart
-```
-
-```bash
-sudo service app restart
-```
-
-On successfull restart of app and nginx, we can access the application on ec2 public ip with port as 8080, and that is it. Our application is set up as service in EC2 instance
+On successfull execution of application playbook, we can access the application on ec2 public ip with port as 8080, and that is it. Our application is set up as service in EC2 instance
 
 On this is done, go to the jenkins dashsboard and click on "manage jenkins" and then click on "manage plugins" and in search bar type "ssh agent" and install the plugin. This plugin shall use private ssh key which will connect to application ec2 instance and perform CD of application code.
 
@@ -559,149 +211,22 @@ Now that the previous step we have created our flask app as a service. The quest
 One thing to note that the filename "app.py" should be same, else the application might not work, since the initial setup was done using application "app.py" as filename. If we want change that to something else, make the neccessary changes to app.service file
 
 ### MLFlow setup in EC2 instance
-For setting up mlflow in EC2 instance, open your code editor in the infrastructure folder and uncomment the mlflow_instance module, and then execute the following commands,
+For setting up mlflow in EC2 instance, SSH into ansible server and then run following commands to provision mlflow instance
 
 ```bash
-terraform init
+terraform -chdir=infrastructure init
 ```
 
 ```bash
-terraform apply
+terraform -chdir=infrastructure apply -target=module.mlflow_instance --auto-approve
 ```
-These commands will launch, t2.small instance with neccessary security groups. After some time, the mlflow instance will be up and running. Connect to the EC2 instance using key pair. On successfull login, execute the following commands,
+
+Once the mlflow instance is provisioned, run the commands to setup mlflow in EC2 instance
 
 ```bash
-sudo apt update
+sudo ansible-playbook playbooks/mlflow.yml
 ```
 
-```bash
-sudo apt-get update
-```
-
-#### Install Anaconda in EC2 instance and create a env for mlflow
-```bash
-wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
-```
-
-```bash
-bash Anaconda3-2022.05-Linux-x86_64.sh
-```
-When prompted type yes and press enter to confirm the location of anaconda3. This process might take a few minutes of time. Once done execute the following commands.
-
-```bash
-export PATH=~/anaconda3/bin:$PATH
-```
-
-```bash
-conda init bash
-```
-Now close the connection made via ssh and reconnect via ssh to see the changes in EC2 instance, we can see that deafult env is to set bsse which indicates that anaconda is successfully installed.
-
-#### Create MLFLow as service in EC2 instance
-Now that anaconda is setup in EC2 instance, we shall create a conda env named mlflow and install the required packages. In order to do that execute the following commands.
-
-```bash
-conda create -n mlflow python=3.7.6 -y
-```
-
-```bash
-conda activate mlflow
-```
-
-```bash
-pip3 install mlflow
-```
-
-```bash
-sudo apt install -y nginx 
-```
-
-```bash
-sudo apt-get install -y apache2-utils
-```
-
-```bash
-cd /etc/nginx/sites-enabled
-```
-
-This command lets you create user profile for mlflow authentication, replace USERNAME with your username,(do remember it or keep a note of it since we will be requiring it for model training service). Once the command is executed, it prompts you to give a new password, fill the details (remember the password or make note of it, we will be requiring it for model training service).  
-```bash
-sudo htpasswd -c /etc/nginx/.htpasswd USERNAME
-```
-
-Now that the username and password are created, we have to create a mlflow nginx configuration file, to tell nginx to listen to our public ip, with our username and password details, like a nginx reverse proxy for HTTP authentication for API calls made by user to MLFlow server. In order to do that, execute the following commands
-
-```bash
-sudo nano mlflow
-```
-```bash
-server {
-    listen 8080;
-    server_name YOUR_IP_OR_DOMAIN;
-    auth_basic “Administrator-Area”;
-    auth_basic_user_file /etc/nginx/.htpasswd; 
-
-    location / {
-        proxy_pass http://localhost:8000;
-        include /etc/nginx/proxy_params;
-        proxy_redirect off;
-    }
-}
-```
-We have successfully created mlflow nginx configuration file. Now we have apply those changes, in order to do so, execute the following commands
-
-```bash
-sudo service nginx restart
-```
-If above command does not return any error, it means that you have successfully configured nginx. 
-
-##### Expose mlflow server as a service in EC2 instance
-Now we have to expose mlflow server as a service in EC2 instance. In order to do so, execute the following commands
-
-```bash
-cd /home/ubuntu
-```
-
-```bash
-cd  /etc/systemd/system
-```
-
-```bash
-sudo nano mlflow-tracking.service
-```
-
-```bash
-[Unit]
-Description=MLflow tracking server
-After=network.target
-
-[Service]
-Restart=on-failure
-RestartSec=30
-
-ExecStart=/bin/bash -c 'PATH=/home/ubuntu/anaconda3/envs/CREATED_ENV/bin/:$PATH exec mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root s3://WAFER_MLFLOW_BUCKET_NAME/ --host 0.0.0.0 -p 8000'
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Now that we have added a service file for mlflow, we have to reload the daemon and start the mlflow service
-
-```bash
-cd /home/ubuntu
-```
-
-```bash
-sudo systemctl daemon-reload
-```
-
-```bash
-sudo systemctl enable mlflow-tracking 
-```
-
-```bash
-sudo systemctl start mlflow-tracking
-```
 If these commands do not return any error that means mlflow service is setup in EC2 instance, and can be accessed via public ip on ports 8000 or 8080. Go to the browser, and paste PUBLIC_IP:8080 or PUBLIC_IP:8000.
 
 If everything is done properly, we should then see the mlflow dashboard in our browser.Sometimes, you might be prompted to give your username and password for login, remember that username and password is the same which have configured for nginx. The public ip with port, mlflow username and mlflow password acts as a environment variables when using model training service. 
@@ -729,11 +254,11 @@ Since we are using microservices architecture, kubernetes plays an important rol
 To create a kubernetes cluster, we have to execute the following commands,
 
 ```bash
-terraform init
+terraform -chdir=infrastructure init
 ```
 
 ```bash
-terraform apply 
+terraform -chdir=infrastructure apply -target=module.eks_cluster --auto-approve 
 ```
 These commands will be initialize the backend required to run terraform and stores the state in s3 bucket. The terraform module includes the launch of 5 instances which are of type t2.medium, which approximately 20GB cluster node groups. 
 
@@ -743,108 +268,23 @@ Now you might be why that much big cluster ??. The answer is we need to setup te
 Since we are using tekton for pipeline orchestration, we need to setup tekton in eks cluster. tekton pipelines can be set up in eks cluster, by looking in the docuementation of Tekton. The setup can be done by executing the following commands
 
 #### Installing Tekton pipelines
+Before setting up tekton pipelines, make sure that tekton cli is runnning the application EC2 instance. Once that is done, run the following commands
 
 ```bash
-kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+sudo ansible-playbook playbooks/tekton.yml
 ```
 
-```bash
-kubectl get pods --namespace tekton-pipelines --watch
-```
-Once the pods reach running state, exit from watch mode.
-
-#### Accessing Tekton Dashboard
-
-```bash
-kubectl apply --filename https://github.com/tektoncd/dashboard/releases/latest/download/tekton-dashboard-release.yaml
-```
-
-```bash
-kubectl get pods --namespace tekton-pipelines --watch
-```
-
-Once the pods reached running state exit from watch mode. By default tekton-dashboard service will be of type ClusterIP, but in order to access it via browser, we need to setup LoadBalancer service, which can be achieved by executing the following commands.
-
-```bash
-kubectl patch svc tekton-dashboard -n tekton-pipelines -p '{"spec":{"type":"LoadBalancer"}}'
-```
-
-After a few minutes, load balancer will be provisioned, and tekton dashboard can be accessed through the loadbalancer ip on port 9097. To get the load balancer ip address 
-
-```bash
-kubectl -n tekton-pipelines get svc tekton-dashboard
-```
-
-Copy the external loadbalancer ip address and paste it in the browser on successfully installation, you will be able to see the tekton dashboard in the browser. 
+On successful execution of the playbook, we can see that tekton dashboard url is avaiable with port, grab it and paste it in browser and tekton dashboard is avaiable.
 
 ### ArgoCD setup
 Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes.Application definitions, configurations, and environments should be declarative and version controlled. Application deployment and lifecycle management should be automated, auditable, and easy to understand.
 
-To setup ArgoCD in EKS cluster, execute the following steps, 
+To setup argocd in EKS cluster, make sure that EKS cluster is provisioned. Once that is done, run the following commands to setup ArgoCD using the playbook
 
 ```bash
-kubectl create namespace argocd
+sudo ansible-playbook playbooks/argocd.yml
 ```
-
-```bash
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-```
-
-```bash
-kubectl -n argocd get pods --watch
-```
-Once all the pods are in running state, exit from watch mode.
-
-```bash
-kubectl -n argocd get svc
-```
-By default, the argocd-server service is of type ClusterIP, we need to patch a load balancer to access it externally.
-
-```bash
-kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
-```
-After few minutes load balancer get provisioned, access the load balancer ip by executing 
-
-```bash
-kubectl -n argocd get svc argocd-server
-```
-On successfull installation, we shall be able to see the login page of ArgoCD server, the initial username is admin and password can get retrived through executing this command
-
-```bash
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
-```
-
-#### Install the ArgoCD CLI
-
-```bash
-wget https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-```
-
-```bash
-chmod +x argocd-linux-amd64
-```
-
-```bash
-sudo mv argocd-linux-amd64 /usr/local/bin/argocd
-```
-
-On successfull login we shall be able to access the ArgoCD dashboard. Now come to terminal and execute the following command
-
-```bash
-argocd login <ARGOCD_SERVER>
-```
-type "y" for insecure login, it is insecure because it runs on https. give username as admin and password retrived from running command
-
-```bash
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
-```
-
-Now we shall change the initial password to our own password, execute these commands
-
-```bash
-argocd account update-password
-```
-Give the initial password and new password, the username will be "admin". Now if we go the dashboard, we see that we have been logged out. Login again with the username as "admin" and password as the updated password. On successfull login, you shall be see that ArgoCD dashboard again.
+On successfull execution of argocd playbook, we shall see the playbook will output argocd url, grab it and paste in the browser with https, and login with username and password as mentioned in /vars/variables.yml  
 
 Now that ArgoCD is setup in EKS cluster, we have to tell ArgoCD will repository to monitor, and which resources to deploy. In order to do that go to dashboard, click on create application.
 
@@ -860,7 +300,7 @@ Before we destroy everthing, we have to EC2 dashboard and in there go to load ba
 Also, empty the data present s3 buckets, if you want them make a backup of it and then empty them. Once these things are done execute
 
 ```bash
-terraform destroy --auto-approve
+terraform -chdir=infrastructure destroy --auto-approve
 ```
 
 Sometimes even after deleting the load balancers, terraform takes time to delete the VPC resources, if that is the case stop the destroy and manually delete the VPC from VPC dashboard, and then destroy the resources using terraform
