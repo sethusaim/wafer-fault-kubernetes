@@ -35,12 +35,12 @@ variable "mlflow_sg_group_name" {
 
 variable "mlflow_ingress_from_port" {
   type    = list(number)
-  default = [22, 8080, 8000, 5000]
+  default = [22, 8080, 8000, 5000, 9090, 9100]
 }
 
 variable "mlflow_ingress_to_port" {
   type    = list(number)
-  default = [22, 8080, 8000, 5000]
+  default = [22, 8080, 8000, 5000, 9090, 9100]
 }
 
 variable "mlflow_cidr_block" {

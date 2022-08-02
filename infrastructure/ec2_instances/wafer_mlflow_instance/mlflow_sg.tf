@@ -30,6 +30,20 @@ resource "aws_security_group" "mlflow_security_group" {
     cidr_blocks = var.mlflow_cidr_block
   }
 
+  ingress {
+    from_port   = var.mlflow_ingress_from_port[4]
+    to_port     = var.mlflow_ingress_to_port[4]
+    protocol    = var.mlflow_protocol
+    cidr_blocks = var.mlflow_cidr_block
+  }
+
+  ingress {
+    from_port   = var.mlflow_ingress_from_port[5]
+    to_port     = var.mlflow_ingress_to_port[5]
+    protocol    = var.mlflow_protocol
+    cidr_blocks = var.mlflow_cidr_block
+  }
+
   egress {
     from_port   = var.mlflow_egress_from_port
     to_port     = var.mlflow_egress_to_port
