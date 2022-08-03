@@ -2,13 +2,13 @@
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 
 [Application_Group]  
-TARGET_PRIVATE_IP ansible_ssh_user=ubuntu ansible_ssh_private_key_file=YOUR_PEM_FILE_NAME.pem ansible_python_interpreter=/usr/bin/python3
+Application_private_ip ansible_ssh_user=ubuntu ansible_ssh_private_key_file=YOUR_PEM_FILE_NAME.pem ansible_python_interpreter=/usr/bin/python3
 
 [MLFlow_Group]
-TARGET_PRIVATE_IP ansible_ssh_user=ubuntu ansible_ssh_private_key_file=YOUR_PEM_FILE_NAME.pem ansible_python_interpreter=/usr/bin/python3
+MLFlow_private_ip ansible_ssh_user=ubuntu ansible_ssh_private_key_file=YOUR_PEM_FILE_NAME.pem ansible_python_interpreter=/usr/bin/python3
 
 [Jenkins_Group]
-TARGET_PRIVATE_IP ansible_ssh_user=ubuntu ansible_ssh_private_key_file=YOUR_PEM_FILE_NAME.pem ansible_python_interpreter=/usr/bin/python3
+Jenkins_private_ip ansible_ssh_user=ubuntu ansible_ssh_private_key_file=YOUR_PEM_FILE_NAME.pem ansible_python_interpreter=/usr/bin/python3
 
 [Prometheus_Group]
-TARGET_PRIVATE_IP ansible_ssh_user=ubuntu ansible_ssh_private_key_file=YOUR_PEM_FILE_NAME.pem ansible_python_interpreter=/usr/bin/python3
+Prometheus_private_ip ansible_ssh_user=ubuntu ansible_ssh_private_key_file=YOUR_PEM_FILE_NAME.pem ansible_python_interpreter=/usr/bin/python3
