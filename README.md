@@ -278,7 +278,7 @@ export MONGODB_ATLAS_PRIVATE_KEY="your_private_key"
 To provision the mongodb altas database
 
 ```bash
-terraform apply -target=module.mongodb_database
+terraform -chdir=infrastructure apply -target=module.mongodb_database --auto-approve
 ```
 After the provisioning of database is done,store the database connection string in jenkins. 
 
