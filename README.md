@@ -310,6 +310,34 @@ sudo ansible-playbook playbooks/tekton.yml
 
 On successful execution of the playbook, we can see that tekton dashboard url is avaiable with port, grab it and paste it in browser and tekton dashboard is avaiable.
 
+### Prometheus and Grafana setup 
+
+#### In AWS EKS cluster
+Before setting up prometheus and grafana in EKS cluster,make sure that we have EKS cluster up and running. Once that is done, run the following commands 
+
+```bash
+sudo ansible-playbook playbooks/monitoring.yml
+```
+
+On successfull execution of the playbook, we will see that prometheus and grafana urls, are avaiable with ports, grab them and paste in the browser, prometheus dashboard will be seen without any login, but in case of grafana dashboard you shall prompted for password, the username is admin and password is prom-operator, we can change this setting, on successful login.
+
+#### Prometheus setup in EC2 instances for EC2 metrics
+Before we proceed to setting up prometheus in EC2 instance, we need to make sure that the ansible roles for prometheus and node exporter and installed within the ansible server, in order to do so run the following commands,
+
+```bash
+ansible-galaxy install --roles-path /home/ubuntu/playbooks/roles cloudalchemy.prometheus
+```
+
+```bash
+ansible-galaxy install --roles-path /home/ubuntu/playbooks/roles cloudalchemy.node_exporter
+```
+Once these roles are installed in the playbooks folder, we have to execute following commands to setup prometheus in EC2 instance
+
+```bash
+sudo ansible-playbook playbooks/prometheus-ec2.yml
+```
+Make sure that update the IP addresses of the respective ec2 instances to be monitored.
+
 ### ArgoCD setup
 Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes.Application definitions, configurations, and environments should be declarative and version controlled. Application deployment and lifecycle management should be automated, auditable, and easy to understand.
 
