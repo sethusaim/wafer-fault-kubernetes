@@ -43,44 +43,5 @@
       register: jenkins_initial_password
       run_once: true
 
-    - name: Check whether node_exporter user exists or not
-      shell: id node_exporter > /dev/null 2>&1 || echo not-exists
-      register: user_exists
-
-    - name: Add node_export user with no home directory
-      block:
-        - name: Add node_exporter user with no home directory
-          shell: sudo useradd --no-create-home node_exporter
-      when: user_exists.stdout == "not-exists"
-
-    - name: Get the node export tar file
-      get_url:
-        url: https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz
-        dest: /home/ubuntu
-
-    - name: Untar the node exporter tar file
-      shell: tar xzf node_exporter-1.3.1.linux-amd64.tar.gz
-
-    - name: Copy the node exporter files to /usr/local/bin/node_exporter
-      shell: sudo cp node_exporter-1.3.1.linux-amd64/node_exporter /usr/local/bin/node_exporter
-
-    - name: Remove the node exporter files
-      shell: rm -rf node_exporter-1.3.1.linux-amd64.tar.gz node_exporter-1.3.1.linux-amd64
-
-    - name: Copy the node exporter service file
-      ansible.builtin.copy:
-        src: /home/ubuntu/node-exporter.service
-        dest: /etc/systemd/system/
-
-    - name: Reload the daemon
-      systemd:
-        daemon_reload: yes
-
-    - name: Start and Enable the node exporter service
-      systemd:
-        name: node-exporter
-        state: started
-        enabled: yes
-
     - debug:
         msg: "Jenkins initial password : {{jenkins_initial_password.stdout}}"
