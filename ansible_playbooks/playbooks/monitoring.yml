@@ -88,7 +88,7 @@
 
     - name: Get load balancer url for prometheus dashboard
       become: false
-      shell: kubectl get svc stable-grafana -n monitor -o json | jq .status.loadBalancer.ingress[0].hostname
+      shell: kubectl get svc stable-kube-prometheus-sta-prometheus -n monitor -o json | jq .status.loadBalancer.ingress[0].hostname
       register: prometheus_url
 
     - debug:
