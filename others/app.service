@@ -1,0 +1,15 @@
+[Unit]
+Description=Application Service
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/application
+Restart=on-failure
+RestartSec=30
+
+ExecStart=/usr/bin/gunicorn3 --workers 3 --bind unix:flaskapp.sock -m 007 app:app
+
+[Install]
+WantedBy=multi-user.target
