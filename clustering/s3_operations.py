@@ -1,4 +1,3 @@
-import csv
 from datetime import datetime
 from io import StringIO
 from os import listdir, remove
