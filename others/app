@@ -1,0 +1,12 @@
+server {
+    listen 8080;
+    server_name YOUR_APP_IP_OR_DOMAIN;
+    auth_basic “Administrator-Area”;
+    auth_basic_user_file /etc/nginx/.htpasswd; 
+
+    location / {
+        proxy_pass http://unix:/home/ubuntu/application/flaskapp.sock;
+        include /etc/nginx/proxy_params;
+        proxy_redirect off;
+    }
+}
