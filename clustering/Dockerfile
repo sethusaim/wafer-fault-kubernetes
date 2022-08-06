@@ -1,4 +1,4 @@
-FROM python:3.7-slim-bullseye
+FROM python:3.7-slim-buster
 
 WORKDIR /app
 
@@ -16,6 +16,6 @@ ENV AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY
 
 ENV AWS_DEFAULT_REGION $AWS_DEFAULT_REGION
 
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 CMD ["python3", "run.py"]
