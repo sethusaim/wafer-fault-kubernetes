@@ -1,4 +1,4 @@
-FROM python:3.7-slim-bullseye
+FROM python:3.7-slim-buster
 
 COPY . /app
 
@@ -28,6 +28,6 @@ ENV MLFLOW_TRACKING_USERNAME $MLFLOW_TRACKING_USERNAME
 
 ENV MLFLOW_TRACKING_PASSWORD $MLFLOW_TRACKING_PASSWORD
 
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 CMD ["python3","run.py"]
