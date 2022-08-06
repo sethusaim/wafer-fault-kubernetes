@@ -1,4 +1,4 @@
-FROM python:3.7-slim-bullseye
+FROM python:3.7-slim-buster
 
 WORKDIR /app
 
@@ -20,6 +20,6 @@ ENV AWS_DEFAULT_REGION $AWS_DEFAULT_REGION
 
 ENV MONGODB_URL $MONGODB_URL
 
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 CMD ["python3","run.py"]
