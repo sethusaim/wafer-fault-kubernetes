@@ -7,7 +7,7 @@ terraform {
 }
 
 module "mongodb_database" {
-  source = "./wafer_database"
+  source = "./database"
 }
 
 module "jenkins_instance" {
@@ -27,7 +27,7 @@ module "application_instance" {
 }
 
 module "eks_cluster" {
-  source = "./wafer_eks_cluster"
+  source = "./eks_cluster"
 }
 
 module "feature_store_bucket" {
