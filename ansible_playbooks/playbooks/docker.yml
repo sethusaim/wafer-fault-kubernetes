@@ -1,4 +1,4 @@
-- name: Setup Docker 
+- name: Setup Docker
   hosts: Jenkins_Group
   become: true
   tasks:
@@ -10,7 +10,7 @@
       apt:
         update_cache: true
         force_apt_get: yes
-        
+
     - name: Get convenience script
       shell: curl -fsSL https://get.docker.com -o get-docker.sh
 
@@ -18,7 +18,7 @@
       shell: sudo sh get-docker.sh
 
     - name: Remove convenience script
-      file: 
+      file:
         state: absent
         path: /home/ubuntu/get-docker.sh
 

@@ -45,7 +45,7 @@
       become: false
       shell: kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
       register: argocd_init_password
-      
+
     - name: Get the argocd cli binary file
       get_url:
         url: https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
@@ -55,7 +55,7 @@
       file:
         path: /usr/local/bin/argocd
         mode: +x
-        
+
     - name: Login to argocd server with initial password
       shell: argocd login {{ argocd_loadbalancer_url.stdout }} --username {{ k8s.argocd.username }} --password {{ argocd_init_password.stdout }} --insecure
       register: login_status
@@ -65,6 +65,6 @@
 
     - name: Update argocd server password
       shell: argocd account update-password --current-password {{ argocd_init_password.stdout }} --new-password '{{ k8s.argocd.password }}' --insecure
-    
+
     - debug:
         msg: "Open with port 9096,ArgoCD url is {{ argocd_loadbalancer_url.stdout }}"

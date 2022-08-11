@@ -15,7 +15,7 @@
 
     - name: Get the helm installer bash script
       shell: curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-  
+
     - name: Change permissions for helm installer bash script
       shell: chmod 700 get_helm.sh
 
@@ -23,30 +23,30 @@
       shell: bash /home/ubuntu/get_helm.sh
 
     - name: Remove the helm installer bash script
-      file: 
-        state: absent 
+      file:
+        state: absent
         path: /home/ubuntu/get_helm.sh
 
     - name: Add helm stable repo
       become: false
       shell: helm repo add stable https://charts.helm.sh/stable
-      
+
     - name: Add prometheus helm repo
       become: false
       shell: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-      
+
     - name: Update the helm repo
       become: false
       shell: helm repo update
 
     - name: Install pip3,unzip,jq
       apt:
-        name: 
+        name:
           - python3-pip
           - unzip
           - jq
         state: present
-      
+
     - name: Get awscli zip file
       get_url:
         url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
@@ -65,13 +65,13 @@
     - name: Create a namespace for prometheus
       become: false
       shell: kubectl create namespace monitor
-    
+
     - name: Install the prometheus helm chart
       become: false
       shell: helm install stable prometheus-community/kube-prometheus-stack -n monitor
-      
+
     - name: Patch load balancer to prometheus server
-      become: false 
+      become: false
       shell: kubectl patch svc stable-kube-prometheus-sta-prometheus -n monitor -p '{"spec":{"type":"LoadBalancer"}}'
 
     - name: Patch load balancer to grafana server
@@ -80,7 +80,7 @@
 
     - name: Wait till load balancer ip address is available
       shell: sleep 5
-    
+
     - name: Get load balancer url for grafana dashboard
       become: false
       shell: kubectl get svc stable-grafana -n monitor -o json | jq .status.loadBalancer.ingress[0].hostname
@@ -93,6 +93,6 @@
 
     - debug:
         msg: "Open this url with port 9090,Prometheus url : {{prometheus_url.stdout}}"
-    
+
     - debug:
         msg: "Grafana url : {{grafana_url.stdout}}"

@@ -5,12 +5,12 @@
     - name: Update using apt
       apt:
         update_cache: yes
-      
+
     - name: Update using apt-get
       apt:
         update_cache: yes
         force_apt_get: yes
-        
+
     - name: Install boto3
       ansible.builtin.pip:
         name: boto3
@@ -43,8 +43,8 @@
             dest: /home/ubuntu/.aws/config
       when: aws_creds_folder.stat.exists == False
 
-    - name: Update using apt  
-      apt: 
+    - name: Update using apt
+      apt:
         update_cache: true
 
     - name: Update using apt-get
@@ -54,7 +54,7 @@
 
     - name: Install awscli,gnupg
       apt:
-        name: 
+        name:
           - awscli
           - gnupg
         state: present

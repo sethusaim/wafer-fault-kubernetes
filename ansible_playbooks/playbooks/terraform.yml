@@ -5,7 +5,7 @@
     - name: Update using apt
       apt:
         update_cache: yes
-        
+
     - name: Update using apt-get
       apt:
         update_cache: true

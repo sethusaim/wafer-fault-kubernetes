@@ -7,7 +7,7 @@
     prometheus_targets:
       node:
         - targets:
-          - MACHINE-1-IP:9100
+            - MACHINE-1-IP:9100
   tasks:
     - name: Update using apt
       apt:
