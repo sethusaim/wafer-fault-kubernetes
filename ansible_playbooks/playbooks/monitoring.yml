@@ -64,7 +64,7 @@
 
     - name: Create a namespace for prometheus
       become: false
-      shell: kubectl create namespace monitor
+      shell: kubectl apply -f https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/manifests/monitor-namespace.yaml
 
     - name: Install the prometheus helm chart
       become: false
