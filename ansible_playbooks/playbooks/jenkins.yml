@@ -41,7 +41,6 @@
     - name: Get Jenkins initial password
       shell: sudo cat /var/lib/jenkins/secrets/initialAdminPassword
       register: jenkins_initial_password
-      run_once: true
 
     - debug:
         msg: "Jenkins initial password : {{jenkins_initial_password.stdout}}"
