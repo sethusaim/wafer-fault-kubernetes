@@ -15,7 +15,7 @@
 
     - name: Create argocd namespace
       become: false
-      shell: kubectl create namespace argocd
+      shell: kubectl apply -f https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/manifests/argocd-namespace.yaml
 
     - name: Install ArgoCD manifest files
       become: false
