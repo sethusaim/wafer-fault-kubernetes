@@ -7,7 +7,11 @@ terraform {
 }
 
 module "mongodb_database" {
-  source = "./database"
+  source = "./databases/mongodb"
+}
+
+module "mlflow_rds_instance" {
+  source = "./databases/postgresql"
 }
 
 module "jenkins_instance" {
