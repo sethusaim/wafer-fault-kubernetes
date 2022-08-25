@@ -11,13 +11,13 @@
         update_cache: yes
         force_apt_get: yes
 
-    - name: Install tekton pipelines
+    - name: Install tekton operator
       become: false
-      shell: kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+      shell: kubectl apply -f https://storage.googleapis.com/tekton-releases/operator/latest/release.yaml
 
-    - name: Install tekton dashboard
+    - name: Install tekton components
       become: false
-      shell: kubectl apply --filename https://github.com/tektoncd/dashboard/releases/latest/download/tekton-dashboard-release.yaml
+      shell: kubectl apply -f https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/manifests/tekton_config.yaml
 
     - name: Patch load balancer to tekton dashboard
       become: false
