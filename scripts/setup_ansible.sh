@@ -34,9 +34,9 @@ pip3 install boto3
 
 ansible --version
 
-sudo apt install awscli
+sudo apt install awscli -y
 
-pip3 install awscli
+pip3 install --upgrade awscli
 
 sudo rm install_ansible.sh 
 
