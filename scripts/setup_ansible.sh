@@ -38,8 +38,6 @@ sudo apt install awscli -y
 
 pip3 install --upgrade awscli
 
-sudo rm install_ansible.sh 
-
 echo "Installed Ansible"
 
 echo "Setting up git repo"
@@ -47,6 +45,8 @@ echo "Setting up git repo"
 git init 
 
 git remote add origin https://github.com/sethusaim/Wafer-Fault-Kubernetes.git
+
+git fetch origin main
 
 git checkout origin/main -- infrastructure
 
