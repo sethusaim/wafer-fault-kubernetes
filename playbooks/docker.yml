@@ -17,6 +17,9 @@
     - name: Execute convenience script
       shell: sudo sh get-docker.sh
 
+    - name: Add docker group 
+      shell: sudo groupadd docker
+
     - name: Remove convenience script
       file:
         state: absent
@@ -24,3 +27,6 @@
 
     - name: Set permission for ubuntu user
       shell: sudo usermod -aG docker ubuntu
+    
+    - name: Execute newgrp docker
+      shell: newgrp docker
