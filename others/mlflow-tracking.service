@@ -6,7 +6,7 @@ After=network.target
 Restart=on-failure
 RestartSec=30
 
-ExecStart=/bin/bash -c 'PATH=/home/ubuntu/anaconda3/envs/CREATED_ENV/bin/:$PATH exec mlflow server --backend-store-uri postgresql://{username}:{password}@{database_endpoint}/mlflow.db --default-artifact-root s3://WAFER_MLFLOW_BUCKET_NAME/ --host 0.0.0.0 -p 8000'
+ExecStart=/bin/bash -c 'PATH=/home/ubuntu/anaconda3/envs/mlflow/bin/:$PATH exec mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root s3://air-pressure-mlflow/ --host 0.0.0.0 -p 8000'
 
 [Install]
 WantedBy=multi-user.target
