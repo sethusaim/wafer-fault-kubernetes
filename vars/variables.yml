@@ -8,7 +8,7 @@ application:
   password: sethusai
 
 k8s:
-  cluster_name: wafer
+  cluster_name: terraform-eks-wafer
   argocd:
     admin: admin
     password: sethusai
