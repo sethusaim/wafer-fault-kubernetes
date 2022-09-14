@@ -155,6 +155,7 @@
     #   shell: export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 
     - name: Export protocol buffers
+      shell: echo "setting env variables"
       environment:
         PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION: python
 
