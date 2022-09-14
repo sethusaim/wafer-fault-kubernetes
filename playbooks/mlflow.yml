@@ -106,13 +106,19 @@
           - nginx
         state: present
 
-    - name: Install mlflow,passlib via pip3
+    - name: Install mlflow,passlib,click via pip3
       ansible.builtin.pip:
         name:
           - mlflow==1.24.0
           - passlib
           - click
         state: present
+
+    - name: Export protocol buffers 
+      shell: export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+
+    # - name: Install mlflow,passlib via pip3
+    #   shell: pip3 install mlflow,passlib,click
         
     - name: Upgrade click
       ansible.builtin.pip:
