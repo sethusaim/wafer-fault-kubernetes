@@ -502,6 +502,19 @@ pipeline {
       when {
         changeset 'infrastructure/Dockerfile'
       }
+
+      environment {
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
+
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+
+        AWS_DEFAULT_REGION = "us-east-1"
+
+        REPO_NAME = "wafer_mlflow"
+      }
+
       steps {
         script {
           sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com'
