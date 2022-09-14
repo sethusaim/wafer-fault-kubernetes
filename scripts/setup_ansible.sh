@@ -55,3 +55,15 @@ git checkout origin/main -- playbooks
 git checkout origin/main -- vars
 
 echo "Git repo setup is done"
+
+echo "Installing Prometheus node exporter role"
+
+ansible-galaxy install --roles-path /home/ubuntu/playbooks/roles cloudalchemy.prometheus
+
+echo "Installed prometheus role"
+
+echo "Installing node exporter role"
+
+ansible-galaxy install --roles-path /home/ubuntu/playbooks/roles cloudalchemy.node_exporter
+
+echo "Installed node exporter role"
