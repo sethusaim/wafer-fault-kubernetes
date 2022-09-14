@@ -6,6 +6,10 @@ terraform {
   }
 }
 
+module "mlflow_app_runner" {
+  source = "./app_runner"
+}
+
 module "mongodb_database" {
   source = "./databases/mongodb"
 }
