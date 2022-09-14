@@ -1,6 +1,8 @@
 - name: Setup Tekton cli for AWS EKS cluster
   hosts: Application_Group
   become: true
+  vars_files:
+    - /home/ubuntu/vars/variables.yml
   tasks:
     - name: Update using apt
       apt:
