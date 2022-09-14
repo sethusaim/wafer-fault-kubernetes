@@ -10,5 +10,5 @@ application:
 k8s:
   cluster_name: terraform-eks-wafer
   argocd:
-    admin: admin
+    username: admin
     password: sethusai
