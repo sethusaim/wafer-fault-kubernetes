@@ -2,7 +2,7 @@
   hosts: Prometheus_Group
   become: true
   roles:
-  - cloudalchemy.prometheus
+    - cloudalchemy.prometheus
   vars:
     prometheus_targets:
       node:
