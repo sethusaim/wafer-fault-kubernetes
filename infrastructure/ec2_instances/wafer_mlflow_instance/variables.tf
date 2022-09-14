@@ -15,7 +15,7 @@ variable "mlflow_instance_type" {
 
 variable "mlflow_key_pair_name" {
   type    = string
-  default = "sethu"
+  default = "sethusaim"
 }
 
 variable "mlflow_tag_name" {

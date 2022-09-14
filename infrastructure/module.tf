@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "wafer-tf-state-sethu"
+    bucket = "wafer-tf-state-sethusaim"
     key    = "tf_state"
     region = "us-east-1"
   }

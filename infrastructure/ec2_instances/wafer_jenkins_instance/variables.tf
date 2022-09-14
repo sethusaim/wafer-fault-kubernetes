@@ -15,7 +15,7 @@ variable "jenkins_instance_type" {
 
 variable "jenkins_key_pair_name" {
   type    = string
-  default = "sethu"
+  default = "sethusaim"
 }
 
 variable "tag_name" {

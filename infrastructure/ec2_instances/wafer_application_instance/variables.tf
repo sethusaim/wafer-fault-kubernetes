@@ -15,7 +15,7 @@ variable "application_instance_type" {
 
 variable "application_key_pair_name" {
   type    = string
-  default = "sethu"
+  default = "sethusaim"
 }
 
 variable "application_tag_name" {
