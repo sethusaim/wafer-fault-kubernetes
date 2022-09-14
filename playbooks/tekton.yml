@@ -19,6 +19,9 @@
       become: false
       shell: kubectl apply -f https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/manifests/tekton_config.yaml
 
+    - name: Sleep 10 seconds
+      shell: sleep 10
+
     - name: Patch load balancer to tekton dashboard
       become: false
       shell: kubectl patch svc tekton-dashboard -n tekton-pipelines -p '{"spec":{"type":"LoadBalancer"}}'
