@@ -113,7 +113,7 @@
           - passlib
           - click
         state: present
-                
+
     - name: Upgrade click
       ansible.builtin.pip:
         name: click
@@ -151,8 +151,12 @@
       systemd:
         daemon_reload: yes
 
-    - name: Export protocol buffers 
-      shell: export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+    # - name: Export protocol buffers 
+    #   shell: export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+
+    - name: Export protocol buffers
+      environment:
+        PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION: python
 
     - name: Enable mlflow tracking service
       systemd:
