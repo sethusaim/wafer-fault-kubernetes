@@ -50,6 +50,8 @@ git fetch origin main
 
 git checkout origin/main -- infrastructure
 
-git checkout origin/main -- ansible-playbooks
+git checkout origin/main -- playbooks
+
+git checkout origin/main -- vars
 
 echo "Git repo setup is done"
