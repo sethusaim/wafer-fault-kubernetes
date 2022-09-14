@@ -1,14 +1,14 @@
 mlflow:
-  env_name: YOUR_ENV_NAME
-  username: YOUR_USERNAME
-  password: YOUR_PASSWORD
+  env_name: mlflow
+  username: sethusai
+  password: sethusai
 
 application:
-  username: YOUR_APP_USERNAME
-  password: YOUR_APP_PASSWORD
+  username: sethusai
+  password: sethusai
 
 k8s:
-  cluster_name: YOUR_CLUSTER_NAME
+  cluster_name: wafer
   argocd:
     admin: admin
-    password: YOUR_ARGOCD_PASSWORD
+    password: sethusai
