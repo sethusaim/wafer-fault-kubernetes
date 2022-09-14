@@ -109,9 +109,16 @@
     - name: Install mlflow,passlib via pip3
       ansible.builtin.pip:
         name:
-          - mlflow
+          - mlflow==1.24.0
           - passlib
+          - click
         state: present
+        
+    - name: Upgrade click
+      ansible.builtin.pip:
+        name: click
+        state: present
+        extra_args: --upgrade
 
     - name: Install Apache Utils
       apt:
