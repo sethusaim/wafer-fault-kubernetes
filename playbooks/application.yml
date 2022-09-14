@@ -122,11 +122,3 @@
       service:
         name: app
         state: restarted
-
-    - name: Get kubectl delete cron job script
-      get_url:
-        url: https://raw.githubusercontent.com/sethusaim/Wafer-Fault-Kubernetes/main/scripts/kubectl_delete_cron_job.sh
-        dest: /home/ubuntu
-
-    - name: Setup kubectl delete cron job
-      shell: bash /home/ubuntu/kubectl_delete_cron_job.sh
