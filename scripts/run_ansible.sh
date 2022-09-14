@@ -8,8 +8,8 @@ git remote add origin https://github.com/sethusaim/Wafer-Fault-Kubernetes.git
 
 git fetch origin
 
-git checkout origin/main -- ansible_playbooks
+git checkout origin/main -- playbooks
 
-cd ansible_playbooks
+git checkout origin/main -- vars
 
 sudo ansible-playbook playbooks/main.yml
