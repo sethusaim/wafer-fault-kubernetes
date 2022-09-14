@@ -178,6 +178,11 @@ Before we install docker in jenkins instance, we need to have jenkins instance u
 sudo ansible-playbook playbooks/docker.yml
 ```
 
+### Refer this video for GitHub Actions Webhook
+```bash
+https://www.youtube.com/watch?v=08Wwof68cxU&list=PLHRp8DjJMjTx2gJOaHHzZjvuCoYShlo0_&index=88&t=760s
+```
+
 #### Install Terraform in Jenkins Instance
 Before we install docker in jenkins instance, we need to have jenkins instance up and running. Once the jenkins instance is up and running, run the following commands, for terraform installation
 
