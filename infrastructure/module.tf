@@ -10,10 +10,6 @@ module "mongodb_database" {
   source = "./databases/mongodb"
 }
 
-module "mlflow_rds_instance" {
-  source = "./databases/postgresql"
-}
-
 module "jenkins_instance" {
   source = "./ec2_instances/wafer_jenkins_instance"
 }
