@@ -95,4 +95,4 @@
         msg: "Open this url with port 9090,Prometheus url : {{prometheus_url.stdout}}"
 
     - debug:
-        msg: "Grafana url : {{grafana_url.stdout}}"
+        msg: "Grafana url : {{grafana_url.stdout}},use username as admin and password as prom-operator"
