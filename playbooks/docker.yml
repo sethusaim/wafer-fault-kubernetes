@@ -17,9 +17,6 @@
     - name: Execute convenience script
       shell: sudo sh get-docker.sh
 
-    # - name: Add docker group 
-    #   shell: sudo groupadd docker
-
     - name: Remove convenience script
       file:
         state: absent
