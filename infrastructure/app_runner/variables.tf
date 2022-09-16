@@ -30,10 +30,10 @@ variable "app_runner_service_role_name" {
 
 variable "app_runner_service_cpu" {
   default = 1024
-  type = number
+  type    = number
 }
 
 variable "app_runner_service_memory" {
   default = 2048
-  type = number
+  type    = number
 }

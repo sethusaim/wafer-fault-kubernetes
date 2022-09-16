@@ -16,10 +16,10 @@ resource "aws_instance" "ansible_instance" {
     ]
 
     connection {
-      type = "ssh"
-      user = "ubuntu"
+      type        = "ssh"
+      user        = "ubuntu"
       private_key = file("C:/Users/sethu/Downloads/sethusaim.pem")
-      host = self.public_ip
+      host        = self.public_ip
     }
   }
 

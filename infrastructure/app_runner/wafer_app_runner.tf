@@ -14,7 +14,7 @@ resource "aws_apprunner_service" "search_data_collection_apprunner_service" {
     auto_deployments_enabled = var.app_runner_service_auto_deployments_enabled
   }
   instance_configuration {
-    cpu = var.app_runner_service_cpu
+    cpu    = var.app_runner_service_cpu
     memory = var.app_runner_service_memory
   }
 }
