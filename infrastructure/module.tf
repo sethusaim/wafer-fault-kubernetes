@@ -62,6 +62,10 @@ module "train_data_bucket" {
   source = "./s3_buckets/wafer_train_data_bucket"
 }
 
+module "mlflow_ecr" {
+  source = "./ecr_repos/wafer_mlflow_ecr"
+}
+
 module "clustering_ecr_repo" {
   source = "./ecr_repos/wafer_clustering_ecr"
 }
