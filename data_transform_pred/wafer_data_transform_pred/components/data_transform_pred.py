@@ -1,9 +1,8 @@
 import logging
 import sys
 
-from wafer_data_transform_pred.components.data_transformation_pred import (
-    DataTransformPred,
-)
+from wafer_data_transform_pred.components.data_transform_pred import \
+    DataTransformPred
 from wafer_data_transform_pred.components.s3_operations import S3Operation
 from wafer_data_transform_pred.exception import WaferException
 from wafer_data_transform_pred.utils.read_params import read_params
