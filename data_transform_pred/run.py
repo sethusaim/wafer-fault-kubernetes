@@ -1,8 +1,7 @@
 import logging
 import sys
 
-from wafer_data_transform_pred.components.data_transform_pred import \
-    DataTransformPred
+from wafer_data_transform_pred.components.data_transform_pred import DataTransformPred
 from wafer_data_transform_pred.exception import WaferException
 from wafer_data_transform_pred.utils.main_utils import MainUtils
 

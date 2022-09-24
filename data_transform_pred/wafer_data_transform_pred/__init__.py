@@ -1,7 +1,11 @@
 import logging
 import os
 
-logs_path = os.path.join("car_price", "logs")
+from from_root import from_root
+
+logs_path = os.path.join(
+    from_root(), "data_transform_pred", "wafer_data_transform_pred", "logs"
+)
 
 os.makedirs(logs_path, exist_ok=True)
 
