@@ -1,9 +1,12 @@
-from s3_operations import S3_Operation
-from utils.logger import App_Logger
-from utils.read_params import get_log_dic, read_params
+import logging
+import sys
+
+from exception import WaferException
+from s3_operations import S3Operation
+from utils.read_params import read_params
 
 
-class Data_Transform_Train:
+class DataTransformTrain:
     """
     Description :   This class shall be used for transforming the good raw training data before loading it in database
     Version     :   1.2
@@ -14,9 +17,9 @@ class Data_Transform_Train:
     def __init__(self):
         self.config = read_params()
 
-        self.s3 = S3_Operation()
+        self.s3 = S3Operation()
 
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
         self.col = self.config["col"]
 
@@ -31,19 +34,12 @@ class Data_Transform_Train:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.replace_missing_with_null.__name__,
-            __file__,
-            "data_transform",
+        self.log_writer.info(
+            "Entered replace_missing_with_null method of DataTransformTrain class"
         )
 
-        self.log_writer.start_log("start", **log_dic)
-
         try:
-            lst = self.s3.read_csv_from_folder(
-                "train_good_data", "train_data", log_dic["log_file"]
-            )
+            lst = self.s3.read_csv_from_folder("train_good_data", "train_data")
 
             for _, f in enumerate(lst):
                 df = f[0]
@@ -56,18 +52,22 @@ class Data_Transform_Train:
 
                 df["Wafer"] = df["Wafer"].str[6:]
 
-                self.log_writer.log(
-                    f"Replaced missing values with null for the file {file}", **log_dic,
+                self.log_writer.info(
+                    f"Replaced missing values with null for the file {file}"
                 )
 
-                self.s3.upload_df_as_csv(
-                    df, abs_f, file, "train_data", log_dic["log_file"]
-                )
+                self.s3.upload_df_as_csv(df, abs_f, file, "train_data")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited replace_missing_with_null method of DataTransformTrain class"
+            )
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def rename_column(self, from_col, to_col):
         """
@@ -80,19 +80,10 @@ class Data_Transform_Train:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.rename_column.__name__,
-            __file__,
-            "data_transform",
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered rename_column method of DataTransformTrain class")
 
         try:
-            lst = self.s3.read_csv_from_folder(
-                "train_good_data", "train_data", log_dic["log_file"]
-            )
+            lst = self.s3.read_csv_from_folder("train_good_data", "train_data")
 
             for _, f in enumerate(lst):
                 df = f[0]
@@ -103,15 +94,19 @@ class Data_Transform_Train:
 
                 df.rename(columns={self.col[from_col]: self.col[to_col]}, inplace=True)
 
-                self.log_writer.log(
-                    f"Renamed the output columns for the file {file}", **log_dic
-                )
+                self.log_writer.info(f"Renamed the output columns for the file {file}")
 
-                self.s3.upload_df_as_csv(
-                    df, abs_f, file, "train_data", log_dic["log_file"]
-                )
+                self.s3.upload_df_as_csv(df, abs_f, file, "train_data")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.start_log("exit",)
+
+            self.log_writer.info(
+                "Exited rename_column method of DataTransformTrain class"
+            )
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message

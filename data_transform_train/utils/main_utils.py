@@ -1,12 +1,13 @@
+import logging
+import sys
 from shutil import rmtree
 
-from s3_operations import S3_Operation
+from exception import WaferException
+from s3_operations import S3Operation
+from utils.read_params import read_params
 
-from utils.logger import App_Logger
-from utils.read_params import read_params, get_log_dic
 
-
-class Main_Utils:
+class MainUtils:
     """
     Description :   This class is used for main utility functions required in core functions of the service
     Version     :   1.2
@@ -15,9 +16,9 @@ class Main_Utils:
     """
 
     def __init__(self):
-        self.s3 = S3_Operation()
+        self.s3 = S3Operation()
 
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
         self.config = read_params()
 
@@ -34,23 +35,20 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.upload_logs.__name__, __file__, "upload"
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered upload_logs method of MainUtils class")
 
         try:
-            self.s3.upload_folder(self.log_dir, "logs", log_dic["log_file"])
+            self.s3.upload_folder(self.log_dir, "logs")
 
-            self.log_writer.log(f"uploaded logs to s3 bucket", **log_dic)
+            self.log_writer.info("Uploaded logs to s3 bucket")
 
-            self.log_writer.start_log("exit", **log_dic)
-
-            self.log_writer.stop_log()
+            self.log_writer.info("Exited upload_logs method of MainUtils class")
 
             rmtree(self.log_dir)
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message

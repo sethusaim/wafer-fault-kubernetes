@@ -1,7 +1,9 @@
-from data_transformation_train import Data_Transform_Train
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic
+import logging
+import sys
+
+from data_transformation_train import DataTransformTrain
+from exception import WaferException
+from utils.main_utils import MainUtils
 
 
 class Run:
@@ -13,9 +15,9 @@ class Run:
     """
 
     def __init__(self):
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
-        self.data_transform = Data_Transform_Train()
+        self.data_transform = DataTransformTrain()
 
     def train_data_transform(self):
         """
@@ -28,26 +30,25 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.train_data_transform.__name__,
-            __file__,
-            "data_transform_main",
-        )
+        self.log_writer.info("Entered train_data_transform method of Run class")
 
         try:
-            self.log_writer.log("Starting Data Transformation", **log_dic)
+            self.log_writer.info("Starting Data Transformation",)
 
             self.data_transform.rename_column("good_bad", "output")
 
             self.data_transform.replace_missing_with_null()
 
-            self.log_writer.log("Data Transformation completed !!", **log_dic)
+            self.log_writer.info("Data Transformation completed !!",)
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited train_data_transform method of Run class")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
 
 if __name__ == "__main__":
@@ -60,6 +61,6 @@ if __name__ == "__main__":
         raise e
 
     finally:
-        utils = Main_Utils()
+        utils = MainUtils()
 
         utils.upload_logs()
