@@ -1,12 +1,13 @@
 import logging
 import sys
 
-from components.s3_operations import S3Operation
-from exception import WaferException
 from kneed import KneeLocator
 from sklearn.cluster import KMeans
-from utils.main_utils import MainUtils
-from utils.read_params import read_params
+
+from wafer_clustering.components.s3_operations import S3Operation
+from wafer_clustering.exception import WaferException
+from wafer_clustering.utils.main_utils import MainUtils
+from wafer_clustering.utils.read_params import read_params
 
 
 class KMeansClustering:

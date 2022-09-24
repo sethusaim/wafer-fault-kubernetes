@@ -4,10 +4,10 @@ from datetime import datetime
 from shutil import rmtree
 
 from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
-
-from components.s3_operations import S3Operation
-from exception import WaferException
 from utils.read_params import read_params
+
+from wafer_clustering.components.s3_operations import S3Operation
+from wafer_clustering.exception import WaferException
 
 
 class MainUtils:
