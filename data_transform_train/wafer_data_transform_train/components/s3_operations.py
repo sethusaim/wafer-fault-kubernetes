@@ -5,10 +5,10 @@ from os import listdir, remove
 from os.path import join
 
 from boto3 import resource
+from exception import WaferException
 from pandas import read_csv
 
-from exception import WaferException
-from utils.read_params import read_params
+from wafer_data_transform_train.utils.read_params import read_params
 
 
 class S3Operation:

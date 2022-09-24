@@ -2,8 +2,9 @@ import logging
 import sys
 
 from exception import WaferException
-from s3_operations import S3Operation
 from utils.read_params import read_params
+
+from wafer_data_transform_train.components.s3_operations import S3Operation
 
 
 class DataTransformTrain:

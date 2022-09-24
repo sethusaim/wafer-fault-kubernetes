@@ -1,9 +1,10 @@
 import logging
 import sys
 
-from data_transformation_train import DataTransformTrain
-from exception import WaferException
-from utils.main_utils import MainUtils
+from wafer_data_transform_train.components.data_transformation_train import \
+    DataTransformTrain
+from wafer_data_transform_train.exception import WaferException
+from wafer_data_transform_train.utils.main_utils import MainUtils
 
 
 class Run:
