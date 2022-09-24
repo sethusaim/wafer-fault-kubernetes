@@ -1,13 +1,14 @@
-from shutil import rmtree
+import logging
+import sys
 from datetime import datetime
+from shutil import rmtree
 
-from s3_operations import S3_Operation
+from exception import WaferException
+from s3_operations import S3Operation
+from utils.read_params import read_params
 
-from utils.logger import App_Logger
-from utils.read_params import get_log_dic, read_params
 
-
-class Main_Utils:
+class MainUtils:
     """
     Description :   This class is used for main utility functions required in core functions of the service
     Version     :   1.2
@@ -16,9 +17,9 @@ class Main_Utils:
     """
 
     def __init__(self):
-        self.s3 = S3_Operation()
+        self.s3 = S3Operation()
 
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
         self.config = read_params()
 
@@ -41,27 +42,25 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.upload_logs.__name__, __file__, "upload"
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered upload_logs method of S3Operation class")
 
         try:
-            self.s3.upload_folder(self.log_dir, "logs", log_dic["log_file"])
+            self.s3.upload_folder(self.log_dir, "logs")
 
-            self.log_writer.log(f"Uploaded logs to logs bucket", **log_dic)
+            self.log_writer.info(f"Uploaded logs to logs bucket")
 
-            self.log_writer.start_log("exit", **log_dic)
-
-            self.log_writer.stop_log()
+            self.log_writer.info("Exited upload_logs method of S3Operation class")
 
             rmtree(self.log_dir)
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
 
-    def get_file_with_timestamp(self, file, log_file):
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
+
+    def get_file_with_timestamp(self, file):
         """
         Method Name :   get_file_with_timestamp
         Description :   This method gets the file name with current time stamp
@@ -72,28 +71,29 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.get_file_with_timestamp.__name__,
-            __file__,
-            log_file,
+        self.log_writer.info(
+            "Entered get_file_with_timestamp method of S3Operation class"
         )
-
-        self.log_writer.start_log("start", **log_dic)
 
         try:
             file = self.current_date + "-" + self.files[file]
 
-            self.log_writer.log("Got file name with date time stamp", **log_dic)
+            self.log_writer.info("Got file name with date time stamp")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited get_file_with_timestamp method of S3Operation class"
+            )
 
             return file
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
 
-    def get_collection_with_timestamp(self, collection_name, log_file):
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
+
+    def get_collection_with_timestamp(self, collection_name):
         """
         Method Name :   get_collection_with_timestamp
         Description :   This method gets the collection name with current time stamp
@@ -104,27 +104,26 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.get_collection_with_timestamp.__name__,
-            __file__,
-            log_file,
+        self.log_writer.info(
+            "Entered get_collection_with_timestamp method of S3Operation class"
         )
-
-        self.log_writer.start_log("start", **log_dic)
 
         try:
             current_collection_name = (
                 self.current_date + "-" + self.mongodb_config[collection_name]
             )
 
-            self.log_writer.log(
-                "Got collection name with current time stamp", **log_dic
-            )
+            self.log_writer.info("Got collection name with current time stamp")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited get_collection_with_timestamp method of S3Operation class"
+            )
 
             return current_collection_name
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message

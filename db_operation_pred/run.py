@@ -1,7 +1,9 @@
-from data_type_valid_pred import DB_Operation_Pred
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic
+import logging
+import sys
+
+from data_type_valid_pred import DBOperationPred
+from exception import WaferException
+from utils.main_utils import MainUtils
 
 
 class Run:
@@ -12,10 +14,10 @@ class Run:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self):
-        self.log_writer = App_Logger()
+    def __init__(self):        
+        self.log_writer = logging.getLogger(__name__)
 
-        self.db_operation = DB_Operation_Pred()
+        self.db_operation = DBOperationPred()
 
     def pred_data_type_valid(self):
         """
@@ -28,30 +30,25 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.pred_data_type_valid.__name__,
-            __file__,
-            "db_main",
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered pred_data_type_valid method of Run class")
 
         try:
-            self.log_writer.log("Data type validation operation started !!", **log_dic)
+            self.log_writer.info("Data type validation operation started !!")
 
             self.db_operation.insert_good_data_as_record("db_name", "collection_name")
 
             self.db_operation.export_collection_to_csv("db_name", "collection_name")
 
-            self.log_writer.log(
-                "Data type validation Operation completed !!", **log_dic
-            )
+            self.log_writer.info("Data type validation Operation completed !!",)
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited pred_data_type_valid method of Run class")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
 
 if __name__ == "__main__":
@@ -64,6 +61,6 @@ if __name__ == "__main__":
         raise e
 
     finally:
-        utils = Main_Utils()
+        utils = MainUtils()
 
         utils.upload_logs()
