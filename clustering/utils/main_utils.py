@@ -1,14 +1,16 @@
+import logging
+import sys
 from datetime import datetime
 from shutil import rmtree
 
 from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
-from s3_operations import S3_Operation
 
-from utils.logger import App_Logger
-from utils.read_params import get_log_dic, read_params
+from exception import WaferException
+from s3_operations import S3Operation
+from utils.read_params import read_params
 
 
-class Main_Utils:
+class MainUtils:
     """
     Description :   This class is used for main utility functions required in core functions of the service
     Version     :   1.2
@@ -17,9 +19,9 @@ class Main_Utils:
     """
 
     def __init__(self):
-        self.s3 = S3_Operation()
+        self.s3 = S3Operation()
 
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
         self.config = read_params()
 
@@ -40,27 +42,25 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.upload_logs.__name__, __file__, "upload"
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered upload_logs method of MainUtils class")
 
         try:
-            self.s3.upload_folder(self.log_dir, "logs", log_dic["log_file"])
+            self.s3.upload_folder(self.log_dir, "logs")
 
-            self.log_writer.log(f"Uploaded logs to s3 bucket", **log_dic)
+            self.log_writer.info("Uploaded logs to s3 bucket")
 
-            self.log_writer.start_log("exit", **log_dic)
-
-            self.log_writer.stop_log()
+            self.log_writer.info("Exited upload_logs method of MainUtils class")
 
             rmtree(self.log_dir)
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
 
-    def get_cluster_fname(self, fname, idx, log_file):
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
+
+    def get_cluster_fname(self, fname, idx):
         """
         Method Name :   get_cluster_fname
         Description :   This method gets the cluster file name based on cluster number
@@ -71,29 +71,29 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.get_cluster_fname.__name__, __file__, log_file
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered get_cluster_name method of MainUtils class")
 
         try:
             cluster_fname = fname.replace(".csv", "-" + str(idx) + ".csv")
 
             cluster_fname = self.current_date + "-" + cluster_fname
 
-            self.log_writer.log(
-                f"Got cluster file name for cluster {idx} of file {fname}", **log_dic,
+            self.log_writer.info(
+                f"Got cluster file name for cluster {idx} of file {fname}",
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited get_cluster_name method of MainUtils class")
 
             return cluster_fname
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
 
-    def upload_cluster_data(self, idx, cluster_data, log_file, key=None):
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
+
+    def upload_cluster_data(self, idx, cluster_data, key=None):
         """
         Method Name :   upload_cluster_data
         Description :   This method uploads the cluster data based on the idx and key
@@ -104,44 +104,31 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.upload_cluster_data.__name__,
-            __file__,
-            log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered upload_cluster_data method of MainUtils class")
 
         try:
-            cluster_fname = self.get_cluster_fname(
-                self.files[key], idx, log_dic["log_file"]
-            )
+            cluster_fname = self.get_cluster_fname(self.files[key], idx,)
 
-            self.log_writer.log(
+            self.log_writer.info(
                 f"Got cluster file name for {key} and with cluster number as {idx}",
-                **log_dic,
             )
 
             self.s3.upload_df_as_csv(
-                cluster_data,
-                cluster_fname,
-                cluster_fname,
-                "feature_store",
-                log_dic["log_file"],
-                index=True,
+                cluster_data, cluster_fname, cluster_fname, "feature_store", index=True
             )
 
-            self.log_writer.log(
-                f"Uploaded {cluster_fname} file to feature store bucket", **log_dic,
+            self.log_writer.info(
+                f"Uploaded {cluster_fname} file to feature store bucket"
             )
-
-            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
 
-    def get_training_data(self, key, log_file):
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
+
+    def get_training_data(self, key):
         """
         Method Name :   get_training_data
         Description :   This method gets the training data from s3 bucket based on the key
@@ -152,38 +139,32 @@ class Main_Utils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.get_training_data.__name__, __file__, log_file
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered the get_training_data method of MainUtils class")
 
         try:
-            data = self.s3.read_csv(
-                self.files[key], "feature_store", log_dic["log_file"], pattern=True
-            )
+            data = self.s3.read_csv(self.files[key], "feature_store", pattern=True)
 
-            self.log_writer.log(
+            self.log_writer.info(
                 f"Got the training data based on {key} from feature store bucket",
-                **log_dic,
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited the get_training_data method of MainUtils class"
+            )
 
             return data
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
 
-    def save_and_upload_elbow_plot(self, max_clusters, wcss, log_file):
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.save_and_upload_elbow_plot.__name__,
-            __file__,
-            log_file,
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
+
+    def save_and_upload_elbow_plot(self, max_clusters, wcss):
+        self.log_writer.info(
+            "Entered the save_and_upload_elbow_plot method of MainUtils class"
         )
-
-        self.log_writer.start_log("start", **log_dic)
 
         try:
             plot(range(1, max_clusters), wcss)
@@ -198,17 +179,19 @@ class Main_Utils:
 
             savefig(fname)
 
-            self.log_writer.log(
-                "Saved elbow plot based on max_clusters and wcss", **log_dic
+            self.log_writer.info("Saved elbow plot based on max_clusters and wcss",)
+
+            self.s3.upload_file(fname, fname, "io_files", index=True)
+
+            self.log_writer.info("Uploaded elbow plot to s3 bucket")
+
+            self.log_writer.info(
+                "Exited the the save_and_upload_elbow_plot method of MainUtils class"
             )
-
-            self.s3.upload_file(
-                fname, fname, "io_files", log_dic["log_file"], index=True
-            )
-
-            self.log_writer.log("Uploaded elbow plot to s3 bucket", **log_dic)
-
-            self.log_writer.start_log("exit", **log_dic)
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message

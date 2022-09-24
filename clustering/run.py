@@ -1,7 +1,9 @@
-from clustering import KMeans_Clustering
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic
+import logging
+import sys
+
+from clustering import KMeansClustering
+from exception import WaferException
+from utils.main_utils import MainUtils
 
 
 class Run:
@@ -13,11 +15,11 @@ class Run:
     """
 
     def __init__(self):
-        self.utils = Main_Utils()
+        self.utils = MainUtils()
 
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
-        self.kmeans_op = KMeans_Clustering("clustering")
+        self.kmeans_op = KMeansClustering("clustering")
 
     def run_clustering(self):
         """
@@ -30,27 +32,19 @@ class Run:
         Version     :   1.2
         Revisions   :   Moved to setup to cloud 
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.run_clustering.__name__,
-            __file__,
-            "clustering",
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered run_clustering method of Run class")
 
         try:
-            X = self.utils.get_training_data("features", log_dic["log_file"])
+            X = self.utils.get_training_data("features")
 
-            self.log_writer.log(
-                "Read the features file for training from feature store bucket",
-                **log_dic,
+            self.log_writer.info(
+                "Read the features file for training from feature store bucket"
             )
 
-            Y = self.utils.get_training_data("targets", log_dic["log_file"])
+            Y = self.utils.get_training_data("targets")
 
-            self.log_writer.log(
-                f"Read the labels for training from feature store bucket", **log_dic
+            self.log_writer.info(
+                f"Read the labels for training from feature store bucket"
             )
 
             num_clusters = self.kmeans_op.draw_elbow_plot(X)
@@ -61,9 +55,7 @@ class Run:
 
             list_of_clusters = X["Cluster"].unique()
 
-            self.log_writer.log(
-                f"Got the {list_of_clusters} unique clusters", **log_dic
-            )
+            self.log_writer.info(f"Got the {list_of_clusters} unique clusters",)
 
             for i in list_of_clusters:
                 cluster_data = X[X["Cluster"] == i]
@@ -80,12 +72,16 @@ class Run:
                     i, cluster_label, "clustering", key="targets"
                 )
 
-            self.log_writer.log("Clustering of training data is completed", **log_dic)
+            self.log_writer.info("Clustering of training data is completed")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited run_clustering method of Run class")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
 
 if __name__ == "__main__":
@@ -98,6 +94,6 @@ if __name__ == "__main__":
         raise e
 
     finally:
-        utils = Main_Utils()
+        utils = MainUtils()
 
         utils.upload_logs()

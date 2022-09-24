@@ -1,13 +1,16 @@
+import logging
+import sys
+
 from kneed import KneeLocator
 from sklearn.cluster import KMeans
 
-from s3_operations import S3_Operation
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic, read_params
+from exception import WaferException
+from s3_operations import S3Operation
+from utils.main_utils import MainUtils
+from utils.read_params import read_params
 
 
-class KMeans_Clustering:
+class KMeansClustering:
     """
     Description :   This class shall be used to divide the data into clusters before training.
     Version     :   1.2
@@ -15,9 +18,7 @@ class KMeans_Clustering:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, log_file):
-        self.log_file = log_file
-
+    def __init__(self):
         self.config = read_params()
 
         self.kmeans_params = self.config["KMeans"]
@@ -26,11 +27,11 @@ class KMeans_Clustering:
 
         self.max_clusters = self.config["max_clusters"]
 
-        self.s3 = S3_Operation()
+        self.s3 = S3Operation()
 
-        self.utils = Main_Utils()
+        self.utils = MainUtils()
 
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
     def draw_elbow_plot(self, data):
         """
@@ -43,14 +44,7 @@ class KMeans_Clustering:
         Version     :   1.2
         Revisions   :   Moved to setup to cloud 
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.draw_elbow_plot.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered draw_elbow_plot method of S3Operation class")
 
         try:
             wcss = []
@@ -62,24 +56,26 @@ class KMeans_Clustering:
 
                 wcss.append(kmeans.inertia_)
 
-            self.utils.save_and_upload_elbow_plot(
-                self.max_clusters, wcss, log_dic["log_file"]
-            )
+            self.utils.save_and_upload_elbow_plot(self.max_clusters, wcss)
 
-            self.log_writer.log("Saved elbow plot with local copy", **log_dic)
+            self.log_writer.info("Saved elbow plot with local copy")
 
             self.kn = KneeLocator(range(1, self.max_clusters), wcss, **self.knee_params)
 
-            self.log_writer.log(
-                f"The optimum number of clusters is {str(self.kn.knee)}", **log_dic
+            self.log_writer.info(
+                f"The optimum number of clusters is {str(self.kn.knee)}"
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited draw_elbow_plot method of S3Operation class")
 
             return self.kn.knee
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def create_clusters(self, data, num_clusters):
         """
@@ -92,14 +88,7 @@ class KMeans_Clustering:
         Version     :   1.2
         Revisions   :   Moved to setup to cloud 
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.create_clusters.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered create_clusters method of KMeansClustering class")
 
         self.data = data
 
@@ -108,19 +97,21 @@ class KMeans_Clustering:
 
             self.y_kmeans = self.kmeans.fit_predict(data)
 
-            self.s3.save_model(
-                self.kmeans, "model_trained", "model", log_dic["log_file"]
-            )
+            self.s3.save_model(self.kmeans, "model_trained", "model")
 
             self.data["Cluster"] = self.y_kmeans
 
-            self.log_writer.log(
-                f"Successfully created {str(self.kn.knee)} clusters", **log_dic
-            )
+            self.log_writer.info(f"Successfully created {str(self.kn.knee)} clusters")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited create_clusters method of KMeansClustering class"
+            )
 
             return self.data
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message

@@ -1,3 +1,5 @@
+import logging
+import sys
 from datetime import datetime
 from io import StringIO
 from os import listdir, remove
@@ -7,11 +9,11 @@ from pickle import dump
 from boto3 import resource
 from pandas import read_csv
 
-from utils.logger import App_Logger
-from utils.read_params import get_log_dic, read_params
+from exception import WaferException
+from utils.read_params import read_params
 
 
-class S3_Operation:
+class S3Operation:
     """
     Description :   This method is used for all the S3 bucket operations
     Version     :   1.2
@@ -24,7 +26,7 @@ class S3_Operation:
 
         self.config = read_params()
 
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
         self.bucket = self.config["s3_bucket"]
 
@@ -36,7 +38,7 @@ class S3_Operation:
 
         self.current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
 
-    def get_bucket(self, bucket, log_file):
+    def get_bucket(self, bucket):
         """
         Method Name :   get_bucket
         Description :   This method gets the bucket from s3 
@@ -47,25 +49,26 @@ class S3_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.get_bucket.__name__, __file__, log_file
-        )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered get_bucket method of S3Operation class")
 
         try:
             bucket = self.s3_resource.Bucket(self.bucket[bucket])
 
-            self.log_writer.log(f"Got {bucket} bucket", **log_dic)
+            self.log_writer.info(f"Got {bucket} bucket")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited get_bucket method of S3Operation class")
 
             return bucket
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
 
-    def get_file_object(self, fname, bucket, log_file, pattern=False):
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
+
+    def get_file_object(self, fname, bucket, pattern=False):
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
@@ -76,14 +79,10 @@ class S3_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.get_file_object.__name__, __file__, log_file
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered get_file_object method of S3Operation class")
 
         try:
-            bucket = self.get_bucket(bucket, log_dic["log_file"])
+            bucket = self.get_bucket(bucket,)
 
             if pattern is False:
                 lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
@@ -93,22 +92,24 @@ class S3_Operation:
                     object for object in bucket.objects.all() if fname in object.key
                 ]
 
-            self.log_writer.log(f"Got {fname} from bucket {bucket}", **log_dic)
+            self.log_writer.info(f"Got {fname} from bucket {bucket}")
 
             func = lambda x: x[0] if len(x) == 1 else x
 
             file_objs = func(lst_objs)
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited get_file_object method of S3Operation class")
 
             return file_objs
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
 
-    def read_object(
-        self, object, log_file, decode=True, make_readable=False,
-    ):
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
+
+    def read_object(self, object, decode=True, make_readable=False):
         """
         Method Name :   read_object
         Description :   This method reads the object with kwargs
@@ -119,11 +120,7 @@ class S3_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.read_object.__name__, __file__, log_file
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered read_object method of S3Operation class")
 
         try:
             func = (
@@ -132,26 +129,26 @@ class S3_Operation:
                 else object.get()["Body"].read()
             )
 
-            self.log_writer.log(
-                f"Read the s3 object with decode as {decode}", **log_dic
-            )
+            self.log_writer.info(f"Read the s3 object with decode as {decode}")
 
             conv_func = lambda: StringIO(func()) if make_readable is True else func()
 
-            self.log_writer.log(
-                f"read the s3 object with make_readable as {make_readable}", **log_dic
+            self.log_writer.info(
+                f"read the s3 object with make_readable as {make_readable}"
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited read_object method of S3Operation class")
 
             return conv_func()
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
 
-    def upload_file(
-        self, from_fname, to_fname, bucket, log_file, delete=True, index=False
-    ):
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
+
+    def upload_file(self, from_fname, to_fname, bucket, delete=True, index=False):
         """
         Method Name :   upload_file
         Description :   This method uploades a file to s3 bucket with kwargs
@@ -162,14 +159,10 @@ class S3_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.upload_file.__name__, __file__, log_file
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered upload_file method of S3Operation class")
 
         try:
-            self.log_writer.log(f"Uploading {from_fname} to s3 bucket", **log_dic)
+            self.log_writer.info(f"Uploading {from_fname} to s3 bucket")
 
             func = (
                 lambda: (self.files[from_fname], self.files[to_fname])
@@ -181,34 +174,34 @@ class S3_Operation:
                 func()[0], self.bucket[bucket], func()[1]
             )
 
-            self.log_writer.log(
-                f"Uploaded {from_fname} to s3 bucket {self.bucket[bucket]}", **log_dic
+            self.log_writer.info(
+                f"Uploaded {from_fname} to s3 bucket {self.bucket[bucket]}"
             )
 
             if delete is True:
-                self.log_writer.log(
-                    f"Option remove is set {delete}..deleting the file", **log_dic
+                self.log_writer.info(
+                    f"Option remove is set {delete}..deleting the file"
                 )
 
                 remove(func()[0])
 
-                self.log_writer.log(
-                    f"Removed the local copy of {from_fname}", **log_dic
-                )
+                self.log_writer.info(f"Removed the local copy of {from_fname}")
 
             else:
-                self.log_writer.log(
-                    f"Option remove is set {delete}, not deleting the file", **log_dic
+                self.log_writer.info(
+                    f"Option remove is set {delete}, not deleting the file"
                 )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited upload_file method of S3Operation class")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
 
-    def save_model(
-        self, model, model_dir, model_bucket, log_file, idx=None,
-    ):
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
+
+    def save_model(self, model, model_dir, model_bucket, idx=None):
         """
         Method Name :   save_model
         Description :   This method saves the model into particular model directory in s3 bucket with kwargs
@@ -219,16 +212,12 @@ class S3_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.save_model.__name__, __file__, log_file
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered save_model method of S3Operation class")
 
         try:
             model_name = model.__class__.__name__
 
-            self.log_writer.log(f"Got {model_name} model name", **log_dic)
+            self.log_writer.info(f"Got {model_name} model name")
 
             func = (
                 lambda: self.current_date + "-" + model_name + self.save_format
@@ -241,35 +230,25 @@ class S3_Operation:
             with open(model_file, "wb") as f:
                 dump(model, f)
 
-            self.log_writer.log(
-                f"Saved {model_name} model as {model_file} name", **log_dic
-            )
+            self.log_writer.info(f"Saved {model_name} model as {model_file} name")
 
             bucket_model_path = self.dir[model_dir] + "/" + model_file
 
-            self.log_writer.log(
-                f"Uploading {model_file} to {model_bucket} bucket", **log_dic
-            )
+            self.log_writer.info(f"Uploading {model_file} to {model_bucket} bucket")
 
-            self.upload_file(
-                model_file, bucket_model_path, model_bucket, log_file, index=True
-            )
+            self.upload_file(model_file, bucket_model_path, model_bucket, index=True)
 
-            self.log_writer.log(
-                f"Uploaded  {model_file} to {model_bucket} bucket", **log_dic
-            )
-
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(f"Uploaded  {model_file} to {model_bucket} bucket")
 
         except Exception as e:
-            self.log_writer.log(
-                f"Model file {model_name} could not be saved", **log_dic
-            )
+            message = WaferException(e, sys)
 
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def upload_df_as_csv(
-        self, data_frame, local_fname, bucket_fname, bucket, log_file, index=False
+        self, data_frame, local_fname, bucket_fname, bucket, index=False
     ):
         """
         Method Name :   upload_df_as_csv
@@ -281,27 +260,27 @@ class S3_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.upload_df_as_csv.__name__, __file__, log_file
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered upload_df_as_csv method of S3Operation class")
 
         try:
             data_frame.to_csv(local_fname, index=None, header=True)
 
-            self.log_writer.log(
-                f"Created a local copy of dataframe with name {local_fname}", **log_dic
+            self.log_writer.info(
+                f"Created a local copy of dataframe with name {local_fname}"
             )
 
-            self.upload_file(local_fname, bucket_fname, bucket, log_file, index=index)
+            self.upload_file(local_fname, bucket_fname, bucket, index=index)
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited upload_df_as_csv method of S3Operation class")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
 
-    def get_df_from_object(self, object, log_file):
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
+
+    def get_df_from_object(self, object):
         """
         Method Name :   get_df_from_object
         Description :   This method gets dataframe from object 
@@ -312,30 +291,30 @@ class S3_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.get_df_from_object.__name__,
-            __file__,
-            log_file,
-        )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered get_df_from_object method of S3Operation class")
 
         try:
-            content = self.read_object(object, log_dic["log_file"], make_readable=True)
+            content = self.read_object(object, make_readable=True)
 
             df = read_csv(content)
 
-            self.log_writer.log(f"Got the dataframe from the object", **log_dic)
+            self.log_writer.info("Got the dataframe from the object")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited get_df_from_object method of S3Operation class"
+            )
 
             return df
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
 
-    def read_csv(self, fname, bucket, log_file, pattern=False):
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
+
+    def read_csv(self, fname, bucket, pattern=False):
         """
         Method Name :   read_csv
         Description :   This method reads the csv data from s3 bucket
@@ -346,59 +325,60 @@ class S3_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.read_csv.__name__, __file__, log_file
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered read_csv method of S3Operation class")
 
         try:
-            csv_obj = self.get_file_object(
-                fname, bucket, log_dic["log_file"], pattern=pattern
+            csv_obj = self.get_file_object(fname, bucket, pattern=pattern)
+
+            df = self.get_df_from_object(csv_obj,)
+
+            self.log_writer.info(
+                f"Read {fname} csv file from {self.bucket[bucket]} bucket"
             )
 
-            df = self.get_df_from_object(csv_obj, log_dic["log_file"])
-
-            self.log_writer.log(
-                f"Read {fname} csv file from {self.bucket[bucket]} bucket", **log_dic
-            )
-
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited read_csv method of S3Operation class")
 
             return df
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
 
-    def upload_folder(self, folder, bucket, log_file):
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.upload_folder.__name__, __file__, log_file
-        )
+            self.log_writer.error(message.error_message)
 
-        self.log_writer.start_log("start", **log_dic)
+            raise message.error_message
+
+    def upload_folder(self, folder, bucket):
+        """
+        Method Name :   upload_folder
+        Description :   This method uploades the folder to s3 bucket
+        
+        Output      :   folder is uploaded to s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        self.log_writer.info("Entered upload_folder method of S3Operation class")
 
         try:
             lst = listdir(folder)
 
-            self.log_writer.log("Got a list of files from folder", **log_dic)
+            self.log_writer.info("Got a list of files from folder")
 
             for f in lst:
                 local_f = join(folder, f)
 
                 dest_f = folder + "/" + f
 
-                self.upload_file(
-                    local_f,
-                    dest_f,
-                    bucket,
-                    log_dic["log_file"],
-                    delete=False,
-                    index=True,
-                )
+                self.upload_file(local_f, dest_f, bucket, delete=False, index=True)
 
-            self.log_writer.log("Uploaded folder to s3 bucket", **log_dic)
+            self.log_writer.info("Uploaded folder to s3 bucket")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited upload_method of S3Operation class")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
