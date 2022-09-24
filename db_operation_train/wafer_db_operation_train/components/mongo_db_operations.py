@@ -4,8 +4,8 @@ from os import environ
 from pandas import DataFrame
 from pymongo import MongoClient
 
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
+from utils.logger import AppLogger
+from utils.main_utils import MainUtils
 from utils.read_params import get_log_dic, read_params
 
 
@@ -26,9 +26,9 @@ class MongoDB_Operation:
 
         self.client = MongoClient(self.DB_URL)
 
-        self.utils = Main_Utils()
+        self.utils = MainUtils()
 
-        self.log_writer = App_Logger()
+        self.log_writer = AppLogger()
 
     def get_database(self, db_name, log_file):
         """
@@ -45,19 +45,19 @@ class MongoDB_Operation:
             self.__class__.__name__, self.get_database.__name__, __file__, log_file
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start",)
 
         try:
             db = self.client[self.mongo_config[db_name]]
 
-            self.log_writer.log(f"Created {db_name} database in MongoDB", **log_dic)
+            self.log_writer.info(f"Created {db_name} database in MongoDB",)
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit",)
 
             return db
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e,)
 
     def get_collection_as_dataframe(self, db_name, collection_name, log_file):
         """
@@ -77,14 +77,12 @@ class MongoDB_Operation:
             log_file,
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start",)
 
         try:
-            database = self.get_database(db_name, log_dic["log_file"])
+            database = self.get_database(db_name,)
 
-            collection_name = self.utils.get_collection_with_timestamp(
-                collection_name, log_dic["log_file"]
-            )
+            collection_name = self.utils.get_collection_with_timestamp(collection_name,)
 
             collection = database.get_collection(collection_name)
 
@@ -93,14 +91,14 @@ class MongoDB_Operation:
             if "_id" in df.columns.to_list():
                 df = df.drop(columns=["_id"], axis=1)
 
-            self.log_writer.log("Converted collection to dataframe", **log_dic)
+            self.log_writer.info("Converted collection to dataframe",)
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit",)
 
             return df
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e,)
 
     def insert_dataframe_as_record(
         self, data_frame, db_name, collection_name, log_file
@@ -122,28 +120,26 @@ class MongoDB_Operation:
             log_file,
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start",)
 
         try:
             records = loads(data_frame.T.to_json()).values()
 
-            self.log_writer.log(f"Converted dataframe to json records", **log_dic)
+            self.log_writer.info(f"Converted dataframe to json records",)
 
-            database = self.get_database(db_name, log_dic["log_file"])
+            database = self.get_database(db_name,)
 
-            collection_name = self.utils.get_collection_with_timestamp(
-                collection_name, log_dic["log_file"]
-            )
+            collection_name = self.utils.get_collection_with_timestamp(collection_name,)
 
             collection = database.get_collection(collection_name)
 
-            self.log_writer.log("Inserting records to MongoDB", **log_dic)
+            self.log_writer.info("Inserting records to MongoDB",)
 
             collection.insert_many(records)
 
-            self.log_writer.log("Inserted records to MongoDB", **log_dic)
+            self.log_writer.info("Inserted records to MongoDB",)
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit",)
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e,)

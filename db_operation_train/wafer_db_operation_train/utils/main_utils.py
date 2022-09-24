@@ -1,13 +1,13 @@
 from shutil import rmtree
 from datetime import datetime
 
-from s3_operations import S3_Operation
+from wafer_db_operation_train.components.s3_operations import S3_Operation
 
-from utils.logger import App_Logger
+from utils.logger import AppLogger
 from utils.read_params import get_log_dic, read_params
 
 
-class Main_Utils:
+class MainUtils:
     """
     Description :   This class is used for main utility functions required in core functions of the service
     Version     :   1.2
@@ -18,7 +18,7 @@ class Main_Utils:
     def __init__(self):
         self.s3 = S3_Operation()
 
-        self.log_writer = App_Logger()
+        self.log_writer = AppLogger()
 
         self.config = read_params()
 
@@ -45,21 +45,23 @@ class Main_Utils:
             self.__class__.__name__, self.upload_logs.__name__, __file__, "upload"
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start",)
 
         try:
-            self.s3.upload_folder(self.log_dir, "logs", log_dic["log_file"])
+            self.s3.upload_folder(
+                self.log_dir, "logs",
+            )
 
-            self.log_writer.log(f"Uploaded logs to logs bucket", **log_dic)
+            self.log_writer.info(f"Uploaded logs to logs bucket",)
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit",)
 
             self.log_writer.stop_log()
 
             rmtree(self.log_dir)
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e,)
 
     def get_file_with_timestamp(self, file, log_file):
         """
@@ -79,19 +81,19 @@ class Main_Utils:
             log_file,
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start",)
 
         try:
             file = self.current_date + "-" + self.files[file]
 
-            self.log_writer.log("Got file name with date time stamp", **log_dic)
+            self.log_writer.info("Got file name with date time stamp",)
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit",)
 
             return file
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e,)
 
     def get_collection_with_timestamp(self, collection_name, log_file):
         """
@@ -111,20 +113,18 @@ class Main_Utils:
             log_file,
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start",)
 
         try:
             current_collection_name = (
                 self.current_date + "-" + self.mongodb_config[collection_name]
             )
 
-            self.log_writer.log(
-                "Got collection name with current time stamp", **log_dic
-            )
+            self.log_writer.info("Got collection name with current time stamp",)
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit",)
 
             return current_collection_name
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e,)

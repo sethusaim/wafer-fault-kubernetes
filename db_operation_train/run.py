@@ -1,7 +1,7 @@
-from data_type_valid_train import DB_Operation_Train
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic
+import logging
+
+from wafer_db_operation_train.components.data_type_valid_train import DBOperationTrain
+from wafer_db_operation_train.utils.main_utils import MainUtils
 
 
 class Run:
@@ -13,9 +13,9 @@ class Run:
     """
 
     def __init__(self):
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
-        self.db_operation = DB_Operation_Train()
+        self.db_operation = DBOperationTrain()
 
     def train_data_type_valid(self):
         """
@@ -28,30 +28,21 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.train_data_type_valid.__name__,
-            __file__,
-            "db_main",
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered train_data_type_valid method of Run class")
 
         try:
-            self.log_writer.log("Data type validation operation started !!", **log_dic)
+            self.log_writer.info("Data type validation operation started !!")
 
             self.db_operation.insert_good_data_as_record("db_name", "collection_name")
 
             self.db_operation.export_collection_to_csv("db_name", "collection_name")
 
-            self.log_writer.log(
-                "Data type validation Operation completed !!", **log_dic
-            )
+            self.log_writer.info("Data type validation Operation completed !!")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited train_data_type_valid method of Run class")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e,)
 
 
 if __name__ == "__main__":
@@ -64,6 +55,6 @@ if __name__ == "__main__":
         raise e
 
     finally:
-        utils = Main_Utils()
+        utils = MainUtils()
 
         utils.upload_logs()

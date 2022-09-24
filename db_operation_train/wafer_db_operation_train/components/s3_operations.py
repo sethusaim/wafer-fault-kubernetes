@@ -5,7 +5,7 @@ from os.path import join
 from boto3 import resource
 from pandas import read_csv
 
-from utils.logger import App_Logger
+from utils.logger import AppLogger
 from utils.read_params import get_log_dic, read_params
 
 
@@ -20,7 +20,7 @@ class S3_Operation:
     def __init__(self):
         self.s3_resource = resource("s3")
 
-        self.log_writer = App_Logger()
+        self.log_writer = AppLogger()
 
         self.config = read_params()
 
@@ -45,7 +45,7 @@ class S3_Operation:
             self.__class__.__name__, self.read_object.__name__, __file__, log_file
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start", )
 
         try:
             func = (
@@ -54,22 +54,22 @@ class S3_Operation:
                 else object.get()["Body"].read()
             )
 
-            self.log_writer.log(
-                f"Read the s3 object with decode as {decode}", **log_dic
+            self.log_writer.info(
+                f"Read the s3 object with decode as {decode}", 
             )
 
             conv_func = lambda: StringIO(func()) if make_readable is True else func()
 
-            self.log_writer.log(
-                f"read the s3 object with make_readable as {make_readable}", **log_dic
+            self.log_writer.info(
+                f"read the s3 object with make_readable as {make_readable}", 
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit", )
 
             return conv_func()
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e, )
 
     def get_df_from_object(self, object, log_file):
         """
@@ -89,21 +89,21 @@ class S3_Operation:
             log_file,
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start", )
 
         try:
             content = self.read_object(object, log_file, make_readable=True)
 
             df = read_csv(content)
 
-            self.log_writer.log("Got the dataframe from object", **log_dic)
+            self.log_writer.info("Got the dataframe from object", )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit", )
 
             return df
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e, )
 
     def read_csv(self, fname, bucket, log_file):
         """
@@ -120,23 +120,23 @@ class S3_Operation:
             self.__class__.__name__, self.read_csv.__name__, __file__, log_file
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start", )
 
         try:
-            csv_obj = self.get_file_object(fname, bucket, log_dic["log_file"])
+            csv_obj = self.get_file_object(fname, bucket, )
 
-            df = self.get_df_from_object(csv_obj, log_dic["log_file"])
+            df = self.get_df_from_object(csv_obj, )
 
-            self.log_writer.log(
-                f"Read {fname} csv file from {bucket} bucket", **log_dic
+            self.log_writer.info(
+                f"Read {fname} csv file from {bucket} bucket", 
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit", )
 
             return df
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e, )
 
     def get_bucket(self, bucket, log_file):
         """
@@ -153,19 +153,19 @@ class S3_Operation:
             self.__class__.__name__, self.get_bucket.__name__, __file__, log_file
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start", )
 
         try:
             bucket = self.s3_resource.Bucket(self.bucket[bucket])
 
-            self.log_writer.log(f"Got {bucket} bucket", **log_dic)
+            self.log_writer.info(f"Got {bucket} bucket", )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit", )
 
             return bucket
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e, )
 
     def get_file_object(self, fname, bucket, log_file):
         """
@@ -182,24 +182,24 @@ class S3_Operation:
             self.__class__.__name__, self.get_file_object.__name__, __file__, log_file
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start", )
 
         try:
-            bucket = self.get_bucket(bucket, log_dic["log_file"])
+            bucket = self.get_bucket(bucket, )
 
             lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
 
-            self.log_writer.log(f"Got {fname} from bucket {bucket}", **log_dic)
+            self.log_writer.info(f"Got {fname} from bucket {bucket}", )
 
             func = lambda x: x[0] if len(x) == 1 else x
 
             file_objs = func(lst_objs)
 
-            self.log_writer.log(
-                f"Got the {fname} file object from {bucket} bucket", **log_dic
+            self.log_writer.info(
+                f"Got the {fname} file object from {bucket} bucket", 
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit", )
 
             return file_objs
 
@@ -224,21 +224,21 @@ class S3_Operation:
             log_file,
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start", )
 
         try:
-            lst = self.get_file_object(folder_name, bucket, log_dic["log_file"])
+            lst = self.get_file_object(folder_name, bucket, )
 
             list_of_files = [object.key for object in lst]
 
-            self.log_writer.log(f"Got list of files from bucket {bucket}", **log_dic)
+            self.log_writer.info(f"Got list of files from bucket {bucket}", )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit", )
 
             return list_of_files
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e, )
 
     def read_csv_from_folder(self, folder_name, bucket, log_file):
         """
@@ -258,30 +258,30 @@ class S3_Operation:
             log_file,
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start", )
 
         try:
             files = self.get_files_from_folder(
-                self.dir[folder_name], bucket, log_dic["log_file"]
+                self.dir[folder_name], bucket, 
             )
 
             lst = [
-                (self.read_csv(f, bucket, log_dic["log_file"]), f, f.split("/")[-1],)
+                (self.read_csv(f, bucket, ), f, f.split("/")[-1],)
                 for f in files
                 if f.endswith(".csv")
             ]
 
-            self.log_writer.log(
+            self.log_writer.info(
                 f"Read csv files from {folder_name} folder from {bucket} bucket",
-                **log_dic,
+                ,
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit", )
 
             return lst
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e, )
 
     def upload_file(self, from_fname, to_fname, bucket, log_file, delete=True):
         """
@@ -298,41 +298,41 @@ class S3_Operation:
             self.__class__.__name__, self.upload_file.__name__, __file__, log_file
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start", )
 
         try:
-            self.log_writer.log(
-                f"Uploading {from_fname} to s3 bucket {bucket}", **log_dic
+            self.log_writer.info(
+                f"Uploading {from_fname} to s3 bucket {bucket}", 
             )
 
             self.s3_resource.meta.client.upload_file(
                 from_fname, self.bucket[bucket], to_fname
             )
 
-            self.log_writer.log(
-                f"Uploaded {from_fname} to s3 bucket {bucket}", **log_dic
+            self.log_writer.info(
+                f"Uploaded {from_fname} to s3 bucket {bucket}", 
             )
 
             if delete is True:
-                self.log_writer.log(
-                    f"Option delete is set {delete}..deleting the file", **log_dic
+                self.log_writer.info(
+                    f"Option delete is set {delete}..deleting the file", 
                 )
 
                 remove(from_fname)
 
-                self.log_writer.log(
-                    f"Removed the local copy of {from_fname}", **log_dic
+                self.log_writer.info(
+                    f"Removed the local copy of {from_fname}", 
                 )
 
-                self.log_writer.start_log("exit", **log_dic)
+                self.log_writer.info("exit", )
 
             else:
-                self.log_writer.log(
-                    f"Option delete is set {delete}, not deleting the file", **log_dic
+                self.log_writer.info(
+                    f"Option delete is set {delete}, not deleting the file", 
                 )
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e, )
 
     def upload_df_as_csv(
         self, data_frame, local_fname, bucket_fname, bucket, log_file, fidx=False
@@ -351,7 +351,7 @@ class S3_Operation:
             self.__class__.__name__, self.upload_df_as_csv.__name__, __file__, log_file
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start", )
 
         try:
             func = lambda fname: self.files[fname] if fidx is False else fname
@@ -362,28 +362,28 @@ class S3_Operation:
 
             data_frame.to_csv(local_fname, index=None, header=True)
 
-            self.log_writer.log(
-                f"Created a local copy of dataframe with name {local_fname}", **log_dic
+            self.log_writer.info(
+                f"Created a local copy of dataframe with name {local_fname}", 
             )
 
-            self.upload_file(local_fname, bucket_fname, bucket, log_dic["log_file"])
+            self.upload_file(local_fname, bucket_fname, bucket, )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit", )
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e, )
 
     def upload_folder(self, folder, bucket, log_file):
         log_dic = get_log_dic(
             self.__class__.__name__, self.upload_folder.__name__, __file__, log_file
         )
 
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start", )
 
         try:
             lst = listdir(folder)
 
-            self.log_writer.log("Got a list of files from folder", **log_dic)
+            self.log_writer.info("Got a list of files from folder", )
 
             for f in lst:
                 local_f = join(folder, f)
@@ -391,12 +391,12 @@ class S3_Operation:
                 dest_f = folder + "/" + f
 
                 self.upload_file(
-                    local_f, dest_f, bucket, log_dic["log_file"], delete=False
+                    local_f, dest_f, bucket, , delete=False
                 )
 
-            self.log_writer.log("Uploaded folder to s3 bucket", **log_dic)
+            self.log_writer.info("Uploaded folder to s3 bucket", )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit", )
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.info(e, )

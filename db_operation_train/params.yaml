@@ -8,15 +8,15 @@ files:
 
 dir:
   train_good_data: good/train
-  log: db_operation_train_logs
+  log: DBOperationTrain_logs
 
-log_dir: db_operation_train_logs
+log_dir: DBOperationTrain_logs
 
 log:
   db_insert: train_db_insert.log
   export_csv: train_export_to_csv.log
   db_main: train_db_main.log
-  upload: upload_db_operation_train.log
+  upload: upload_DBOperationTrain.log
 
 mongodb:
   db_name: wafer-data
