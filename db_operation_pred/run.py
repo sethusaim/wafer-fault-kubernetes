@@ -1,9 +1,10 @@
 import logging
 import sys
 
-from data_type_valid_pred import DBOperationPred
-from exception import WaferException
-from utils.main_utils import MainUtils
+from wafer_db_operation_pred.components.data_type_valid_pred import \
+    DBOperationPred
+from wafer_db_operation_pred.exception import WaferException
+from wafer_db_operation_pred.utils.main_utils import MainUtils
 
 
 class Run:

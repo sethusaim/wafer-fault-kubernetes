@@ -7,8 +7,8 @@ from os.path import join
 from boto3 import resource
 from pandas import read_csv
 
-from exception import WaferException
-from utils.read_params import read_params
+from wafer_db_operation_pred.exception import WaferException
+from wafer_db_operation_pred.utils.read_params import read_params
 
 
 class S3Operation:

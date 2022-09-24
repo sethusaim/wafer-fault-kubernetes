@@ -4,7 +4,7 @@ from datetime import datetime
 from shutil import rmtree
 
 from exception import WaferException
-from s3_operations import S3Operation
+from wafer_db_operation_pred.components.s3_operations import S3Operation
 from utils.read_params import read_params
 
 

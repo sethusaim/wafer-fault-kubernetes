@@ -6,9 +6,9 @@ from os import environ
 from pandas import DataFrame
 from pymongo import MongoClient
 
-from exception import WaferException
-from utils.main_utils import MainUtils
-from utils.read_params import read_params
+from wafer_db_operation_pred.exception import WaferException
+from wafer_db_operation_pred.utils.main_utils import MainUtils
+from wafer_db_operation_pred.utils.read_params import read_params
 
 
 class MongoDBOperation:

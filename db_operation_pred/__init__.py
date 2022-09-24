@@ -1,7 +1,9 @@
 import logging
 import os
 
-logs_path = os.path.join("wafer", "logs")
+from from_root import from_root
+
+logs_path = os.path.join(from_root(), "db_operation_pred", "wafer_db_operation_pred","logs")
 
 os.makedirs(logs_path, exist_ok=True)
 

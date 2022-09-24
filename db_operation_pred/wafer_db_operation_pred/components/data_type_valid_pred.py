@@ -1,11 +1,11 @@
 import logging
 import sys
 
-from exception import WaferException
-from mongo_db_operations import MongoDBOperation
-from s3_operations import S3Operation
-from utils.main_utils import MainUtils
-from utils.read_params import get_log_dic
+from wafer_db_operation_pred.components.mongo_db_operations import \
+    MongoDBOperation
+from wafer_db_operation_pred.components.s3_operations import S3Operation
+from wafer_db_operation_pred.exception import WaferException
+from wafer_db_operation_pred.utils.main_utils import MainUtils
 
 
 class DBOperationPred:
