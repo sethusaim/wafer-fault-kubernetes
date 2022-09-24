@@ -1,7 +1,7 @@
 import logging
 import os
 
-logs_path = os.path.join("car_price", "logs")
+logs_path = os.path.join("wafer", "logs")
 
 os.makedirs(logs_path, exist_ok=True)
 
