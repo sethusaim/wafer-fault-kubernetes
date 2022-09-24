@@ -9,8 +9,8 @@ from pickle import dump
 from boto3 import resource
 from pandas import read_csv
 
-from exception import WaferException
-from utils.read_params import read_params
+from wafer_clustering.exception import WaferException
+from wafer_clustering.utils.read_params import read_params
 
 
 class S3Operation:

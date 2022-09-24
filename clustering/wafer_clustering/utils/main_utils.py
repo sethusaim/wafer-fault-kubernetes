@@ -5,8 +5,8 @@ from shutil import rmtree
 
 from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
 
+from components.s3_operations import S3Operation
 from exception import WaferException
-from s3_operations import S3Operation
 from utils.read_params import read_params
 
 
@@ -195,3 +195,4 @@ class MainUtils:
             self.log_writer.error(message.error_message)
 
             raise message.error_message
+
