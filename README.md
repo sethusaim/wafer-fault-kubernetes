@@ -8,6 +8,8 @@ This is an end to end machine learning system for predicting the failure of the 
 
 - Practical Implementation - https://drive.google.com/file/d/1Qf2sHB9uBidAPtPSY9AHb-4n3PlTJq4Y/view?usp=sharing [Long Video]
 
+For Jenkins Github Webhook - https://www.youtube.com/watch?v=08Wwof68cxU&t=760s
+
 ### Problem Statement 
 To build a classification methodology to predict the failure of wafer sensors on the basis of given training data. 
 
