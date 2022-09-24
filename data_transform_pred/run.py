@@ -1,9 +1,11 @@
 import logging
 import sys
 
-from data_transformation_pred import DataTransformPred
-from exception import WaferException
-from utils.main_utils import MainUtils
+from wafer_data_transform_pred.components.data_transformation_pred import (
+    DataTransformPred,
+)
+from wafer_data_transform_pred.exception import WaferException
+from wafer_data_transform_pred.utils.main_utils import MainUtils
 
 
 class Run:

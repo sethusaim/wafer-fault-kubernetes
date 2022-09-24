@@ -3,8 +3,12 @@ import sys
 from shutil import rmtree
 
 from exception import WaferException
-from s3_operations import S3Operation
 from utils.read_params import read_params
+
+from wafer_data_transform_pred.components.data_transformation_pred import (
+    DataTransformPred,
+)
+from wafer_data_transform_pred.components.s3_operations import S3Operation
 
 
 class MainUtils:

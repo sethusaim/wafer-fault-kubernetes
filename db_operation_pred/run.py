@@ -14,7 +14,7 @@ class Run:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self):        
+    def __init__(self):
         self.log_writer = logging.getLogger(__name__)
 
         self.db_operation = DBOperationPred()
