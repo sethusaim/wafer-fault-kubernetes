@@ -1,6 +1,8 @@
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic
+import logging
+import sys
+
+from wafer_model_prediction.exception import WaferException
+from wafer_model_prediction.utils.main_utils import MainUtils
 
 
 class Run:
@@ -12,9 +14,9 @@ class Run:
     """
 
     def __init__(self):
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
-        self.utils = Main_Utils()
+        self.utils = MainUtils()
 
     def predict_from_model(self):
         """
@@ -27,32 +29,30 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__, self.predict_from_model.__name__, __file__, "pred"
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered predict_from_model method of Run class")
 
         try:
-            unique_clusters, data = self.utils.get_unique_clusters(log_dic["log_file"])
+            unique_clusters, data = self.utils.get_unique_clusters()
 
-            self.log_writer.log(f"Got {unique_clusters} clusters", **log_dic)
+            self.log_writer.info(f"Got {unique_clusters} clusters")
 
             for i in unique_clusters:
-                result = self.utils.get_predictions(i, data, log_dic["log_file"])
+                result = self.utils.get_predictions(i, data)
 
-                self.utils.upload_results(result, log_dic["log_file"])
+                self.utils.upload_results(result)
 
-            self.log_writer.log(
-                "Prediction file is created in io_files bucket", **log_dic
-            )
+            self.log_writer.info("Prediction file is created in io_files bucket")
 
-            self.log_writer.log("End of prediction", **log_dic)
+            self.log_writer.info("End of prediction")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited predict_from_model method of Run class")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
 
 if __name__ == "__main__":
@@ -65,6 +65,6 @@ if __name__ == "__main__":
         raise e
 
     finally:
-        utils = Main_Utils()
+        utils = MainUtils()
 
         utils.upload_logs()
