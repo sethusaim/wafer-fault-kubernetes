@@ -1,7 +1,9 @@
-from tuner import Model_Finder
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic
+import logging
+import sys
+
+from wafer_model_training.components.tuner import ModelFinder
+from wafer_model_training.exception import WaferException
+from wafer_model_training.utils.main_utils import MainUtils
 
 
 class Run:
@@ -13,11 +15,11 @@ class Run:
     """
 
     def __init__(self):
-        self.model = Model_Finder("model_train")
+        self.model = ModelFinder()
 
-        self.utils = Main_Utils()
+        self.utils = MainUtils()
 
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
     def training_model(self):
         """
@@ -30,33 +32,27 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.training_model.__name__,
-            __file__,
-            "model_train",
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered training_model method of Run class")
 
         try:
-            lst_clusters = self.utils.get_number_of_clusters(log_dic["log_file"])
+            lst_clusters = self.utils.get_number_of_clusters()
 
-            self.log_writer.log(
-                f"Found the number of cluster to be {lst_clusters}", **log_dic
-            )
+            self.log_writer.info(f"Found the number of cluster to be {lst_clusters}")
 
             self.model.perform_training(lst_clusters)
 
-            self.log_writer.log(
-                "Completed model and training and logging of the models to mlflow",
-                **log_dic,
+            self.log_writer.info(
+                "Completed model and training and logging of the models to mlflow"
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited training_model method of Run class")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
 
 if __name__ == "__main__":
@@ -69,6 +65,6 @@ if __name__ == "__main__":
         raise e
 
     finally:
-        utils = Main_Utils()
+        utils = MainUtils()
 
         utils.upload_logs()

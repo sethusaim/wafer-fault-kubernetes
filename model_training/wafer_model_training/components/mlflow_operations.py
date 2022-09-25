@@ -1,14 +1,16 @@
+import logging
+import sys
 from datetime import datetime
 from os import environ
 
 from mlflow import log_metric, log_param, set_experiment, set_tracking_uri
 from mlflow.sklearn import log_model
 
-from utils.logger import App_Logger
-from utils.read_params import get_log_dic, read_params
+from wafer_model_training.exception import WaferException
+from wafer_model_training.utils.read_params import read_params
 
 
-class MLFlow_Operation:
+class MLFlowOperation:
     """
     Description :    This class shall be used for handling all the mlflow operations
     Version     :   1.2
@@ -16,12 +18,10 @@ class MLFlow_Operation:
     Revisions   :   Moved to setup to cloud
     """
 
-    def __init__(self, log_file):
+    def __init__(self):
         self.config = read_params()
 
-        self.log_writer = App_Logger()
-
-        self.log_file = log_file
+        self.log_writer = logging.getLogger(__name__)
 
         self.mlflow_config = self.config["mlflow_config"]
 
@@ -38,26 +38,25 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.set_mlflow_experiment.__name__,
-            __file__,
-            self.log_file,
+        self.log_writer.info(
+            "Entered set_mlflow_experiment method of MLFlowOperation class"
         )
-
-        self.log_writer.start_log("start", **log_dic)
 
         try:
             set_experiment(self.mlflow_config[exp_name])
 
-            self.log_writer.log(
-                f"Set mlflow experiment with name as {exp_name}", **log_dic
+            self.log_writer.info(f"Set mlflow experiment with name as {exp_name}")
+
+            self.log_writer.info(
+                "Exited set_mlflow_experiment method of MLFlowOperation class "
             )
 
-            self.log_writer.start_log("exit", **log_dic)
-
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def set_mlflow_tracking_uri(self):
         """
@@ -70,24 +69,25 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.set_mlflow_tracking_uri.__name__,
-            __file__,
-            self.log_file,
+        self.log_writer.info(
+            "Entered set_mlflow_tracking_uri method of MLFlowOperation class"
         )
-
-        self.log_writer.start_log("start", **log_dic)
 
         try:
             set_tracking_uri(environ["MLFLOW_TRACKING_URI"])
 
-            self.log_writer.log("Set mlflow tracking uri", **log_dic)
+            self.log_writer.info("Set mlflow tracking uri")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited set_mlflow_tracking_uri method of MLFlowOperation class"
+            )
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def log_sklearn_model(self, model, model_name):
         """
@@ -100,14 +100,9 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.log_sklearn_model.__name__,
-            __file__,
-            self.log_file,
+        self.log_writer.info(
+            "Entered log_sklearn_model method of MLFlowOperation class"
         )
-
-        self.log_writer.start_log("start", **log_dic)
 
         try:
             log_model(
@@ -117,12 +112,18 @@ class MLFlow_Operation:
                 artifact_path=model_name,
             )
 
-            self.log_writer.log(f"Logged {model_name} model in mlflow", **log_dic)
+            self.log_writer.info(f"Logged {model_name} model in mlflow")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited log_sklearn_model method of MLFlowOperation class"
+            )
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def log_model_metric(self, model_name, metric):
         """
@@ -135,26 +136,25 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.log_model_metric.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered log_model_metric method of MLFlowOperation class")
 
         try:
             model_score_name = f"{model_name}-best_score"
 
             log_metric(model_score_name, metric)
 
-            self.log_writer.log(f"{model_score_name} logged in mlflow", **log_dic)
+            self.log_writer.info(f"{model_score_name} logged in mlflow")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited log_model_metric method of MLFlowOperation class"
+            )
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def log_model_param(self, model, model_name, param):
         """
@@ -167,26 +167,23 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.log_model_param.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered log_model_param method of MLFlowOperation class")
 
         try:
             model_param_name = model_name + f"-{param}"
 
             log_param(model_param_name, model.__dict__[param])
 
-            self.log_writer.log(f"{model_param_name} logged in mlflow", **log_dic)
+            self.log_writer.info(f"{model_param_name} logged in mlflow")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def log_all_for_model(self, model, model_score, idx):
         """
@@ -199,27 +196,20 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.log_all_for_model.__name__,
-            __file__,
-            self.log_file,
+        self.log_writer.info(
+            "Entered log_all_for_model method of MLFlowOperation class"
         )
 
         try:
-            self.log_writer.start_log("start", **log_dic)
-
             base_model_name = model.__class__.__name__
 
             model_name = self.current_date + "-" + base_model_name + str(idx)
 
-            self.log_writer.log(f"Got the model name as {base_model_name}", **log_dic)
+            self.log_writer.info(f"Got the model name as {base_model_name}")
 
             model_params_list = list(self.config["train_model"][base_model_name].keys())
 
-            self.log_writer.log(
-                f"Created a list of params based on {model_name}", **log_dic
-            )
+            self.log_writer.info(f"Created a list of params based on {model_name}")
 
             [
                 self.log_model_param(model, model_name, param)
@@ -230,12 +220,17 @@ class MLFlow_Operation:
 
             self.log_model_metric(model_name, float(model_score))
 
-            self.log_writer.log(
+            self.log_writer.info(
                 f"Logged model,metrics and parameters for {model_name} to mlflow",
-                **log_dic,
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited log_all_for_model method of MLFlowOperation class"
+            )
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
