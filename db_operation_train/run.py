@@ -1,6 +1,9 @@
 import logging
+import sys
 
-from wafer_db_operation_train.components.data_type_valid_train import DBOperationTrain
+from wafer_db_operation_train.components.data_type_valid_train import \
+    DBOperationTrain
+from wafer_db_operation_train.exception import WaferException
 from wafer_db_operation_train.utils.main_utils import MainUtils
 
 
@@ -42,7 +45,11 @@ class Run:
             self.log_writer.info("Exited train_data_type_valid method of Run class")
 
         except Exception as e:
-            self.log_writer.info(e,)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
 
 if __name__ == "__main__":
