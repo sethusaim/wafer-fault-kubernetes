@@ -1,15 +1,17 @@
+import logging
+import sys
 from os import environ
 
 from mlflow import get_experiment_by_name, search_runs, set_tracking_uri
 from mlflow.tracking import MlflowClient
 
-from s3_operations import S3_Operation
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic, read_params
+from wafer_load_prod_model.components.s3_operations import S3Operation
+from wafer_load_prod_model.exception import WaferException
+from wafer_load_prod_model.utils.main_utils import MainUtils
+from wafer_load_prod_model.utils.read_params import read_params
 
 
-class MLFlow_Operation:
+class MLFlowOperation:
     """
     Description :    This class shall be used for handling all the mlflow operations
     Version     :   1.2
@@ -17,18 +19,16 @@ class MLFlow_Operation:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, log_file):
+    def __init__(self):
         self.config = read_params()
 
         self.mlflow_config = self.config["mlflow_config"]
 
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
-        self.s3 = S3_Operation()
+        self.s3 = S3Operation()
 
-        self.utils = Main_Utils()
-
-        self.log_file = log_file
+        self.utils = MainUtils()
 
         self.remote_server_uri = environ["MLFLOW_TRACKING_URI"]
 
@@ -45,24 +45,21 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.set_mlflow_tracking_uri.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered set_mlflow_tracking_uri method of MLFlowOperation class")
 
         try:
             set_tracking_uri(self.remote_server_uri)
 
-            self.log_writer.log("Set mlflow tracking uri", **log_dic)
+            self.log_writer.info("Set mlflow tracking uri")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited set_mlflow_tracking_uri method of MLFlowOperation class")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def get_experiment(self, exp_name):
         """
@@ -75,26 +72,23 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.get_experiment.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered get_experiment method of MLFLowOperation class")
 
         try:
             exp = get_experiment_by_name(self.mlflow_config[exp_name])
 
-            self.log_writer.log(f"Got {exp_name} experiment from mlflow", **log_dic)
+            self.log_writer.info(f"Got {exp_name} experiment from mlflow")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited get_experiment method of MLFLowOperation class")
 
             return exp
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def get_runs_from_mlflow(self, exp_id):
         """
@@ -107,29 +101,25 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.get_runs_from_mlflow.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered get_runs_from_mlflow method of MLFlowOperation class")
 
         try:
             runs = search_runs(exp_id)
 
-            self.log_writer.log(
+            self.log_writer.info(
                 f"Completed searching for runs in mlflow with experiment ids as {exp_id}",
-                **log_dic,
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited get_runs_from_mlflow method of MLFlowOperation class")
 
             return runs
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def get_mlflow_models(self):
         """
@@ -142,26 +132,23 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.get_mlflow_models.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered get_mlflow_models method of MLFlowOperation class")
 
         try:
             reg_model_names = [rm.name for rm in self.client.list_registered_models()]
 
-            self.log_writer.log("Got registered models from mlflow", **log_dic)
+            self.log_writer.info("Got registered models from mlflow")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited get_mlflow_models method of MLFlowOperation class")
 
             return reg_model_names
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def search_mlflow_models(self, order):
         """
@@ -174,28 +161,23 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.search_mlflow_models.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered search_mlflow_models method of MLFlowOperation class")
 
         try:
             results = self.client.search_registered_models(order_by=[f"name {order}"])
 
-            self.log_writer.log(
-                f"Got registered models in mlflow in {order} order", **log_dic
-            )
+            self.log_writer.info(f"Got registered models in mlflow in {order} order")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited search_mlflow_models method of MLFlowOperation class")
 
             return results
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def transition_mlflow_model(
         self, model_version, stage, model_name, from_bucket, to_bucket
@@ -210,83 +192,58 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.transition_mlflow_model.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered transition_mlflow_model method of MLFlowOperation class")
 
         try:
             current_version = model_version
 
-            self.log_writer.log(
-                f"Got {current_version} as the current model version", **log_dic
-            )
+            self.log_writer.info(f"Got {current_version} as the current model version")
 
-            train_model_file = self.utils.get_model_file(
-                "trained_model", model_name, log_dic["log_file"]
-            )
+            train_model_file = self.utils.get_model_file("trained_model", model_name)
 
-            stag_model_file = self.utils.get_model_file(
-                "stag_model", model_name, log_dic["log_file"]
-            )
+            stag_model_file = self.utils.get_model_file("stag_model", model_name)
 
-            prod_model_file = self.utils.get_model_file(
-                "prod_model", model_name, log_dic["log_file"]
-            )
+            prod_model_file = self.utils.get_model_file("prod_model", model_name)
 
-            self.log_writer.log("Created trained,stag and prod model files", **log_dic)
+            self.log_writer.info("Created trained,stag and prod model files")
 
             if stage == "Production":
-                self.log_writer.log(f"{stage} is selected for transition", **log_dic)
+                self.log_writer.info(f"{stage} is selected for transition")
 
                 self.client.transition_model_version_stage(
                     model_name, current_version, stage
                 )
 
-                self.log_writer.log(
-                    f"Transitioned {model_name} to {stage} in mlflow", **log_dic
-                )
+                self.log_writer.info(f"Transitioned {model_name} to {stage} in mlflow")
 
                 self.s3.copy_data(
-                    train_model_file,
-                    from_bucket,
-                    prod_model_file,
-                    to_bucket,
-                    log_dic["log_file"],
+                    train_model_file, from_bucket, prod_model_file, to_bucket,
                 )
 
             elif stage == "Staging":
-                self.log_writer.log(f"{stage} is selected for transition", **log_dic)
+                self.log_writer.info(f"{stage} is selected for transition")
 
                 self.client.transition_model_version_stage(
                     model_name, current_version, stage
                 )
 
-                self.log_writer.log(
-                    f"Transitioned {model_name} to {stage} in mlflow", **log_dic
-                )
+                self.log_writer.info(f"Transitioned {model_name} to {stage} in mlflow")
 
                 self.s3.copy_data(
-                    train_model_file,
-                    from_bucket,
-                    stag_model_file,
-                    to_bucket,
-                    log_dic["log_file"],
+                    train_model_file, from_bucket, stag_model_file, to_bucket,
                 )
 
             else:
-                self.log_writer.log(
-                    "Please select stage for model transition", **log_dic
-                )
+                self.log_writer.info("Please select stage for model transition")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited transition_mlflow_model method of MLFlowOperation class")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def transition_best_models(self, model, top_models):
         """
@@ -300,19 +257,11 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.transition_best_models.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered transition_best_models method of MLFlowOperation class")
 
         try:
-            self.log_writer.log(
+            self.log_writer.info(
                 "Started transitioning best models to production and rest to staging",
-                **log_dic,
             )
 
             if model.name in top_models:
@@ -333,14 +282,18 @@ class MLFlow_Operation:
                     model.version, "Staging", model.name, "model", "model"
                 )
 
-            self.log_writer.log(
-                "Transitioned best models to production and rest to staging", **log_dic
+            self.log_writer.info(
+                "Transitioned best models to production and rest to staging",
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited transition_best_models method of MLFlowOperation class")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def get_best_models(self, runs, num_clusters):
         """
@@ -353,14 +306,7 @@ class MLFlow_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.get_best_models.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered get_best_models method of MLFlowOperation class")
 
         try:
             reg_model_names = self.get_mlflow_models()
@@ -371,20 +317,17 @@ class MLFlow_Operation:
                 if model != "KMeans"
             ]
 
-            self.log_writer.log(
-                "Created cols list based on registered models", **log_dic
-            )
+            self.log_writer.info("Created cols list based on registered models")
 
             runs_cols = runs.filter(cols).max().sort_values(ascending=False)
 
-            self.log_writer.log(
+            self.log_writer.info(
                 "Filtered the runs dataframe based on the cols in descending order",
-                **log_dic,
             )
 
             metrics_dict = runs_cols.to_dict()
 
-            self.log_writer.log("Converted runs_cols to dict", **log_dic)
+            self.log_writer.info("Converted runs_cols to dict")
 
             """ 
                         Eg-output: For 3 clusters, 
@@ -421,9 +364,8 @@ class MLFlow_Operation:
                 for i in range(0, num_clusters)
             ]
 
-            self.log_writer.log(
+            self.log_writer.info(
                 "Got the best metric names from the metrics_dict and number of clusters",
-                **log_dic,
             )
 
             ## best_metrics will store the value of metrics, but we want the names of the models,
@@ -433,13 +375,15 @@ class MLFlow_Operation:
 
             ## top_mn_lst - will store the top 3 model names
 
-            self.log_writer.log(
-                "Got the top model list from best_metrics names", **log_dic
-            )
+            self.log_writer.info("Got the top model list from best_metrics names")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited get_best_models method of MLFlowOperation class")
 
             return top_mn_lst
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message

@@ -1,10 +1,12 @@
-from mlflow_operations import MLFlow_Operation
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic
+import logging
+import sys
+
+from wafer_load_prod_model.components.mlflow_operations import MLFlowOperation
+from wafer_load_prod_model.exception import WaferException
+from wafer_load_prod_model.utils.main_utils import MainUtils
 
 
-class Load_Prod_Model:
+class LoadProdModel:
     """
     Description :   This class shall be used for loading the production model
     Version     :   1.2
@@ -13,11 +15,11 @@ class Load_Prod_Model:
     """
 
     def __init__(self):
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
-        self.utils = Main_Utils()
+        self.utils = MainUtils()
 
-        self.mlflow_op = MLFlow_Operation("load_prod_model")
+        self.mlflow_op = MLFlowOperation()
 
     def load_production_model(self):
         """
@@ -30,17 +32,10 @@ class Load_Prod_Model:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.load_production_model.__name__,
-            __file__,
-            "load_prod_model",
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered load_production_model method of Run class")
 
         try:
-            self.utils.create_prod_and_stag_dirs("model", log_dic["log_file"])
+            self.utils.create_prod_and_stag_dirs("model")
 
             self.mlflow_op.set_mlflow_tracking_uri()
 
@@ -48,7 +43,7 @@ class Load_Prod_Model:
 
             runs = self.mlflow_op.get_runs_from_mlflow(exp.experiment_id)
 
-            num_clusters = self.utils.get_number_of_clusters(log_dic["log_file"])
+            num_clusters = self.utils.get_number_of_clusters()
 
             """
             Code Explaination: 
@@ -63,7 +58,7 @@ class Load_Prod_Model:
 
             top_mn_lst = self.mlflow_op.get_best_models(runs, num_clusters)
 
-            self.log_writer.log(f"Got the top model names", **log_dic)
+            self.log_writer.info(f"Got the top model names")
 
             results = self.mlflow_op.search_mlflow_models("DESC")
 
@@ -78,19 +73,23 @@ class Load_Prod_Model:
                 for mv in res.latest_versions
             ]
 
-            self.log_writer.log(
-                "Transitioning of models based on scores successfully done", **log_dic
+            self.log_writer.info(
+                "Transitioning of models based on scores successfully done",
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
 
 if __name__ == "__main__":
     try:
-        run = Load_Prod_Model()
+        run = LoadProdModel()
 
         run.load_production_model()
 
@@ -98,6 +97,6 @@ if __name__ == "__main__":
         raise e
 
     finally:
-        utils = Main_Utils()
+        utils = MainUtils()
 
         utils.upload_logs()
