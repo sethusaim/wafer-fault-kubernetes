@@ -1,8 +1,10 @@
-from data_loader_pred import Data_Getter_Pred
-from preprocessing import Preprocessor
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic
+import logging
+import sys
+
+from wafer_preprocess_pred.components.data_loader_pred import DataGetterPred
+from wafer_preprocess_pred.components.preprocessing import Preprocessor
+from wafer_preprocess_pred.exception import WaferException
+from wafer_preprocess_pred.utils.main_utils import MainUtils
 
 
 class Run:
@@ -14,13 +16,13 @@ class Run:
     """
 
     def __init__(self):
-        self.utils = Main_Utils()
+        self.utils = MainUtils()
 
-        self.data_getter_pred = Data_Getter_Pred("preprocess_pred")
+        self.data_getter_pred = DataGetterPred()
 
-        self.preprocess = Preprocessor("preprocess_pred")
+        self.preprocess = Preprocessor()
 
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
     def run_preprocess(self):
         """
@@ -33,52 +35,44 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.run_preprocess.__name__,
-            __file__,
-            "preprocess_pred",
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start")
 
         try:
             data = self.data_getter_pred.get_data()
 
             is_null_present = self.preprocess.is_null_present(data)
 
-            self.log_writer.log(
+            self.log_writer.info(
                 f"Preprocessing function is_null_present returned null values present to be {is_null_present}",
-                **log_dic,
             )
 
-            self.log_writer.log("Imputing missing values for the data", **log_dic)
+            self.log_writer.info("Imputing missing values for the data")
 
             if is_null_present:
                 data = self.preprocess.impute_missing_values(data)
 
-            self.log_writer.log("Imputed missing values for the data", **log_dic)
+            self.log_writer.info("Imputed missing values for the data")
 
             cols_to_drop = self.preprocess.get_columns_with_zero_std_deviation(data)
 
-            self.log_writer.log("Got columns with zero standard deviation", **log_dic)
+            self.log_writer.info("Got columns with zero standard deviation")
 
             data = self.preprocess.remove_columns(data, cols_to_drop)
 
-            self.log_writer.log(
-                "Removed columns with zero standard deviation", **log_dic
-            )
+            self.log_writer.info("Removed columns with zero standard deviation")
 
-            self.utils.upload_preprocessed_data(data, log_dic["log_file"])
+            self.utils.upload_preprocessed_data(data)
 
-            self.log_writer.log(
-                "Completed preprocessing for prediction data", **log_dic
-            )
+            self.log_writer.info("Completed preprocessing for prediction data")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
 
 if __name__ == "__main__":
@@ -91,6 +85,6 @@ if __name__ == "__main__":
         raise e
 
     finally:
-        utils = Main_Utils()
+        utils = MainUtils()
 
         utils.upload_logs()

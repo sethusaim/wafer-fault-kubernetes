@@ -1,10 +1,13 @@
+import logging
+import sys
+
 import numpy as np
 from pandas import DataFrame
 from sklearn.impute import KNNImputer
+from utils.main_utils import MainUtils
+from utils.read_params import read_params
 
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic, read_params
+from wafer_preprocess_pred.exception import WaferException
 
 
 class Preprocessor:
@@ -15,16 +18,14 @@ class Preprocessor:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, log_file):
-        self.log_file = log_file
-
+    def __init__(self):
         self.config = read_params()
 
         self.imputer_params = self.config["knn_imputer"]
 
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
-        self.utils = Main_Utils()
+        self.utils = MainUtils()
 
     def remove_columns(self, data, columns):
         """
@@ -37,14 +38,7 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   Modified code based on the params.yaml file
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.remove_columns.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered remove_columns method of Preprocessor class")
 
         self.data = data
 
@@ -53,14 +47,18 @@ class Preprocessor:
         try:
             self.useful_data = self.data.drop(labels=self.columns, axis=1)
 
-            self.log_writer.log("Column removal Successful", **log_dic)
+            self.log_writer.info("Column removal Successful")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited remove_columns method of Preprocessor class")
 
             return self.useful_data
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def separate_label_feature(self, data, label_col_name):
         """
@@ -73,30 +71,31 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.separate_label_feature.__name__,
-            __file__,
-            self.log_file,
+        self.log_writer.info(
+            "Entered separate_label_feature method of Preprocessor Class"
         )
-
-        self.log_writer.start_log("start", **log_dic)
 
         try:
             self.X = data.drop(labels=label_col_name, axis=1)
 
             self.Y = data[label_col_name]
 
-            self.log_writer.log(f"Label Separation Successful", **log_dic)
+            self.log_writer.info(f"Label Separation Successful")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited separate_label_feature method of Preprocessor Class"
+            )
 
             return self.X, self.Y
 
         except Exception as e:
-            self.log_writer.log("Label Separation Unsuccessful", **log_dic)
+            self.log_writer.info("Label Separation Unsuccessful")
 
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def is_null_present(self, data):
         """
@@ -109,14 +108,7 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.is_null_present.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered is_null_present method of Preprocessor class")
 
         self.null_present = False
 
@@ -130,21 +122,24 @@ class Preprocessor:
                     break
 
             if self.null_present:
-                self.utils.upload_null_values_file(data, log_dic["log_file"])
+                self.utils.upload_null_values_file(data)
 
-            self.log_writer.log(
+            self.log_writer.info(
                 "Finding missing values is a success.Data written to the null values file",
-                **log_dic,
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited is_null_present method of Preprocessor class")
 
             return self.null_present
 
         except Exception as e:
-            self.log_writer.log("Finding missing values failed", **log_dic)
+            self.log_writer.info("Finding missing values failed")
 
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def impute_missing_values(self, data):
         """
@@ -157,14 +152,9 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.impute_missing_values.__name__,
-            __file__,
-            self.log_file,
+        self.log_writer.info(
+            "Entered impute_missing_values class of Preprocessor Class"
         )
-
-        self.log_writer.start_log("start", **log_dic)
 
         self.data = data
 
@@ -175,16 +165,22 @@ class Preprocessor:
 
             self.new_data = DataFrame(data=self.new_array, columns=self.data.columns)
 
-            self.log_writer.log("Imputing missing values Successful", **log_dic)
+            self.log_writer.info("Imputing missing values Successful")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited impute_missing_values class of Preprocessor Class"
+            )
 
             return self.new_data
 
         except Exception as e:
-            self.log_writer.log("Imputing missing values failed", **log_dic)
+            self.log_writer.info("Imputing missing values failed")
 
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
 
     def get_columns_with_zero_std_deviation(self, data):
         """
@@ -197,14 +193,9 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.get_columns_with_zero_std_deviation.__name__,
-            __file__,
-            self.log_file,
+        self.log_writer.info(
+            "Entered get_columns_with_zero_std_deviation method of Preprocessor Class"
         )
-
-        self.log_writer.start_log("start", **log_dic)
 
         self.columns = data.columns
 
@@ -215,17 +206,21 @@ class Preprocessor:
         try:
             self.col_to_drop = [x for x in self.columns if self.data_n[x]["std"] == 0]
 
-            self.log_writer.log(
-                "Column search for Standard Deviation of Zero Successful.", **log_dic
+            self.log_writer.info(
+                "Column search for Standard Deviation of Zero Successful."
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited get_columns_with_zero_std_deviation method of Preprocessor Class"
+            )
 
             return self.col_to_drop
 
         except Exception as e:
-            self.log_writer.log(
-                "Column search for Standard Deviation of Zero Failed.", **log_dic
-            )
+            self.log_writer.info("Column search for Standard Deviation of Zero Failed.")
 
-            self.log_writer.exception_log(e, **log_dic)
+            message = WaferException(e, sys)
+
+            self.log_writer.error(message.error_message)
+
+            raise message.error_message
