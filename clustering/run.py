@@ -65,7 +65,7 @@ class Run:
                                 
                 self.utils.upload_cluster_data(i,cluster_features,key="features")
                 
-                self.utils.upload_cluster_data(i,cluster_features,key="targets")
+                self.utils.upload_cluster_data(i,cluster_label,key="targets")
 
             self.log_writer.info("Clustering of training data is completed")
 
