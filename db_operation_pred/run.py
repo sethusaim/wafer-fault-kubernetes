@@ -3,7 +3,6 @@ import sys
 
 from wafer_db_operation_pred.components.data_type_valid_pred import DBOperationPred
 from wafer_db_operation_pred.exception import WaferException
-from wafer_db_operation_pred.utils.main_utils import MainUtils
 
 
 class Run:
@@ -54,9 +53,4 @@ if __name__ == "__main__":
         run.pred_data_type_valid()
 
     except Exception as e:
-        raise e
-
-    finally:
-        utils = MainUtils()
-
-        utils.upload_logs()
+        raise WaferException(e, sys) from e
