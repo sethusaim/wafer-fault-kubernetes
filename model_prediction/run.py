@@ -58,9 +58,4 @@ if __name__ == "__main__":
         run.predict_from_model()
 
     except Exception as e:
-        raise e
-
-    finally:
-        utils = MainUtils()
-
-        utils.upload_logs()
+        raise WaferException(e, sys) from e
