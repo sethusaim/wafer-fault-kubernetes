@@ -79,7 +79,7 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered get_df_from_object method of S3Operation class")
 
         try:
             content = self.read_object(object, make_readable=True)
@@ -88,7 +88,7 @@ class S3Operation:
 
             self.log_writer.info("Got the dataframe from object")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited get_df_from_object method of S3Operation class")
 
             return df
 
@@ -106,7 +106,7 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered read_csv method of S3Operation class")
 
         try:
             csv_obj = self.get_file_object(fname, bucket)
@@ -115,7 +115,7 @@ class S3Operation:
 
             self.log_writer.info(f"Read {fname} csv file from {bucket} bucket")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited read_csv method of S3Operation class")
 
             return df
 
@@ -133,14 +133,14 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered get_bucket method of S3Operation class")
 
         try:
             bucket = self.s3_resource.Bucket(self.bucket[bucket])
 
             self.log_writer.info(f"Got {bucket} bucket")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited get_bucket method of S3Operation class")
 
             return bucket
 
@@ -158,7 +158,7 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered get_file_object method of S3Operation class")
 
         try:
             bucket = self.get_bucket(bucket)
@@ -173,7 +173,7 @@ class S3Operation:
 
             self.log_writer.info(f"Got the {fname} file object from {bucket} bucket")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited get_file_object method of S3Operation class")
 
             return file_objs
 
@@ -191,7 +191,7 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered get_files_from_folder method of S3Operation class")
 
         try:
             lst = self.get_file_object(folder_name, bucket)
@@ -200,7 +200,7 @@ class S3Operation:
 
             self.log_writer.info(f"Got list of files from bucket {bucket}")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited get_files_from_folder method of S3Operation class")
 
             return list_of_files
 
@@ -218,7 +218,7 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered read_csv_from_folder method of S3Operation class")
 
         try:
             files = self.get_files_from_folder(self.dir[folder_name], bucket)
@@ -233,7 +233,7 @@ class S3Operation:
                 f"Read csv files from {folder_name} folder from {bucket} bucket",
             )
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited read_csv_from_folder method of S3Operation class")
 
             return lst
 
@@ -251,7 +251,7 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered upload_file method of S3Operation class")
 
         try:
             self.log_writer.info(f"Uploading {from_fname} to s3 bucket {bucket}")
@@ -271,7 +271,7 @@ class S3Operation:
 
                 self.log_writer.info(f"Removed the local copy of {from_fname}")
 
-                self.log_writer.info("exit")
+                self.log_writer.info("Exited upload_file method of S3Operation class")
 
             else:
                 self.log_writer.info(
@@ -294,7 +294,7 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered upload_df_as_csv method of S3Operation class")
 
         try:
             func = lambda fname: self.files[fname] if fidx is False else fname
@@ -311,14 +311,23 @@ class S3Operation:
 
             self.upload_file(local_fname, bucket_fname, bucket)
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited upload_df_as_csv method of S3Operation class")
 
         except Exception as e:
             raise WaferException(e, sys) from e
 
     def upload_folder(self, folder, bucket):
-
-        self.log_writer.info("start")
+        """
+        Method Name :   upload_folder
+        Description :   This method uploades folder to s3 bucket
+        
+        Output      :   Folder is uploaded to s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        self.log_writer.info("Entered upload_folder method of S3Operation class")
 
         try:
             lst = listdir(folder)
@@ -334,7 +343,7 @@ class S3Operation:
 
             self.log_writer.info("Uploaded folder to s3 bucket")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited upload_folder method of S3Operation class")
 
         except Exception as e:
             raise WaferException(e, sys) from e
