@@ -11,10 +11,6 @@ files:
 
 target_col: Output
 
-log:
-  preprocess: preprocess_train.log
-  upload: upload_preprocess_train.log
-
 knn_imputer:
   n_neighbors: 3
   weights: uniform
