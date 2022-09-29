@@ -1,8 +1,8 @@
 import logging
 import sys
 
-from wafer_db_operation_train.components.mongo_db_operations import MongoDB_Operation
-from wafer_db_operation_train.components.s3_operations import S3_Operation
+from wafer_db_operation_train.components.mongo_db_operations import MongoDBOperation
+from wafer_db_operation_train.components.s3_operations import S3Operation
 from wafer_db_operation_train.exception import WaferException
 from wafer_db_operation_train.utils.main_utils import MainUtils
 
@@ -16,9 +16,9 @@ class DBOperationTrain:
     """
 
     def __init__(self):
-        self.s3 = S3_Operation()
+        self.s3 = S3Operation()
 
-        self.mongo = MongoDB_Operation()
+        self.mongo = MongoDBOperation()
 
         self.log_writer = logging.getLogger(__name__)
 

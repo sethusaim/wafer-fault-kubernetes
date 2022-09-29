@@ -2,7 +2,7 @@ import logging
 import sys
 from datetime import datetime
 
-from wafer_db_operation_train.components.s3_operations import S3_Operation
+from wafer_db_operation_train.components.s3_operations import S3Operation
 from wafer_db_operation_train.exception import WaferException
 from wafer_db_operation_train.utils.read_params import read_params
 
@@ -16,7 +16,7 @@ class MainUtils:
     """
 
     def __init__(self):
-        self.s3 = S3_Operation()
+        self.s3 = S3Operation()
 
         self.log_writer = logging.getLogger(__name__)
 

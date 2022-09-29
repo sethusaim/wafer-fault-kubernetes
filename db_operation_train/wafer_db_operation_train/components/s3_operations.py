@@ -1,4 +1,5 @@
 import logging
+import sys
 from io import StringIO
 from os import listdir, remove
 from os.path import join
@@ -6,10 +7,11 @@ from os.path import join
 from boto3 import resource
 from pandas import read_csv
 
+from wafer_db_operation_train.exception import WaferException
 from wafer_db_operation_train.utils.read_params import read_params
 
 
-class S3_Operation:
+class S3Operation:
     """
     Description :   This method is used for all the S3 bucket operations
     Version     :   1.2
@@ -42,7 +44,7 @@ class S3_Operation:
         Revisions   :   moved setup to cloud
         """
 
-        self.log_writer.info("start")
+        self.log_writer.info("Entered read_object method of S3Operation class")
 
         try:
             func = (
@@ -59,12 +61,12 @@ class S3_Operation:
                 f"read the s3 object with make_readable as {make_readable}"
             )
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited read_object method of S3Operation class")
 
             return conv_func()
 
         except Exception as e:
-            self.log_writer.info(e)
+            raise WaferException(e, sys) from e
 
     def get_df_from_object(self, object):
         """
@@ -91,7 +93,7 @@ class S3_Operation:
             return df
 
         except Exception as e:
-            self.log_writer.info(e)
+            raise WaferException(e, sys) from e
 
     def read_csv(self, fname, bucket):
         """
@@ -118,7 +120,7 @@ class S3_Operation:
             return df
 
         except Exception as e:
-            self.log_writer.info(e)
+            raise WaferException(e, sys) from e
 
     def get_bucket(self, bucket):
         """
@@ -143,7 +145,7 @@ class S3_Operation:
             return bucket
 
         except Exception as e:
-            self.log_writer.info(e)
+            raise WaferException(e, sys) from e
 
     def get_file_object(self, fname, bucket):
         """
@@ -203,7 +205,7 @@ class S3_Operation:
             return list_of_files
 
         except Exception as e:
-            self.log_writer.info(e)
+            raise WaferException(e, sys) from e
 
     def read_csv_from_folder(self, folder_name, bucket):
         """
@@ -236,7 +238,7 @@ class S3_Operation:
             return lst
 
         except Exception as e:
-            self.log_writer.info(e)
+            raise WaferException(e, sys) from e
 
     def upload_file(self, from_fname, to_fname, bucket, delete=True):
         """
@@ -277,7 +279,7 @@ class S3_Operation:
                 )
 
         except Exception as e:
-            self.log_writer.info(e)
+            raise WaferException(e, sys) from e
 
     def upload_df_as_csv(
         self, data_frame, local_fname, bucket_fname, bucket, fidx=False
@@ -312,7 +314,7 @@ class S3_Operation:
             self.log_writer.info("exit")
 
         except Exception as e:
-            self.log_writer.info(e)
+            raise WaferException(e, sys) from e
 
     def upload_folder(self, folder, bucket):
 
@@ -335,4 +337,4 @@ class S3_Operation:
             self.log_writer.info("exit")
 
         except Exception as e:
-            self.log_writer.info(e)
+            raise WaferException(e, sys) from e

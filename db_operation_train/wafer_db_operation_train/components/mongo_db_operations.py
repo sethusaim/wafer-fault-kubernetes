@@ -11,7 +11,7 @@ from wafer_db_operation_train.utils.main_utils import MainUtils
 from wafer_db_operation_train.utils.read_params import read_params
 
 
-class MongoDB_Operation:
+class MongoDBOperation:
     """
     Description :   This method is used for all mongodb operations
     Version     :   1.2
@@ -43,14 +43,14 @@ class MongoDB_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered get_database method of MongoDBOperation class")
 
         try:
             db = self.client[self.mongo_config[db_name]]
 
             self.log_writer.info(f"Created {db_name} database in MongoDB")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited get_database method of MongoDBOperation class")
 
             return db
 
@@ -68,12 +68,14 @@ class MongoDB_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info(
+            "Entered get_collection_as_dataframe method of MongoDBOperation class"
+        )
 
         try:
-            database = self.get_database(db_name,)
+            database = self.get_database(db_name)
 
-            collection_name = self.utils.get_collection_with_timestamp(collection_name,)
+            collection_name = self.utils.get_collection_with_timestamp(collection_name)
 
             collection = database.get_collection(collection_name)
 
@@ -84,7 +86,9 @@ class MongoDB_Operation:
 
             self.log_writer.info("Converted collection to dataframe")
 
-            self.log_writer.info("exit")
+            self.log_writer.info(
+                "Exited get_collection_as_dataframe method of MongoDBOperation class"
+            )
 
             return df
 
@@ -102,7 +106,9 @@ class MongoDB_Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info(
+            "Entered insert_dataframe_as_record method of MongoDBOperation class"
+        )
 
         try:
             records = loads(data_frame.T.to_json()).values()
@@ -121,7 +127,9 @@ class MongoDB_Operation:
 
             self.log_writer.info("Inserted records to MongoDB")
 
-            self.log_writer.info("exit")
+            self.log_writer.info(
+                "Exited insert_dataframe_as_record method of MongoDBOperation class"
+            )
 
         except Exception as e:
             raise WaferException(e, sys) from e
