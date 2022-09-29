@@ -1,9 +1,9 @@
 import logging
 import sys
 
-from wafer_pred_val.components.pred_data_validation import RawPredDataValidation
+from wafer_pred_val.components.pred_data_validation import \
+    RawPredDataValidation
 from wafer_pred_val.exception import WaferException
-from wafer_pred_val.utils.main_utils import MainUtils
 
 
 class Run:
@@ -30,7 +30,7 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered")
+        self.log_writer.info("Entered raw_pred_data_validation method of Run class")
 
         try:
             self.log_writer.info("Raw Data Validation started !!")
@@ -54,7 +54,7 @@ class Run:
 
             self.log_writer.info("Raw Data Validation Completed !!")
 
-            self.log_writer.info("Exited")
+            self.log_writer.info("Exited raw_pred_data_validation method of Run class")
 
         except Exception as e:
             raise WaferException(e, sys) from e
@@ -67,9 +67,4 @@ if __name__ == "__main__":
         run.raw_pred_data_validation()
 
     except Exception as e:
-        raise e
-
-    finally:
-        utils = MainUtils()
-
-        utils.upload_logs()
+        raise WaferException(e, sys) from e

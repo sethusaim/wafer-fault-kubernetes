@@ -3,11 +3,11 @@ import os
 
 from from_root import from_root
 
-logs_path = os.path.join(from_root(), "car_price", "logs")
+logs_path = os.path.join(from_root(), "model_prediction", "wafer_model_prediction","prediction_logs")
 
 os.makedirs(logs_path, exist_ok=True)
 
-LOG_FILE_PATH = os.path.join(logs_path, "car_price.log")
+LOG_FILE_PATH = os.path.join(logs_path, "model_prediction.log")
 
 logging.basicConfig(
     filename=LOG_FILE_PATH,

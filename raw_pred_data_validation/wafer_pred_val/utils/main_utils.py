@@ -24,33 +24,6 @@ class MainUtils:
 
         self.dir = self.config["dir"]
 
-        self.log_dir = self.dir["log"]
-
-    def upload_logs(self):
-        """
-        Method Name :   upload_logs
-        Description :   This method uploads the logs to s3 bucket
-        
-        Output      :   The logs are uploaded to s3 bucket
-        On Failure  :   Write an exception log and then raise an exception
-        
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        self.log_writer.info("Entered upload_logs method of MainUtils class")
-
-        try:
-            self.s3.upload_folder(self.log_dir, "logs")
-
-            self.log_writer.info("Uploaded logs to logs s3 bucket")
-
-            self.log_writer.info("Exited upload_logs method of MainUtils class")
-
-            rmtree(self.log_dir)
-
-        except Exception as e:
-            raise WaferException(e, sys) from e
-
     def get_filename(self, key, fname):
         """
         Method Name :   get_pred_fname

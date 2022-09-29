@@ -8,6 +8,7 @@ from os.path import join
 from boto3 import client, resource
 from botocore.exceptions import ClientError
 from pandas import read_csv
+
 from wafer_pred_val.exception import WaferException
 from wafer_pred_val.utils.read_params import read_params
 
@@ -494,38 +495,6 @@ class S3Operation:
             )
 
             self.log_writer.info("Exited upload_df_as_csv method of S3Operation class")
-
-        except Exception as e:
-            raise WaferException(e, sys) from e
-
-    def upload_folder(self, folder, bucket):
-        """
-        Method Name :   upload_folder
-        Description :   This method uploades folder to s3 bucket
-
-        Output      :   A folder is uploaded to s3 bucket
-        On Failure  :   Write an exception log and then raise an exception
-
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        self.log_writer.info("Entered upload_folder method of S3Operation class")
-
-        try:
-            lst = listdir(folder)
-
-            self.log_writer.info("Got a list of files from folder")
-
-            for f in lst:
-                local_f = join(folder, f)
-
-                dest_f = folder + "/" + f
-
-                self.upload_file(local_f, dest_f, bucket, delete=False)
-
-            self.log_writer.info("Uploaded folder to s3 bucket")
-
-            self.log_writer.info("Exited upload_folder method of S3Operation class")
 
         except Exception as e:
             raise WaferException(e, sys) from e
