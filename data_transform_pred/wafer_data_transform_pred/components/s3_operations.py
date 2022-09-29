@@ -6,9 +6,9 @@ from os.path import join
 
 from boto3 import resource
 from pandas import read_csv
-from utils.read_params import read_params
 
 from wafer_data_transform_pred.exception import WaferException
+from wafer_data_transform_pred.utils.read_params import read_params
 
 
 class S3Operation:
@@ -146,8 +146,6 @@ class S3Operation:
             self.log_writer.info(
                 f"Read csv files from {folder_name} folder from {bucket} bucket"
             )
-
-            self.log_writer.start_log("exit")
 
             self.log_writer.info(
                 "Exited read_csv_from_folder method of S3Operation class"
