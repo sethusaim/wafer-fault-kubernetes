@@ -60,7 +60,3 @@ if __name__ == "__main__":
     except Exception as e:
         raise e
 
-    finally:
-        utils = MainUtils()
-
-        utils.upload_logs()

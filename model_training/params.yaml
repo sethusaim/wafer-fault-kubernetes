@@ -21,10 +21,6 @@ dir:
 
 file_pattern: -wafer_train_features-
 
-log:
-  model_train: model_training.log
-  upload: upload_model_train.log
-
 model_utils:
   verbose: 3
   cv: 4
