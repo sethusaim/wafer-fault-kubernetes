@@ -4,10 +4,10 @@ import sys
 import numpy as np
 from pandas import DataFrame
 from sklearn.impute import KNNImputer
-from utils.main_utils import MainUtils
-from utils.read_params import read_params
 
 from wafer_preprocess_pred.exception import WaferException
+from wafer_preprocess_pred.utils.main_utils import MainUtils
+from wafer_preprocess_pred.utils.read_params import read_params
 
 
 class Preprocessor:

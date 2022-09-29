@@ -4,12 +4,12 @@ import os
 from from_root import from_root
 
 logs_path = os.path.join(
-    from_root(), "wafer_preprocesssing_pred", "wafer_preprocess_pred", "logs"
+    from_root(), "preprocessing_pred", "wafer_preprocess_pred", "preprocesssing_pred_logs"
 )
 
 os.makedirs(logs_path, exist_ok=True)
 
-LOG_FILE_PATH = os.path.join(logs_path, "wafer.log")
+LOG_FILE_PATH = os.path.join(logs_path, "preprocessing_pred.log")
 
 logging.basicConfig(
     filename=LOG_FILE_PATH,

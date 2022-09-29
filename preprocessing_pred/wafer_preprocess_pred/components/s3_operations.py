@@ -6,7 +6,6 @@ from os.path import join
 
 from boto3 import resource
 from pandas import read_csv
-from utils.read_params import read_params
 
 from wafer_preprocess_pred.exception import WaferException
 from wafer_preprocess_pred.utils.read_params import read_params
