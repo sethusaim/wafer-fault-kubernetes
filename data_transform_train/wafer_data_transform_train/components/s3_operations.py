@@ -5,9 +5,9 @@ from os import listdir, remove
 from os.path import join
 
 from boto3 import resource
-from exception import WaferException
 from pandas import read_csv
 
+from wafer_data_transform_train.exception import WaferException
 from wafer_data_transform_train.utils.read_params import read_params
 
 
@@ -270,8 +270,6 @@ class S3Operation:
             list_of_files = [object.key for object in lst]
 
             self.log_writer.info(f"Got list of files from bucket {bucket}")
-
-            self.log_writer.start_log("exit",)
 
             self.log_writer.info(
                 "Exited get_files_from_folder method of S3Operation class"

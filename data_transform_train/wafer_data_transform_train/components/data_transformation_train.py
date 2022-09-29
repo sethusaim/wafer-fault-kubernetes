@@ -1,10 +1,9 @@
 import logging
 import sys
 
-from exception import WaferException
-from utils.read_params import read_params
-
 from wafer_data_transform_train.components.s3_operations import S3Operation
+from wafer_data_transform_train.exception import WaferException
+from wafer_data_transform_train.utils.read_params import read_params
 
 
 class DataTransformTrain:
@@ -94,8 +93,6 @@ class DataTransformTrain:
                 self.log_writer.info(f"Renamed the output columns for the file {file}")
 
                 self.s3.upload_df_as_csv(df, abs_f, file, "train_data")
-
-            self.log_writer.start_log("exit",)
 
             self.log_writer.info(
                 "Exited rename_column method of DataTransformTrain class"

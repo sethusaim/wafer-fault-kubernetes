@@ -4,13 +4,8 @@ s3_bucket:
 
 dir:
   train_good_data: good/train
-  log: data_transform_train_logs
-
-log:
-  data_transform: train_data_transform.log
-  data_transform_main: data_transform_main.log
-  upload: upload_data_transform_train.log
-
+  log: wafer_data_transform_train/wafer_data_transform_train_logs/
+  
 col:
   output: Output
   good_bad: Good/Bad

@@ -4,7 +4,10 @@ import os
 from from_root import from_root
 
 logs_path = os.path.join(
-    from_root(), "data_transform_train", "wafer_data_transform", "logs"
+    from_root(),
+    "data_transform_train",
+    "wafer_data_transform_train",
+    "wafer_data_transform_train_logs",
 )
 
 os.makedirs(logs_path, exist_ok=True)
