@@ -263,25 +263,3 @@ class S3Operation:
         except Exception as e:
             raise WaferException(e, sys) from e
 
-    def upload_folder(self, folder, bucket):
-
-        self.log_writer.info("start")
-
-        try:
-            lst = listdir(folder)
-
-            self.log_writer.info("Got a list of files from folder")
-
-            for f in lst:
-                local_f = join(folder, f)
-
-                dest_f = folder + "/" + f
-
-                self.upload_file(local_f, dest_f, bucket, delete=False)
-
-            self.log_writer.info("Uploaded folder to s3 bucket")
-
-            self.log_writer.info("exit")
-
-        except Exception as e:
-            raise WaferException(e, sys) from e
