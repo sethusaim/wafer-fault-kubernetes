@@ -38,10 +38,6 @@ module "io_files_bucket" {
   source = "./s3_buckets/wafer_io_files_bucket"
 }
 
-module "logs_bucket" {
-  source = "./s3_buckets/wafer_logs_bucket"
-}
-
 module "mlflow_bucket" {
   source = "./s3_buckets/wafer_mlflow_bucket"
 }
