@@ -55,11 +55,7 @@ class MongoDBOperation:
             return db
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_collection_as_dataframe(self, db_name, collection_name):
         """
@@ -97,11 +93,7 @@ class MongoDBOperation:
             return df
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def insert_dataframe_as_record(self, data_frame, db_name, collection_name):
         """
@@ -140,8 +132,4 @@ class MongoDBOperation:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e

@@ -52,11 +52,7 @@ class MainUtils:
             rmtree(self.log_dir)
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def find_correct_model_file(self, cluster_number, bucket):
         """
@@ -97,11 +93,7 @@ class MainUtils:
             return model_name
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_unique_clusters(self):
         """
@@ -142,11 +134,7 @@ class MainUtils:
             return unique_clusters, data
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_pred_input_file(self):
         """
@@ -173,11 +161,7 @@ class MainUtils:
             return data
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_predictions(self, idx, data):
         """
@@ -228,11 +212,7 @@ class MainUtils:
             return result
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def upload_results(self, result_df):
         """
@@ -257,11 +237,7 @@ class MainUtils:
             self.log_writer.info("exit")
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_file_with_timestamp(self, file):
         """
@@ -294,8 +270,4 @@ class MainUtils:
             return ip_fname
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e

@@ -1,4 +1,4 @@
-resource "aws_apprunner_service" "search_data_collection_apprunner_service" {
+resource "aws_apprunner_service" "mlflow_apprunner_service" {
   service_name = var.app_runner_service_name
   source_configuration {
     authentication_configuration {

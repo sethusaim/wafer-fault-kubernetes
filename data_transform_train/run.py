@@ -1,8 +1,9 @@
 import logging
 import sys
 
-from wafer_data_transform_train.components.data_transformation_train import \
-    DataTransformTrain
+from wafer_data_transform_train.components.data_transformation_train import (
+    DataTransformTrain,
+)
 from wafer_data_transform_train.exception import WaferException
 from wafer_data_transform_train.utils.main_utils import MainUtils
 
@@ -45,11 +46,7 @@ class Run:
             self.log_writer.info("Exited train_data_transform method of Run class")
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
 
 if __name__ == "__main__":

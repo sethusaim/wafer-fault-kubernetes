@@ -1,8 +1,7 @@
 import logging
 import sys
 
-from wafer_db_operation_train.components.mongo_db_operations import \
-    MongoDB_Operation
+from wafer_db_operation_train.components.mongo_db_operations import MongoDB_Operation
 from wafer_db_operation_train.components.s3_operations import S3_Operation
 from wafer_db_operation_train.exception import WaferException
 from wafer_db_operation_train.utils.main_utils import MainUtils
@@ -90,8 +89,4 @@ class DBOperationTrain:
             self.log_writer.info("exit")
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e

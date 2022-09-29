@@ -44,17 +44,13 @@ class S3Operation:
         self.log_writer.info("start")
 
         try:
-            self.log_writer.info(
-                f"Uploading {from_fname} to s3 bucket {bucket}"
-            )
+            self.log_writer.info(f"Uploading {from_fname} to s3 bucket {bucket}")
 
             self.s3_resource.meta.client.upload_file(
                 from_fname, self.bucket[bucket], to_fname
             )
 
-            self.log_writer.info(
-                f"Uploaded {from_fname} to s3 bucket {bucket}"
-            )
+            self.log_writer.info(f"Uploaded {from_fname} to s3 bucket {bucket}")
 
             if delete is True:
                 self.log_writer.info(
@@ -63,9 +59,7 @@ class S3Operation:
 
                 remove(from_fname)
 
-                self.log_writer.info(
-                    f"Removed the local copy of {from_fname}"
-                )
+                self.log_writer.info(f"Removed the local copy of {from_fname}")
 
             else:
                 self.log_writer.info(
@@ -109,7 +103,6 @@ class S3Operation:
 
             self.log_writer.info(
                 f"Uploaded dataframe as csv to {bucket} bucket with name as {bucket_fname}",
-                
             )
 
             self.log_writer.info("exit")
@@ -166,9 +159,7 @@ class S3Operation:
 
             file_objs = func(lst_objs)
 
-            self.log_writer.info(
-                f"Got {fname} file object from {bucket} bucket"
-            )
+            self.log_writer.info(f"Got {fname} file object from {bucket} bucket")
 
             self.log_writer.info("exit")
 
@@ -199,9 +190,7 @@ class S3Operation:
                 else object.get()["Body"].read()
             )
 
-            self.log_writer.info(
-                f"Read the s3 object with decode as {decode}"
-            )
+            self.log_writer.info(f"Read the s3 object with decode as {decode}")
 
             conv_func = lambda: StringIO(func()) if make_readable is True else func()
 
@@ -265,9 +254,7 @@ class S3Operation:
 
             df = self.get_df_from_object(csv_obj)
 
-            self.log_writer.info(
-                f"Read {fname} csv file from {bucket} bucket"
-            )
+            self.log_writer.info(f"Read {fname} csv file from {bucket} bucket")
 
             self.log_writer.info("exit")
 
@@ -277,7 +264,6 @@ class S3Operation:
             raise WaferException(e, sys) from e
 
     def upload_folder(self, folder, bucket):
-
 
         self.log_writer.info("start")
 
@@ -291,9 +277,7 @@ class S3Operation:
 
                 dest_f = folder + "/" + f
 
-                self.upload_file(
-                    local_f, dest_f, bucket, delete=False
-                )
+                self.upload_file(local_f, dest_f, bucket, delete=False)
 
             self.log_writer.info("Uploaded folder to s3 bucket")
 

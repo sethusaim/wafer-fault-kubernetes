@@ -53,11 +53,7 @@ class MainUtils:
             rmtree(self.log_dir)
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_model_file(self, key, model_name):
         """
@@ -82,11 +78,7 @@ class MainUtils:
             return model_file
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def create_prod_and_stag_dirs(self, bucket):
         """
@@ -99,21 +91,21 @@ class MainUtils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered create_prod_and_stag_dirs method of MainUtils class")
+        self.log_writer.info(
+            "Entered create_prod_and_stag_dirs method of MainUtils class"
+        )
 
         try:
             self.s3.create_folder("prod_model", bucket)
 
             self.s3.create_folder("stag_model", bucket)
 
-            self.log_writer.info("Exited create_prod_and_stag_dirs method of MainUtils class")
+            self.log_writer.info(
+                "Exited create_prod_and_stag_dirs method of MainUtils class"
+            )
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_number_of_clusters(self):
         """
@@ -141,13 +133,11 @@ class MainUtils:
 
             self.log_writer.info(f"Got the number of clusters as {num_clusters}")
 
-            self.log_writer.info("Exited get_number_of_clusters method of MainUtils class")
+            self.log_writer.info(
+                "Exited get_number_of_clusters method of MainUtils class"
+            )
 
             return num_clusters
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e

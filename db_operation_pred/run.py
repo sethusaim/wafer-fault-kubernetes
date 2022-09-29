@@ -1,8 +1,7 @@
 import logging
 import sys
 
-from wafer_db_operation_pred.components.data_type_valid_pred import \
-    DBOperationPred
+from wafer_db_operation_pred.components.data_type_valid_pred import DBOperationPred
 from wafer_db_operation_pred.exception import WaferException
 from wafer_db_operation_pred.utils.main_utils import MainUtils
 
@@ -45,11 +44,7 @@ class Run:
             self.log_writer.info("Exited pred_data_type_valid method of Run class")
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
 
 if __name__ == "__main__":

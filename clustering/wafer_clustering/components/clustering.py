@@ -71,11 +71,7 @@ class KMeansClustering:
             return self.kn.knee
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def create_clusters(self, data, num_clusters):
         """
@@ -110,8 +106,4 @@ class KMeansClustering:
             return self.data
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e

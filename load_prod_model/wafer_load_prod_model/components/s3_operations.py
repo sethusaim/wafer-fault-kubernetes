@@ -18,7 +18,7 @@ class S3Operation:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self):        
+    def __init__(self):
         self.log_writer = logging.getLogger(__name__)
 
         self.config = read_params()
@@ -54,27 +54,19 @@ class S3Operation:
         except ClientError as e:
             if e.response["Error"]["Code"] == "404":
                 self.log_writer.info(
-                    f"{folder_name} folder does not exist,creating new one" 
+                    f"{folder_name} folder does not exist,creating new one"
                 )
 
                 self.s3_client.put_object(
                     Bucket=self.bucket[bucket], Key=(self.dir[folder_name] + "/")
                 )
 
-                self.log_writer.info(
-                    f"{folder_name} folder created in {bucket} bucket"
-                )
+                self.log_writer.info(f"{folder_name} folder created in {bucket} bucket")
 
             else:
-                self.log_writer.info(
-                    f"Error occured in creating {folder_name} folder", 
-                )
+                self.log_writer.info(f"Error occured in creating {folder_name} folder",)
 
-                message = WaferException(e, sys)
-
-                self.log_writer.error(message.error_message)
-
-                raise message.error_message
+                raise WaferException(e, sys) from e
 
     def copy_data(self, from_fname, from_bucket, to_fname, to_bucket):
         """
@@ -103,11 +95,7 @@ class S3Operation:
             self.log_writer.info("Exited copy_data method of S3Operation class")
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def upload_file(self, from_fname, to_fname, bucket, delete=True):
         """
@@ -123,17 +111,13 @@ class S3Operation:
         self.log_writer.info("Entered upload_file method of S3Operation class")
 
         try:
-            self.log_writer.info(
-                f"Uploading {from_fname} to s3 bucket {bucket}"
-            )
+            self.log_writer.info(f"Uploading {from_fname} to s3 bucket {bucket}")
 
             self.s3_resource.meta.client.upload_file(
                 from_fname, self.bucket[bucket], to_fname
             )
 
-            self.log_writer.info(
-                f"Uploaded {from_fname} to s3 bucket {bucket}"
-            )
+            self.log_writer.info(f"Uploaded {from_fname} to s3 bucket {bucket}")
 
             if delete is True:
                 self.log_writer.info(
@@ -142,9 +126,7 @@ class S3Operation:
 
                 remove(from_fname)
 
-                self.log_writer.info(
-                    f"Removed the local copy of {from_fname}"
-                )
+                self.log_writer.info(f"Removed the local copy of {from_fname}")
 
             else:
                 self.log_writer.info(
@@ -154,11 +136,7 @@ class S3Operation:
             self.log_writer.info("Exited upload_file method of S3Operation class")
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_bucket(self, bucket):
         """
@@ -183,11 +161,7 @@ class S3Operation:
             return bucket
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_file_object(self, fname, bucket, pattern=False):
         """
@@ -224,11 +198,7 @@ class S3Operation:
             return file_objs
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_files_from_folder(self, folder_name, bucket, pattern=False):
         """
@@ -241,7 +211,9 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered get_files_from_folder method of S3Operation class")
+        self.log_writer.info(
+            "Entered get_files_from_folder method of S3Operation class"
+        )
 
         try:
             lst = self.get_file_object(folder_name, bucket, pattern=pattern)
@@ -250,16 +222,14 @@ class S3Operation:
 
             self.log_writer.info(f"Got list of files from bucket {bucket}")
 
-            self.log_writer.info("Exited get_files_from_folder method of S3Operation class")
+            self.log_writer.info(
+                "Exited get_files_from_folder method of S3Operation class"
+            )
 
             return list_of_files
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def upload_folder(self, folder, bucket):
         """
@@ -291,8 +261,4 @@ class S3Operation:
             self.log_writer.info("Exited upload_folder method of S3Operation class")
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e

@@ -64,11 +64,7 @@ class DataTransformTrain:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def rename_column(self, from_col, to_col):
         """
@@ -106,8 +102,4 @@ class DataTransformTrain:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e

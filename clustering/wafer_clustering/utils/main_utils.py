@@ -54,11 +54,7 @@ class MainUtils:
             rmtree(self.log_dir)
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_cluster_fname(self, fname, idx):
         """
@@ -87,11 +83,7 @@ class MainUtils:
             return cluster_fname
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def upload_cluster_data(self, idx, cluster_data, key=None):
         """
@@ -122,11 +114,7 @@ class MainUtils:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_training_data(self, key):
         """
@@ -155,11 +143,7 @@ class MainUtils:
             return data
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def save_and_upload_elbow_plot(self, max_clusters, wcss):
         self.log_writer.info(
@@ -190,9 +174,4 @@ class MainUtils:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
-
+            raise WaferException(e, sys) from e

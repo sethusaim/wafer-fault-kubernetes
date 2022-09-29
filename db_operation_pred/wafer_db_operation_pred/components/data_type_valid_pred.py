@@ -1,8 +1,7 @@
 import logging
 import sys
 
-from wafer_db_operation_pred.components.mongo_db_operations import \
-    MongoDBOperation
+from wafer_db_operation_pred.components.mongo_db_operations import MongoDBOperation
 from wafer_db_operation_pred.components.s3_operations import S3Operation
 from wafer_db_operation_pred.exception import WaferException
 from wafer_db_operation_pred.utils.main_utils import MainUtils
@@ -59,11 +58,7 @@ class DBOperationPred:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def export_collection_to_csv(self, good_data_db_name, good_data_collection_name):
         """
@@ -97,8 +92,4 @@ class DBOperationPred:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e

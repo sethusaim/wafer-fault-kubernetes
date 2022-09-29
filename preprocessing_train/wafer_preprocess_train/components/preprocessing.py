@@ -119,7 +119,6 @@ class Preprocessor:
 
             self.log_writer.info(
                 "Finding missing values is a success.Data written to the null values file",
-                
             )
 
             self.log_writer.info("exit")
@@ -195,9 +194,7 @@ class Preprocessor:
             return self.col_to_drop
 
         except Exception as e:
-            self.log_writer.info(
-                "Column search for Standard Deviation of Zero Failed."
-            )
+            self.log_writer.info("Column search for Standard Deviation of Zero Failed.")
 
             raise WaferException(e, sys) from e
 

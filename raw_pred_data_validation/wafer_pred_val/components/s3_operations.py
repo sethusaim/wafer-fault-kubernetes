@@ -8,7 +8,6 @@ from os.path import join
 from boto3 import client, resource
 from botocore.exceptions import ClientError
 from pandas import read_csv
-
 from wafer_pred_val.exception import WaferException
 from wafer_pred_val.utils.read_params import read_params
 

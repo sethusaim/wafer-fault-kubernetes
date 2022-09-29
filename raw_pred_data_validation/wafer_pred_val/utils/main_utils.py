@@ -87,7 +87,9 @@ class MainUtils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered create_dirs_for_good_bad_data method of MainUtils class")
+        self.log_writer.info(
+            "Entered create_dirs_for_good_bad_data method of MainUtils class"
+        )
 
         try:
             self.s3.create_folder("pred_good_data", "pred_data")
@@ -96,7 +98,9 @@ class MainUtils:
 
             self.log_writer.info(f"Created folders for good and bad data in s3 bucket")
 
-            self.log_writer.info("Exited create_dirs_for_good_bad_data method of MainUtils class")
+            self.log_writer.info(
+                "Exited create_dirs_for_good_bad_data method of MainUtils class"
+            )
 
         except Exception as e:
             raise WaferException(e, sys) from e

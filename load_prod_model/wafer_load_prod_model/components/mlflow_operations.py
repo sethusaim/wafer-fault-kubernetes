@@ -45,21 +45,21 @@ class MLFlowOperation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered set_mlflow_tracking_uri method of MLFlowOperation class")
+        self.log_writer.info(
+            "Entered set_mlflow_tracking_uri method of MLFlowOperation class"
+        )
 
         try:
             set_tracking_uri(self.remote_server_uri)
 
             self.log_writer.info("Set mlflow tracking uri")
 
-            self.log_writer.info("Exited set_mlflow_tracking_uri method of MLFlowOperation class")
+            self.log_writer.info(
+                "Exited set_mlflow_tracking_uri method of MLFlowOperation class"
+            )
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_experiment(self, exp_name):
         """
@@ -79,16 +79,14 @@ class MLFlowOperation:
 
             self.log_writer.info(f"Got {exp_name} experiment from mlflow")
 
-            self.log_writer.info("Exited get_experiment method of MLFLowOperation class")
+            self.log_writer.info(
+                "Exited get_experiment method of MLFLowOperation class"
+            )
 
             return exp
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_runs_from_mlflow(self, exp_id):
         """
@@ -101,7 +99,9 @@ class MLFlowOperation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered get_runs_from_mlflow method of MLFlowOperation class")
+        self.log_writer.info(
+            "Entered get_runs_from_mlflow method of MLFlowOperation class"
+        )
 
         try:
             runs = search_runs(exp_id)
@@ -110,16 +110,14 @@ class MLFlowOperation:
                 f"Completed searching for runs in mlflow with experiment ids as {exp_id}",
             )
 
-            self.log_writer.info("Exited get_runs_from_mlflow method of MLFlowOperation class")
+            self.log_writer.info(
+                "Exited get_runs_from_mlflow method of MLFlowOperation class"
+            )
 
             return runs
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_mlflow_models(self):
         """
@@ -132,23 +130,23 @@ class MLFlowOperation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered get_mlflow_models method of MLFlowOperation class")
+        self.log_writer.info(
+            "Entered get_mlflow_models method of MLFlowOperation class"
+        )
 
         try:
             reg_model_names = [rm.name for rm in self.client.list_registered_models()]
 
             self.log_writer.info("Got registered models from mlflow")
 
-            self.log_writer.info("Exited get_mlflow_models method of MLFlowOperation class")
+            self.log_writer.info(
+                "Exited get_mlflow_models method of MLFlowOperation class"
+            )
 
             return reg_model_names
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def search_mlflow_models(self, order):
         """
@@ -161,23 +159,23 @@ class MLFlowOperation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered search_mlflow_models method of MLFlowOperation class")
+        self.log_writer.info(
+            "Entered search_mlflow_models method of MLFlowOperation class"
+        )
 
         try:
             results = self.client.search_registered_models(order_by=[f"name {order}"])
 
             self.log_writer.info(f"Got registered models in mlflow in {order} order")
 
-            self.log_writer.info("Exited search_mlflow_models method of MLFlowOperation class")
+            self.log_writer.info(
+                "Exited search_mlflow_models method of MLFlowOperation class"
+            )
 
             return results
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def transition_mlflow_model(
         self, model_version, stage, model_name, from_bucket, to_bucket
@@ -192,7 +190,9 @@ class MLFlowOperation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered transition_mlflow_model method of MLFlowOperation class")
+        self.log_writer.info(
+            "Entered transition_mlflow_model method of MLFlowOperation class"
+        )
 
         try:
             current_version = model_version
@@ -236,14 +236,12 @@ class MLFlowOperation:
             else:
                 self.log_writer.info("Please select stage for model transition")
 
-            self.log_writer.info("Exited transition_mlflow_model method of MLFlowOperation class")
+            self.log_writer.info(
+                "Exited transition_mlflow_model method of MLFlowOperation class"
+            )
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def transition_best_models(self, model, top_models):
         """
@@ -257,7 +255,9 @@ class MLFlowOperation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered transition_best_models method of MLFlowOperation class")
+        self.log_writer.info(
+            "Entered transition_best_models method of MLFlowOperation class"
+        )
 
         try:
             self.log_writer.info(
@@ -286,14 +286,12 @@ class MLFlowOperation:
                 "Transitioned best models to production and rest to staging",
             )
 
-            self.log_writer.info("Exited transition_best_models method of MLFlowOperation class")
+            self.log_writer.info(
+                "Exited transition_best_models method of MLFlowOperation class"
+            )
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
     def get_best_models(self, runs, num_clusters):
         """
@@ -377,13 +375,11 @@ class MLFlowOperation:
 
             self.log_writer.info("Got the top model list from best_metrics names")
 
-            self.log_writer.info("Exited get_best_models method of MLFlowOperation class")
+            self.log_writer.info(
+                "Exited get_best_models method of MLFlowOperation class"
+            )
 
             return top_mn_lst
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
