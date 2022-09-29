@@ -80,7 +80,7 @@ class S3_Operation:
         self.log_writer.info("start")
 
         try:
-            content = self.read_object(object,make_readable=True)
+            content = self.read_object(object, make_readable=True)
 
             df = read_csv(content)
 
@@ -220,9 +220,13 @@ class S3_Operation:
 
         try:
             files = self.get_files_from_folder(self.dir[folder_name], bucket)
-            
-            lst = [(self.read_csv(f,bucket),f,f.split("/")[-1]) for f in files if f.endswith(".csv")]
-                
+
+            lst = [
+                (self.read_csv(f, bucket), f, f.split("/")[-1])
+                for f in files
+                if f.endswith(".csv")
+            ]
+
             self.log_writer.info(
                 f"Read csv files from {folder_name} folder from {bucket} bucket",
             )

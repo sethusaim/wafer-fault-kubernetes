@@ -1,8 +1,7 @@
 import logging
 import sys
 
-from wafer_db_operation_train.components.mongo_db_operations import \
-    MongoDB_Operation
+from wafer_db_operation_train.components.mongo_db_operations import MongoDB_Operation
 from wafer_db_operation_train.components.s3_operations import S3_Operation
 from wafer_db_operation_train.exception import WaferException
 from wafer_db_operation_train.utils.main_utils import MainUtils

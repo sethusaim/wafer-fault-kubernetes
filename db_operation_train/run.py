@@ -1,8 +1,7 @@
 import logging
 import sys
 
-from wafer_db_operation_train.components.data_type_valid_train import \
-    DBOperationTrain
+from wafer_db_operation_train.components.data_type_valid_train import DBOperationTrain
 from wafer_db_operation_train.exception import WaferException
 
 
