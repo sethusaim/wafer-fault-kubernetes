@@ -3,7 +3,6 @@ import sys
 
 from wafer_raw_val.components.train_data_validation import RawTrainDataValidation
 from wafer_raw_val.exception import WaferException
-from wafer_raw_val.utils.main_utils import MainUtils
 
 
 class Run:
@@ -67,9 +66,4 @@ if __name__ == "__main__":
         run.raw_train_data_validation()
 
     except Exception as e:
-        raise e
-
-    finally:
-        utils = MainUtils()
-
-        utils.upload_logs()
+        raise WaferException(e, sys) from e
