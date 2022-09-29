@@ -1,13 +1,12 @@
 import logging
 import sys
 from datetime import datetime
-from shutil import rmtree
 
 from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
-from utils.read_params import read_params
 
 from wafer_clustering.components.s3_operations import S3Operation
 from wafer_clustering.exception import WaferException
+from wafer_clustering.utils.read_params import read_params
 
 
 class MainUtils:
@@ -30,31 +29,6 @@ class MainUtils:
         self.log_dir = self.config["dir"]["log"]
 
         self.current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
-
-    def upload_logs(self):
-        """
-        Method Name :   upload_logs
-        Description :   This method uploads the logs to s3 bucket
-        
-        Output      :   The logs are uploaded to s3 bucket
-        On Failure  :   Write an exception log and then raise an exception
-        
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        self.log_writer.info("Entered upload_logs method of MainUtils class")
-
-        try:
-            self.s3.upload_folder(self.log_dir, "logs")
-
-            self.log_writer.info("Uploaded logs to s3 bucket")
-
-            self.log_writer.info("Exited upload_logs method of MainUtils class")
-
-            rmtree(self.log_dir)
-
-        except Exception as e:
-            raise WaferException(e, sys) from e
 
     def get_cluster_fname(self, fname, idx):
         """
