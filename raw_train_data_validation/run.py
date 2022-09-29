@@ -1,8 +1,7 @@
 import logging
 import sys
 
-from wafer_raw_val.components.train_data_validation import \
-    RawTrainDataValidation
+from wafer_raw_val.components.train_data_validation import RawTrainDataValidation
 from wafer_raw_val.exception import WaferException
 from wafer_raw_val.utils.main_utils import MainUtils
 
