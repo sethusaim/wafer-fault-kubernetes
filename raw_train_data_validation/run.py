@@ -1,7 +1,10 @@
-from train_data_validation import Raw_Train_Data_Validation
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic
+import logging
+import sys
+
+from wafer_raw_val.components.train_data_validation import \
+    RawTrainDataValidation
+from wafer_raw_val.exception import WaferException
+from wafer_raw_val.utils.main_utils import MainUtils
 
 
 class Run:
@@ -13,9 +16,9 @@ class Run:
     """
 
     def __init__(self):
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
-        self.raw_data = Raw_Train_Data_Validation()
+        self.raw_data = RawTrainDataValidation()
 
     def raw_train_data_validation(self):
         """
@@ -28,17 +31,10 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.raw_train_data_validation.__name__,
-            __file__,
-            "raw_train_main",
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered")
 
         try:
-            self.log_writer.log("Raw Data Validation started !!", **log_dic)
+            self.log_writer.info("Raw Data Validation started !!")
 
             (
                 LengthOfDateStampInFile,
@@ -57,12 +53,12 @@ class Run:
 
             self.raw_data.validate_missing_values_in_col()
 
-            self.log_writer.log("Raw Data Validation Completed !!", **log_dic)
+            self.log_writer.info("Raw Data Validation Completed !!")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            raise WaferException(e, sys) from e
 
 
 if __name__ == "__main__":
@@ -75,6 +71,6 @@ if __name__ == "__main__":
         raise e
 
     finally:
-        utils = Main_Utils()
+        utils = MainUtils()
 
         utils.upload_logs()
