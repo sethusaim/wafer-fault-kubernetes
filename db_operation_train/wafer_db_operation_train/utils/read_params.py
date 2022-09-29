@@ -26,7 +26,7 @@ def read_params(config_path="params.yaml"):
         )
 
 
-def get_log_dic(class_name, method_name, file, log_file):
+def get_log_dic(class_name, method_name, file):
     """
     Method Name :   get_log_dic
     Description :   This method gets extra log params as dict

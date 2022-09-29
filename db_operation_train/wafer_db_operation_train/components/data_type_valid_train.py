@@ -1,7 +1,8 @@
 import logging
 import sys
 
-from wafer_db_operation_train.components.mongo_db_operations import MongoDB_Operation
+from wafer_db_operation_train.components.mongo_db_operations import \
+    MongoDB_Operation
 from wafer_db_operation_train.components.s3_operations import S3_Operation
 from wafer_db_operation_train.exception import WaferException
 from wafer_db_operation_train.utils.main_utils import MainUtils
@@ -40,7 +41,7 @@ class DBOperationTrain:
         )
 
         try:
-            lst = self.s3.read_csv_from_folder("train_good_data", "train_data",)
+            lst = self.s3.read_csv_from_folder("train_good_data", "train_data")
 
             for _, f in enumerate(lst):
                 df = f[0]
@@ -56,7 +57,7 @@ class DBOperationTrain:
             self.log_writer.info("exit",)
 
         except Exception as e:
-            self.log_writer.info(e,)
+            raise WaferException(e, sys) from e
 
     def export_collection_to_csv(self, good_data_db_name, good_data_collection_name):
         """
