@@ -1,8 +1,7 @@
 import logging
 import sys
 
-from wafer_pred_val.components.pred_data_validation import \
-    RawPredDataValidation
+from wafer_pred_val.components.pred_data_validation import RawPredDataValidation
 from wafer_pred_val.exception import WaferException
 
 
