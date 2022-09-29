@@ -48,8 +48,6 @@ class MainUtils:
 
             self.log_writer.info("Exited")
 
-            self.log_writer.stop_log()
-
             rmtree(self.log_dir)
 
         except Exception as e:
