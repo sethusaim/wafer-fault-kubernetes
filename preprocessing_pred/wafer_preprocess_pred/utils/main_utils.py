@@ -28,6 +28,7 @@ class MainUtils:
 
         self.files = self.config["files"]
 
+<<<<<<< HEAD
         self.log_dir = self.config["dir"]["log"]
 
     def upload_logs(self):
@@ -59,6 +60,8 @@ class MainUtils:
 
             
 
+=======
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
     def upload_null_values_file(self, data):
         """
         Method Name :   upload_logs
@@ -93,11 +96,15 @@ class MainUtils:
             self.log_writer.info("exit")
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def upload_preprocessed_data(self, data):
         self.log_writer.info(
@@ -116,11 +123,15 @@ class MainUtils:
             )
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_file_with_timestamp(self, file):
         self.log_writer.info(
@@ -143,8 +154,12 @@ class MainUtils:
             return ip_fname
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a

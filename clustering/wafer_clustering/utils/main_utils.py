@@ -1,13 +1,12 @@
 import logging
 import sys
 from datetime import datetime
-from shutil import rmtree
 
 from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
-from utils.read_params import read_params
 
 from wafer_clustering.components.s3_operations import S3Operation
 from wafer_clustering.exception import WaferException
+from wafer_clustering.utils.read_params import read_params
 
 
 class MainUtils:
@@ -31,6 +30,7 @@ class MainUtils:
 
         self.current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
 
+<<<<<<< HEAD
     def upload_logs(self):
         """
         Method Name :   upload_logs
@@ -56,6 +56,8 @@ class MainUtils:
         except Exception as e:
             raise WaferException(e, sys) from e
 
+=======
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
     def get_cluster_fname(self, fname, idx):
         """
         Method Name :   get_cluster_fname

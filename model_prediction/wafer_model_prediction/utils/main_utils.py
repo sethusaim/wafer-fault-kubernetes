@@ -1,7 +1,6 @@
 import logging
 import sys
 from datetime import datetime
-from shutil import rmtree
 
 from pandas import DataFrame
 
@@ -25,10 +24,9 @@ class MainUtils:
 
         self.config = read_params()
 
-        self.log_dir = self.config["dir"]["log"]
-
         self.files = self.config["files"]
 
+<<<<<<< HEAD
     def upload_logs(self):
         """
         Method Name :   upload_logs
@@ -58,6 +56,8 @@ class MainUtils:
 
             
 
+=======
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
     def find_correct_model_file(self, cluster_number, bucket):
         """
         Method Name :   find_correct_model_file
@@ -97,11 +97,15 @@ class MainUtils:
             return model_name
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_unique_clusters(self):
         """
@@ -142,11 +146,15 @@ class MainUtils:
             return unique_clusters, data
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_pred_input_file(self):
         """
@@ -173,11 +181,15 @@ class MainUtils:
             return data
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_predictions(self, idx, data):
         """
@@ -228,11 +240,15 @@ class MainUtils:
             return result
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def upload_results(self, result_df):
         """
@@ -257,11 +273,15 @@ class MainUtils:
             self.log_writer.info("exit")
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_file_with_timestamp(self, file):
         """
@@ -294,8 +314,12 @@ class MainUtils:
             return ip_fname
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a

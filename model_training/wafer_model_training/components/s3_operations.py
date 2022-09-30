@@ -59,11 +59,15 @@ class S3Operation:
             return bucket
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_file_object(self, fname, bucket, pattern=False):
         """
@@ -100,11 +104,15 @@ class S3Operation:
             return file_objs
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def read_object(self, object, decode=True, make_readable=False):
         """
@@ -139,11 +147,15 @@ class S3Operation:
             return conv_func()
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def copy_data(self, from_fname, from_bucket, to_fname, to_bucket):
         """
@@ -172,11 +184,15 @@ class S3Operation:
             self.log_writer.info("Exited copy_data method of S3Operation class")
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def read_csv(self, fname, bucket, pattern=False):
         """
@@ -203,11 +219,15 @@ class S3Operation:
             return df
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def save_model(self, model, model_dir, model_bucket, idx=None):
         """
@@ -251,11 +271,15 @@ class S3Operation:
         except Exception as e:
             self.log_writer.info(f"Model file {model_name} could not be saved")
 
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def upload_file(self, from_fname, to_fname, bucket, delete=True):
         """
@@ -298,11 +322,15 @@ class S3Operation:
             self.log_writer.info("Exited upload_file method of S3Operation class")
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_files_from_folder(self, folder_name, bucket):
         """
@@ -333,11 +361,15 @@ class S3Operation:
             return list_of_files
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def read_csv_from_folder(self, folder_name, bucket):
         """
@@ -372,11 +404,15 @@ class S3Operation:
             return lst
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_df_from_object(self, object):
         """
@@ -405,11 +441,15 @@ class S3Operation:
             return df
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def load_model(self, model_name, bucket, model_dir=None):
         """
@@ -450,6 +490,7 @@ class S3Operation:
             return model
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
@@ -491,3 +532,8 @@ class S3Operation:
             
 
             
+=======
+            raise WaferException(e, sys) from e
+
+
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a

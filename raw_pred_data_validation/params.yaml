@@ -8,20 +8,10 @@ dir:
   raw_pred_batch_data: pred_batch
   pred_good_data: good/pred
   pred_bad_data: bad/pred
-  log: raw_pred_data_validation_logs
 
 files:
   pred_schema: wafer-schema_prediction.json
   regex: wafer-regex.txt
-
-log:
-  upload: upload_raw_pred_data_validation.log
-  raw_pred_main: raw_pred_main.log
-  values_from_schema: pred_values_from_schema.log
-  general: pred_general.log
-  name_validation: pred_name_validation.log
-  col_validation: pred_col_validation.log
-  missing_values_in_col: pred_missing_values_in_column.log
 
 log_params:
   filemode: a

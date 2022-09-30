@@ -24,6 +24,7 @@ def read_params(config_path="params.yaml"):
         raise Exception(
             f"Exception occured in {__file__}, Method : {method_name}, Error : {str(e)}"
         )
+<<<<<<< HEAD
 
 
 def get_log_dic(class_name, method_name, file, log_file):
@@ -51,3 +52,5 @@ def get_log_dic(class_name, method_name, file, log_file):
         raise Exception(
             f"Exception occured in {__file__}, Method : {_method_name}, Error : {str(e)}"
         )
+=======
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a

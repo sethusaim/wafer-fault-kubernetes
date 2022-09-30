@@ -30,6 +30,7 @@ class MainUtils:
 
         self.feats_pattern = self.config["feature_pattern"]
 
+<<<<<<< HEAD
     def upload_logs(self):
         """
         Method Name :   upload_logs
@@ -59,6 +60,8 @@ class MainUtils:
 
             
 
+=======
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
     def get_model_file(self, key, model_name):
         """
         Method Name :   get_model_file
@@ -82,11 +85,15 @@ class MainUtils:
             return model_file
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def create_prod_and_stag_dirs(self, bucket):
         """
@@ -99,21 +106,29 @@ class MainUtils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered create_prod_and_stag_dirs method of MainUtils class")
+        self.log_writer.info(
+            "Entered create_prod_and_stag_dirs method of MainUtils class"
+        )
 
         try:
             self.s3.create_folder("prod_model", bucket)
 
             self.s3.create_folder("stag_model", bucket)
 
-            self.log_writer.info("Exited create_prod_and_stag_dirs method of MainUtils class")
+            self.log_writer.info(
+                "Exited create_prod_and_stag_dirs method of MainUtils class"
+            )
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_number_of_clusters(self):
         """
@@ -141,13 +156,19 @@ class MainUtils:
 
             self.log_writer.info(f"Got the number of clusters as {num_clusters}")
 
-            self.log_writer.info("Exited get_number_of_clusters method of MainUtils class")
+            self.log_writer.info(
+                "Exited get_number_of_clusters method of MainUtils class"
+            )
 
             return num_clusters
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a

@@ -23,3 +23,5 @@ ENV MLFLOW_TRACKING_URI $MLFLOW_TRACKING_URI
 RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
 CMD ["python3","run.py"]
+
+# mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root s3://wafer-mlflow-35789c9/ --host 0.0.0.0 -p 8080

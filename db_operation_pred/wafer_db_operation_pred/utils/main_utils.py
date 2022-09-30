@@ -1,11 +1,10 @@
 import logging
 import sys
 from datetime import datetime
-from shutil import rmtree
 
-from exception import WaferException
 from wafer_db_operation_pred.components.s3_operations import S3Operation
-from utils.read_params import read_params
+from wafer_db_operation_pred.exception import WaferException
+from wafer_db_operation_pred.utils.read_params import read_params
 
 
 class MainUtils:
@@ -25,12 +24,11 @@ class MainUtils:
 
         self.current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
 
-        self.log_dir = self.config["dir"]["log"]
-
         self.files = self.config["files"]
 
         self.mongodb_config = self.config["mongodb"]
 
+<<<<<<< HEAD
     def upload_logs(self):
         """
         Method Name :   upload_logs
@@ -60,6 +58,8 @@ class MainUtils:
 
             
 
+=======
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
     def get_file_with_timestamp(self, file):
         """
         Method Name :   get_file_with_timestamp
@@ -87,11 +87,15 @@ class MainUtils:
             return file
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_collection_with_timestamp(self, collection_name):
         """
@@ -122,8 +126,12 @@ class MainUtils:
             return current_collection_name
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a

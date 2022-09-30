@@ -68,11 +68,15 @@ class Run:
             self.log_writer.info("exit")
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
 
 if __name__ == "__main__":
@@ -83,8 +87,3 @@ if __name__ == "__main__":
 
     except Exception as e:
         raise e
-
-    finally:
-        utils = MainUtils()
-
-        utils.upload_logs()

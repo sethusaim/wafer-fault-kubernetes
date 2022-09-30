@@ -62,14 +62,10 @@ class Run:
                 cluster_features = cluster_data.drop(["Labels", "Cluster"], axis=1)
 
                 cluster_label = cluster_data["Labels"]
-
-                self.utils.upload_cluster_data(
-                    i, cluster_features, "clustering", key="features"
-                )
-
-                self.utils.upload_cluster_data(
-                    i, cluster_label, "clustering", key="targets"
-                )
+                                
+                self.utils.upload_cluster_data(i,cluster_features,key="features")
+                
+                self.utils.upload_cluster_data(i,cluster_label,key="targets")
 
             self.log_writer.info("Clustering of training data is completed")
 
@@ -87,8 +83,11 @@ if __name__ == "__main__":
 
     except Exception as e:
         raise e
+<<<<<<< HEAD
 
     finally:
         utils = MainUtils()
 
         utils.upload_logs()
+=======
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a

@@ -8,7 +8,7 @@ dir:
   raw_train_batch_data: train_batch
   train_good_data: good/train
   train_bad_data: bad/train
-  log: raw_train_data_validation_logs
+  log: wafer_raw_val/wafer_raw_val_logs
 
 files:
   train_schema: wafer-schema_training.json

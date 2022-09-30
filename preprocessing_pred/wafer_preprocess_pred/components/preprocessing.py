@@ -4,10 +4,10 @@ import sys
 import numpy as np
 from pandas import DataFrame
 from sklearn.impute import KNNImputer
-from utils.main_utils import MainUtils
-from utils.read_params import read_params
 
 from wafer_preprocess_pred.exception import WaferException
+from wafer_preprocess_pred.utils.main_utils import MainUtils
+from wafer_preprocess_pred.utils.read_params import read_params
 
 
 class Preprocessor:
@@ -54,11 +54,15 @@ class Preprocessor:
             return self.useful_data
 
         except Exception as e:
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def separate_label_feature(self, data, label_col_name):
         """
@@ -91,11 +95,15 @@ class Preprocessor:
         except Exception as e:
             self.log_writer.info("Label Separation Unsuccessful")
 
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def is_null_present(self, data):
         """
@@ -135,11 +143,15 @@ class Preprocessor:
         except Exception as e:
             self.log_writer.info("Finding missing values failed")
 
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def impute_missing_values(self, data):
         """
@@ -176,11 +188,15 @@ class Preprocessor:
         except Exception as e:
             self.log_writer.info("Imputing missing values failed")
 
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_columns_with_zero_std_deviation(self, data):
         """
@@ -219,8 +235,12 @@ class Preprocessor:
         except Exception as e:
             self.log_writer.info("Column search for Standard Deviation of Zero Failed.")
 
+<<<<<<< HEAD
             
 
             
 
             
+=======
+            raise WaferException(e, sys) from e
+>>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
