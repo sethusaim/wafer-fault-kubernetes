@@ -2,10 +2,9 @@ import logging
 import sys
 from shutil import rmtree
 
-from exception import WaferException
-from utils.read_params import read_params
-
 from wafer_data_transform_train.components.s3_operations import S3Operation
+from wafer_data_transform_train.exception import WaferException
+from wafer_data_transform_train.utils.read_params import read_params
 
 
 class MainUtils:
@@ -48,8 +47,4 @@ class MainUtils:
             rmtree(self.log_dir)
 
         except Exception as e:
-            
-
-            
-
-            
+            raise WaferException(e, sys) from e

@@ -63,15 +63,7 @@ class DataTransformTrain:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def rename_column(self, from_col, to_col):
         """
@@ -107,12 +99,4 @@ class DataTransformTrain:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
