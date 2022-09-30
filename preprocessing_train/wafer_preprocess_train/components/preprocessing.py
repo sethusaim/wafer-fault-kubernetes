@@ -1,20 +1,13 @@
 import logging
-<<<<<<< HEAD
-=======
 import sys
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
 import numpy as np
 from pandas import DataFrame
 from sklearn.impute import KNNImputer
 from sklearn.preprocessing import LabelEncoder
 
-<<<<<<< HEAD
-from wafer_preprocess_train.utils.main_utils import Main_Utils
-=======
 from wafer_preprocess_train.exception import WaferException
 from wafer_preprocess_train.utils.main_utils import MainUtils
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 from wafer_preprocess_train.utils.read_params import read_params
 
 
@@ -50,11 +43,7 @@ class Preprocessor:
         sVersion     :   1.2
         Revisions   :   Modified code based on the params.yaml file
         """
-<<<<<<< HEAD
-        self.log_writer.info("Entered remove_columns method of Preprocessor class")
-=======
         self.log_writer.info("start")
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
         self.data = data
 
@@ -65,20 +54,12 @@ class Preprocessor:
 
             self.log_writer.info("Column removal Successful")
 
-<<<<<<< HEAD
-            self.log_writer.info("Exited remove_columns method of Preprocessor class")
-=======
             self.log_writer.info("exit")
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
             return self.useful_data
 
         except Exception as e:
-<<<<<<< HEAD
-            self.log_writer.exception_log(e)
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def separate_label_feature(self, data):
         """
@@ -91,13 +72,7 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-<<<<<<< HEAD
-        self.log_writer.info(
-            "Entered separate_label_feature method of Preprocessor class"
-        )
-=======
         self.log_writer.info("start")
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
         try:
             self.X = data.drop(labels=self.label_col_name, axis=1)
@@ -106,24 +81,14 @@ class Preprocessor:
 
             self.log_writer.info(f"Label Separation Successful")
 
-<<<<<<< HEAD
-            self.log_writer.info(
-                "Exited separate_label_feature method of Preprocessor class"
-            )
-=======
             self.log_writer.info("exit")
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
             return self.X, self.Y
 
         except Exception as e:
             self.log_writer.info("Label Separation Unsuccessful")
 
-<<<<<<< HEAD
-            self.log_writer.exception_log(e)
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def is_null_present(self, data):
         """
@@ -136,11 +101,7 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-<<<<<<< HEAD
-        self.log_writer.info("Entered is_null_present method of Preprocessor class")
-=======
         self.log_writer.info("start")
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
         self.null_present = False
 
@@ -160,22 +121,14 @@ class Preprocessor:
                 "Finding missing values is a success.Data written to the null values file",
             )
 
-<<<<<<< HEAD
-            self.log_writer.info("Exited is_null_present method of Preprocessor class")
-=======
             self.log_writer.info("exit")
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
             return self.null_present
 
         except Exception as e:
             self.log_writer.info("Finding missing values failed")
 
-<<<<<<< HEAD
-            self.log_writer.exception_log(e)
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def impute_missing_values(self, data):
         """
@@ -208,11 +161,7 @@ class Preprocessor:
         except Exception as e:
             self.log_writer.info("Imputing missing values failed")
 
-<<<<<<< HEAD
-            self.log_writer.exception_log(e)
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_columns_with_zero_std_deviation(self, data):
         """
@@ -247,11 +196,7 @@ class Preprocessor:
         except Exception as e:
             self.log_writer.info("Column search for Standard Deviation of Zero Failed.")
 
-<<<<<<< HEAD
-            self.log_writer.exception_log(e)
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def encode_target_col(self, data):
         """
@@ -280,8 +225,4 @@ class Preprocessor:
             return y_df
 
         except Exception as e:
-<<<<<<< HEAD
-            self.log_writer.exception_log(e)
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a

@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import os
-=======
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 import sys
 
 
