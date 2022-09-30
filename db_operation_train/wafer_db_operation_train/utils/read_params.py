@@ -24,4 +24,3 @@ def read_params(config_path="params.yaml"):
         raise Exception(
             f"Exception occured in {__file__}, Method : {method_name}, Error : {str(e)}"
         )
-

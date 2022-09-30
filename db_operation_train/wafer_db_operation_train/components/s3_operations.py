@@ -88,7 +88,9 @@ class S3Operation:
 
             self.log_writer.info("Got the dataframe from object")
 
-            self.log_writer.info("Exited get_df_from_object method of S3Operation class")
+            self.log_writer.info(
+                "Exited get_df_from_object method of S3Operation class"
+            )
 
             return df
 
@@ -191,7 +193,9 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered get_files_from_folder method of S3Operation class")
+        self.log_writer.info(
+            "Entered get_files_from_folder method of S3Operation class"
+        )
 
         try:
             lst = self.get_file_object(folder_name, bucket)
@@ -200,7 +204,9 @@ class S3Operation:
 
             self.log_writer.info(f"Got list of files from bucket {bucket}")
 
-            self.log_writer.info("Exited get_files_from_folder method of S3Operation class")
+            self.log_writer.info(
+                "Exited get_files_from_folder method of S3Operation class"
+            )
 
             return list_of_files
 
@@ -233,7 +239,9 @@ class S3Operation:
                 f"Read csv files from {folder_name} folder from {bucket} bucket",
             )
 
-            self.log_writer.info("Exited read_csv_from_folder method of S3Operation class")
+            self.log_writer.info(
+                "Exited read_csv_from_folder method of S3Operation class"
+            )
 
             return lst
 

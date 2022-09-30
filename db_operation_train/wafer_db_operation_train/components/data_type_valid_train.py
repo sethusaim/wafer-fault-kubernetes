@@ -89,12 +89,4 @@ class DBOperationTrain:
             self.log_writer.info("exit")
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a

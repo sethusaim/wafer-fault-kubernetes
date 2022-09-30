@@ -39,14 +39,18 @@ class MainUtils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered get_file_with_timestamp method of MainUtils class")
+        self.log_writer.info(
+            "Entered get_file_with_timestamp method of MainUtils class"
+        )
 
         try:
             file = self.current_date + "-" + self.files[file]
 
             self.log_writer.info("Got file name with date time stamp")
 
-            self.log_writer.info("Exited get_file_with_timestamp method of MainUtils class")
+            self.log_writer.info(
+                "Exited get_file_with_timestamp method of MainUtils class"
+            )
 
             return file
 
@@ -64,7 +68,9 @@ class MainUtils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("Entered get_collection_with_timestamp method of MainUtils class")
+        self.log_writer.info(
+            "Entered get_collection_with_timestamp method of MainUtils class"
+        )
 
         try:
             current_collection_name = (
@@ -73,7 +79,9 @@ class MainUtils:
 
             self.log_writer.info("Got collection name with current time stamp")
 
-            self.log_writer.info("Exited get_collection_with_timestamp method of MainUtils class")
+            self.log_writer.info(
+                "Exited get_collection_with_timestamp method of MainUtils class"
+            )
 
             return current_collection_name
 
