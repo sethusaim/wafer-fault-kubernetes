@@ -26,38 +26,6 @@ class MainUtils:
 
         self.files = self.config["files"]
 
-<<<<<<< HEAD
-    def upload_logs(self):
-        """
-        Method Name :   upload_logs
-        Description :   This method uploads the logs to s3 bucket
-        
-        Output      :   The logs are uploaded to s3 bucket
-        On Failure  :   Write an exception log and then raise an exception
-        
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        self.log_writer.info("Entered upload_logs method of MainUtils class")
-
-        try:
-            self.s3.upload_folder(self.log_dir, "logs")
-
-            self.log_writer.info(f"Uploaded logs to logs s3 bucket")
-
-            self.log_writer.info("Exited upload_logs method of MainUtils class")
-
-            rmtree(self.log_dir)
-
-        except Exception as e:
-            
-
-            
-
-            
-
-=======
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
     def find_correct_model_file(self, cluster_number, bucket):
         """
         Method Name :   find_correct_model_file
@@ -97,15 +65,7 @@ class MainUtils:
             return model_name
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_unique_clusters(self):
         """
@@ -146,15 +106,7 @@ class MainUtils:
             return unique_clusters, data
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_pred_input_file(self):
         """
@@ -181,15 +133,7 @@ class MainUtils:
             return data
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_predictions(self, idx, data):
         """
@@ -240,15 +184,7 @@ class MainUtils:
             return result
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def upload_results(self, result_df):
         """
@@ -273,15 +209,7 @@ class MainUtils:
             self.log_writer.info("exit")
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_file_with_timestamp(self, file):
         """
@@ -314,12 +242,4 @@ class MainUtils:
             return ip_fname
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a

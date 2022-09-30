@@ -3,7 +3,9 @@ import os
 
 from from_root import from_root
 
-logs_path = os.path.join(from_root(), "model_prediction", "wafer_model_prediction","prediction_logs")
+logs_path = os.path.join(
+    from_root(), "model_prediction", "wafer_model_prediction", "prediction_logs"
+)
 
 os.makedirs(logs_path, exist_ok=True)
 
