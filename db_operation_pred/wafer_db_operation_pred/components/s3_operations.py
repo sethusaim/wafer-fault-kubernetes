@@ -65,15 +65,7 @@ class S3Operation:
             return conv_func()
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_df_from_object(self, object):
         """
@@ -102,15 +94,7 @@ class S3Operation:
             return df
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def read_csv(self, fname, bucket):
         """
@@ -137,15 +121,7 @@ class S3Operation:
             return df
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_bucket(self, bucket):
         """
@@ -170,15 +146,7 @@ class S3Operation:
             return bucket
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_file_object(self, fname, bucket):
         """
@@ -211,15 +179,7 @@ class S3Operation:
             return file_objs
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_files_from_folder(self, folder_name, bucket):
         """
@@ -250,15 +210,7 @@ class S3Operation:
             return list_of_files
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def read_csv_from_folder(self, folder_name, bucket):
         """
@@ -293,15 +245,7 @@ class S3Operation:
             return lst
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def upload_file(self, from_fname, to_fname, bucket, delete=True):
         """
@@ -342,15 +286,7 @@ class S3Operation:
             self.log_writer.info("Exited upload_file method of S3Operation class")
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def upload_df_as_csv(
         self, data_frame, local_fname, bucket_fname, bucket, fidx=False
@@ -385,48 +321,4 @@ class S3Operation:
             self.log_writer.info("Exited upload_df_as_csv method of S3Operation class")
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-
-    def upload_folder(self, folder, bucket):
-        """
-        Method Name :   upload_df_as_csv
-        Description :   This method uploades a dataframe as csv file to s3 bucket
-        
-        Output      :   A dataframe is uploaded as csv file to s3 bucket
-        On Failure  :   Write an exception log and then raise an exception
-        
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        self.log_writer.info("Entered upload_folder method of S3Operation class")
-
-        try:
-            lst = listdir(folder)
-
-            self.log_writer.info("Got a list of files from folder")
-
-            for f in lst:
-                local_f = join(folder, f)
-
-                dest_f = folder + "/" + f
-
-                self.upload_file(local_f, dest_f, bucket, delete=False)
-
-            self.log_writer.info("Uploaded folder to s3 bucket")
-
-            self.log_writer.info("Exited upload_folder method of S3Operation class")
-
-        except Exception as e:
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a

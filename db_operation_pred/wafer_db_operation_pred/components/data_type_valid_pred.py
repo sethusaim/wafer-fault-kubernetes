@@ -58,15 +58,7 @@ class DBOperationPred:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def export_collection_to_csv(self, good_data_db_name, good_data_collection_name):
         """
@@ -100,12 +92,4 @@ class DBOperationPred:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
