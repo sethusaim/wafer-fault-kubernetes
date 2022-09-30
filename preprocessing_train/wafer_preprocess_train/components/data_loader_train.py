@@ -32,7 +32,7 @@ class DataGetterTrain:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered get_data method of S3Operation class")
 
         try:
             ip_fname = self.utils.get_file_with_timestamp("train_export")
@@ -41,7 +41,7 @@ class DataGetterTrain:
 
             self.log_writer.info("Training data loaded from feature store bucket")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited get_data method of S3Operation class")
 
             return df
 
