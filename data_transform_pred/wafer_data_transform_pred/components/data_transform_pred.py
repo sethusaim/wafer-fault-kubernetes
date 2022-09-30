@@ -58,7 +58,6 @@ class DataTransformPred:
 
         except Exception as e:
             raise WaferException(e, sys) from e
-            raise WaferException(e, sys) from e
 
     def replace_missing_with_null(self):
         """
@@ -100,5 +99,4 @@ class DataTransformPred:
             )
 
         except Exception as e:
-            raise WaferException(e, sys) from e
             raise WaferException(e, sys) from e

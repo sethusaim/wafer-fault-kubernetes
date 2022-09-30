@@ -44,7 +44,6 @@ class Run:
 
         except Exception as e:
             raise WaferException(e, sys) from e
-            raise WaferException(e, sys) from e
 
 
 if __name__ == "__main__":
