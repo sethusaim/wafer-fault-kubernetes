@@ -1,6 +1,5 @@
 import logging
 import sys
-from shutil import rmtree
 
 from wafer_pred_val.components.s3_operations import S3Operation
 from wafer_pred_val.exception import WaferException
