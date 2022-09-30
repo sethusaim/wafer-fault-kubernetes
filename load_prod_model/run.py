@@ -77,7 +77,7 @@ class LoadProdModel:
                 "Transitioning of models based on scores successfully done",
             )
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited load_production_model method of Run class")
 
         except Exception as e:
             raise WaferException(e, sys) from e

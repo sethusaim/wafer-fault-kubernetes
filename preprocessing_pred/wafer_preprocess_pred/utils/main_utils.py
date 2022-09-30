@@ -59,7 +59,7 @@ class MainUtils:
 
             self.log_writer.info("Uploaded null values csv file to s3 bucket")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited upload_null_values_file method of MainUtils class")
 
         except Exception as e:
             raise WaferException(e, sys) from e

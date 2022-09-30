@@ -53,7 +53,7 @@ class DBOperationTrain:
                     "Inserted dataframe as collection record in mongodb",
                 )
 
-            self.log_writer.info("exit",)
+            self.log_writer.info("Exited insert_good_data_as_record method of DBOperationTrain class")
 
         except Exception as e:
             raise WaferException(e, sys) from e
@@ -86,7 +86,7 @@ class DBOperationTrain:
 
             self.log_writer.info("Exported dataframe to csv file",)
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited export_collection_to_csv method of DBOperationTrain class")
 
         except Exception as e:
             raise WaferException(e, sys) from e
