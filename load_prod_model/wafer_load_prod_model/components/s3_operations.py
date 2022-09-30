@@ -70,11 +70,11 @@ class S3Operation:
                     f"Error occured in creating {folder_name} folder", 
                 )
 
-                message = WaferException(e, sys)
+                
 
-                self.log_writer.error(message.error_message)
+                
 
-                raise message.error_message
+                
 
     def copy_data(self, from_fname, from_bucket, to_fname, to_bucket):
         """
@@ -103,11 +103,11 @@ class S3Operation:
             self.log_writer.info("Exited copy_data method of S3Operation class")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def upload_file(self, from_fname, to_fname, bucket, delete=True):
         """
@@ -154,11 +154,11 @@ class S3Operation:
             self.log_writer.info("Exited upload_file method of S3Operation class")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_bucket(self, bucket):
         """
@@ -183,11 +183,11 @@ class S3Operation:
             return bucket
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_file_object(self, fname, bucket, pattern=False):
         """
@@ -224,11 +224,11 @@ class S3Operation:
             return file_objs
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_files_from_folder(self, folder_name, bucket, pattern=False):
         """
@@ -255,11 +255,11 @@ class S3Operation:
             return list_of_files
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def upload_folder(self, folder, bucket):
         """
@@ -291,8 +291,8 @@ class S3Operation:
             self.log_writer.info("Exited upload_folder method of S3Operation class")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            

@@ -90,8 +90,8 @@ class DBOperationTrain:
             self.log_writer.info("exit")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            

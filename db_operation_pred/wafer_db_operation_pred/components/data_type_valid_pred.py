@@ -59,11 +59,11 @@ class DBOperationPred:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def export_collection_to_csv(self, good_data_db_name, good_data_collection_name):
         """
@@ -97,8 +97,8 @@ class DBOperationPred:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            

@@ -1,8 +1,8 @@
-from data_loader_train import Data_Getter_Train
-from preprocessing import Preprocessor
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic
+import logging
+
+from wafer_preprocess_train.components.data_loader_train import Data_Getter_Train
+from wafer_preprocess_train.components.preprocessing import Preprocessor
+from wafer_preprocess_train.utils.main_utils import Main_Utils
 
 
 class Run:
@@ -16,11 +16,11 @@ class Run:
     def __init__(self):
         self.utils = Main_Utils()
 
-        self.preprocessor = Preprocessor("preprocess")
+        self.preprocessor = Preprocessor()
 
-        self.data_getter_train = Data_Getter_Train("preprocess")
+        self.data_getter_train = Data_Getter_Train()
 
-        self.log_writer = App_Logger()
+        self.log_writer = ""
 
     def run_preprocess(self):
         """
@@ -33,14 +33,7 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.run_preprocess.__name__,
-            __file__,
-            "preprocess",
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start")
 
         try:
             data = self.data_getter_train.get_data()
@@ -60,20 +53,16 @@ class Run:
 
             Y = self.preprocessor.encode_target_col(Y)
 
-            self.utils.upload_data_to_feature_store(
-                X, "wafer_features", log_dic["log_file"]
-            )
+            self.utils.upload_data_to_feature_store(X, "wafer_features")
 
-            self.utils.upload_data_to_feature_store(
-                Y, "wafer_targets", log_dic["log_file"]
-            )
+            self.utils.upload_data_to_feature_store(Y, "wafer_targets")
 
-            self.log_writer.log("Completed preprocessing on training data", **log_dic)
+            self.log_writer.log("Completed preprocessing on training data")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit")
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.exception_log(e)
 
 
 if __name__ == "__main__":

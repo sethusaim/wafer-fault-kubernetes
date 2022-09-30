@@ -52,11 +52,11 @@ class MLFlowOperation:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def set_mlflow_tracking_uri(self):
         """
@@ -83,11 +83,11 @@ class MLFlowOperation:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def log_sklearn_model(self, model, model_name):
         """
@@ -119,11 +119,11 @@ class MLFlowOperation:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def log_model_metric(self, model_name, metric):
         """
@@ -150,11 +150,11 @@ class MLFlowOperation:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def log_model_param(self, model, model_name, param):
         """
@@ -179,11 +179,11 @@ class MLFlowOperation:
             self.log_writer.info("exit")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def log_all_for_model(self, model, model_score, idx):
         """
@@ -229,8 +229,8 @@ class MLFlowOperation:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            

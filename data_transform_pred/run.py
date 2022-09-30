@@ -1,8 +1,7 @@
 import logging
 import sys
 
-from wafer_data_transform_pred.components.data_transform_pred import \
-    DataTransformPred
+from wafer_data_transform_pred.components.data_transform_pred import DataTransformPred
 from wafer_data_transform_pred.exception import WaferException
 from wafer_data_transform_pred.utils.main_utils import MainUtils
 
@@ -45,11 +44,7 @@ class Run:
             self.log_writer.info("Data Transformation completed !!")
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
 
 if __name__ == "__main__":

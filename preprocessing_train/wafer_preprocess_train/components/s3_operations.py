@@ -5,8 +5,8 @@ from os.path import join
 from boto3 import resource
 from pandas import read_csv
 
-from utils.logger import App_Logger
-from utils.read_params import get_log_dic, read_params
+
+, read_params
 
 
 class S3_Operation:
@@ -22,7 +22,7 @@ class S3_Operation:
 
         self.config = read_params()
 
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
         self.bucket = self.config["s3_bucket"]
 

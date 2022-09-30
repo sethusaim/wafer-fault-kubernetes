@@ -4,7 +4,6 @@ from shutil import rmtree
 
 from exception import WaferException
 from utils.read_params import read_params
-
 from wafer_data_transform_pred.components.data_transform_pred import DataTransformPred
 from wafer_data_transform_pred.components.s3_operations import S3Operation
 
@@ -49,8 +48,4 @@ class MainUtils:
             rmtree(self.log_dir)
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e

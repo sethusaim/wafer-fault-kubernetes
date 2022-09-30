@@ -76,11 +76,7 @@ class Run:
             self.log_writer.info("Exited run_clustering method of Run class")
 
         except Exception as e:
-            message = WaferException(e, sys)
-
-            self.log_writer.error(message.error_message)
-
-            raise message.error_message
+            raise WaferException(e, sys) from e
 
 
 if __name__ == "__main__":
@@ -96,4 +92,3 @@ if __name__ == "__main__":
         utils = MainUtils()
 
         utils.upload_logs()
-

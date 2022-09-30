@@ -55,11 +55,11 @@ class MLFlowOperation:
             self.log_writer.info("Exited set_mlflow_tracking_uri method of MLFlowOperation class")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_experiment(self, exp_name):
         """
@@ -84,11 +84,11 @@ class MLFlowOperation:
             return exp
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_runs_from_mlflow(self, exp_id):
         """
@@ -115,11 +115,11 @@ class MLFlowOperation:
             return runs
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_mlflow_models(self):
         """
@@ -144,11 +144,11 @@ class MLFlowOperation:
             return reg_model_names
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def search_mlflow_models(self, order):
         """
@@ -173,11 +173,11 @@ class MLFlowOperation:
             return results
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def transition_mlflow_model(
         self, model_version, stage, model_name, from_bucket, to_bucket
@@ -239,11 +239,11 @@ class MLFlowOperation:
             self.log_writer.info("Exited transition_mlflow_model method of MLFlowOperation class")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def transition_best_models(self, model, top_models):
         """
@@ -289,11 +289,11 @@ class MLFlowOperation:
             self.log_writer.info("Exited transition_best_models method of MLFlowOperation class")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_best_models(self, runs, num_clusters):
         """
@@ -382,8 +382,8 @@ class MLFlowOperation:
             return top_mn_lst
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            

@@ -63,11 +63,11 @@ class S3Operation:
             return conv_func()
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_df_from_object(self, object):
         """
@@ -96,11 +96,11 @@ class S3Operation:
             return df
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def read_csv(self, fname, bucket):
         """
@@ -127,11 +127,11 @@ class S3Operation:
             return df
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def read_csv_from_folder(self, folder_name, bucket):
         """
@@ -168,11 +168,11 @@ class S3Operation:
             return lst
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def upload_file(self, from_fname, to_fname, bucket, delete=True):
         """
@@ -217,11 +217,11 @@ class S3Operation:
             self.log_writer.info("Exited upload_file method of S3operation class")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_bucket(self, bucket):
         """
@@ -246,11 +246,11 @@ class S3Operation:
             return bucket
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def delete_file(self, fname, bucket):
         """
@@ -273,11 +273,11 @@ class S3Operation:
             self.log_writer.info("Exited delete_file method of S3Operation class")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_files_from_folder(self, folder_name, bucket):
         """
@@ -308,11 +308,11 @@ class S3Operation:
             return list_of_files
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_file_object(self, fname, bucket):
         """
@@ -343,11 +343,11 @@ class S3Operation:
             return file_objs
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def upload_df_as_csv(self, data_frame, local_fname, bucket_fname, bucket):
         """
@@ -374,11 +374,11 @@ class S3Operation:
             self.log_writer.info("Exited upload_df_as_csv method of S3Operation")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def upload_folder(self, folder, bucket):
         """
@@ -410,8 +410,8 @@ class S3Operation:
             self.log_writer.info("Exited upload_folder method of S3Operation class")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            

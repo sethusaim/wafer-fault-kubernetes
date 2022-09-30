@@ -53,11 +53,11 @@ class MainUtils:
             rmtree(self.log_dir)
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_model_file(self, key, model_name):
         """
@@ -82,11 +82,11 @@ class MainUtils:
             return model_file
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def create_prod_and_stag_dirs(self, bucket):
         """
@@ -109,11 +109,11 @@ class MainUtils:
             self.log_writer.info("Exited create_prod_and_stag_dirs method of MainUtils class")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_number_of_clusters(self):
         """
@@ -146,8 +146,8 @@ class MainUtils:
             return num_clusters
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            

@@ -53,11 +53,11 @@ class MainUtils:
             rmtree(self.log_dir)
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def upload_null_values_file(self, data):
         """
@@ -93,11 +93,11 @@ class MainUtils:
             self.log_writer.info("exit")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def upload_preprocessed_data(self, data):
         self.log_writer.info(
@@ -116,11 +116,11 @@ class MainUtils:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_file_with_timestamp(self, file):
         self.log_writer.info(
@@ -143,8 +143,8 @@ class MainUtils:
             return ip_fname
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            

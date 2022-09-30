@@ -1,11 +1,12 @@
+import logging
+
 import numpy as np
 from pandas import DataFrame
 from sklearn.impute import KNNImputer
 from sklearn.preprocessing import LabelEncoder
 
-from utils.logger import App_Logger
-from utils.main_utils import Main_Utils
-from utils.read_params import get_log_dic, read_params
+from wafer_preprocess_train.utils.main_utils import Main_Utils
+from wafer_preprocess_train.utils.read_params import read_params
 
 
 class Preprocessor:
@@ -25,7 +26,7 @@ class Preprocessor:
 
         self.label_col_name = self.config["target_col"]
 
-        self.log_writer = App_Logger()
+        self.log_writer = logging.getLogger(__name__)
 
         self.utils = Main_Utils()
 
@@ -42,14 +43,7 @@ class Preprocessor:
         sVersion     :   1.2
         Revisions   :   Modified code based on the params.yaml file
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.remove_columns.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered remove_columns method of Preprocessor class")
 
         self.data = data
 
@@ -58,14 +52,14 @@ class Preprocessor:
         try:
             self.useful_data = self.data.drop(labels=self.columns, axis=1)
 
-            self.log_writer.log("Column removal Successful", **log_dic)
+            self.log_writer.info("Column removal Successful")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited remove_columns method of Preprocessor class")
 
             return self.useful_data
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.exception_log(e)
 
     def separate_label_feature(self, data):
         """
@@ -78,30 +72,27 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.separate_label_feature.__name__,
-            __file__,
-            self.log_file,
+        self.log_writer.info(
+            "Entered separate_label_feature method of Preprocessor class"
         )
-
-        self.log_writer.start_log("start", **log_dic)
 
         try:
             self.X = data.drop(labels=self.label_col_name, axis=1)
 
             self.Y = data[self.label_col_name]
 
-            self.log_writer.log(f"Label Separation Successful", **log_dic)
+            self.log_writer.info(f"Label Separation Successful")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info(
+                "Exited separate_label_feature method of Preprocessor class"
+            )
 
             return self.X, self.Y
 
         except Exception as e:
-            self.log_writer.log("Label Separation Unsuccessful", **log_dic)
+            self.log_writer.info("Label Separation Unsuccessful")
 
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.exception_log(e)
 
     def is_null_present(self, data):
         """
@@ -114,14 +105,7 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.is_null_present.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("Entered is_null_present method of Preprocessor class")
 
         self.null_present = False
 
@@ -135,21 +119,20 @@ class Preprocessor:
                     break
 
             if self.null_present:
-                self.utils.upload_null_values_file(data, log_dic["log_file"])
+                self.utils.upload_null_values_file(data)
 
-            self.log_writer.log(
+            self.log_writer.info(
                 "Finding missing values is a success.Data written to the null values file",
-                **log_dic,
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("Exited is_null_present method of Preprocessor class")
 
             return self.null_present
 
         except Exception as e:
-            self.log_writer.log("Finding missing values failed", **log_dic)
+            self.log_writer.info("Finding missing values failed")
 
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.exception_log(e)
 
     def impute_missing_values(self, data):
         """
@@ -162,14 +145,7 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.impute_missing_values.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start")
 
         self.data = data
 
@@ -180,16 +156,16 @@ class Preprocessor:
 
             self.new_data = DataFrame(data=self.new_array, columns=self.data.columns)
 
-            self.log_writer.log("Imputing missing values Successful", **log_dic)
+            self.log_writer.info("Imputing missing values Successful")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit")
 
             return self.new_data
 
         except Exception as e:
-            self.log_writer.log("Imputing missing values failed", **log_dic)
+            self.log_writer.info("Imputing missing values failed")
 
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.exception_log(e)
 
     def get_columns_with_zero_std_deviation(self, data):
         """
@@ -202,14 +178,7 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.get_columns_with_zero_std_deviation.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start")
 
         self.columns = data.columns
 
@@ -220,20 +189,18 @@ class Preprocessor:
         try:
             self.col_to_drop = [x for x in self.columns if self.data_n[x]["std"] == 0]
 
-            self.log_writer.log(
-                "Column search for Standard Deviation of Zero Successful.", **log_dic
+            self.log_writer.info(
+                "Column search for Standard Deviation of Zero Successful."
             )
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit")
 
             return self.col_to_drop
 
         except Exception as e:
-            self.log_writer.log(
-                "Column search for Standard Deviation of Zero Failed.", **log_dic
-            )
+            self.log_writer.info("Column search for Standard Deviation of Zero Failed.")
 
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.exception_log(e)
 
     def encode_target_col(self, data):
         """
@@ -246,27 +213,20 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        log_dic = get_log_dic(
-            self.__class__.__name__,
-            self.encode_target_col.__name__,
-            __file__,
-            self.log_file,
-        )
-
-        self.log_writer.start_log("start", **log_dic)
+        self.log_writer.info("start")
 
         try:
             y_col = self.le.fit_transform(data)
 
-            self.log_writer.log("Encoded target column using LabelEncoder", **log_dic)
+            self.log_writer.info("Encoded target column using LabelEncoder")
 
             y_df = DataFrame(y_col, columns=["Labels"])
 
-            self.log_writer.log("Created a dataframe for encoded targets", **log_dic)
+            self.log_writer.info("Created a dataframe for encoded targets")
 
-            self.log_writer.start_log("exit", **log_dic)
+            self.log_writer.info("exit")
 
             return y_df
 
         except Exception as e:
-            self.log_writer.exception_log(e, **log_dic)
+            self.log_writer.exception_log(e)

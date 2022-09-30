@@ -48,11 +48,11 @@ class Run:
             self.log_writer.info("Exited training_model method of Run class")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
 
 if __name__ == "__main__":

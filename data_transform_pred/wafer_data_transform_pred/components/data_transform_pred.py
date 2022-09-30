@@ -57,11 +57,11 @@ class DataTransformPred:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def replace_missing_with_null(self):
         """
@@ -103,8 +103,8 @@ class DataTransformPred:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            

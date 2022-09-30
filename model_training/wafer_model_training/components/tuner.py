@@ -73,11 +73,11 @@ class ModelFinder:
             return lst
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def train_and_log_models(self, X_data, Y_data, idx):
         """
@@ -115,11 +115,11 @@ class ModelFinder:
             )
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def perform_training(self, lst_clusters):
         """
@@ -165,8 +165,8 @@ class ModelFinder:
             self.log_writer.info("Exited perform_training method of ModelFinder class")
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            

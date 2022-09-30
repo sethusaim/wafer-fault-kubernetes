@@ -54,11 +54,11 @@ class Preprocessor:
             return self.useful_data
 
         except Exception as e:
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def separate_label_feature(self, data, label_col_name):
         """
@@ -91,11 +91,11 @@ class Preprocessor:
         except Exception as e:
             self.log_writer.info("Label Separation Unsuccessful")
 
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def is_null_present(self, data):
         """
@@ -135,11 +135,11 @@ class Preprocessor:
         except Exception as e:
             self.log_writer.info("Finding missing values failed")
 
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def impute_missing_values(self, data):
         """
@@ -176,11 +176,11 @@ class Preprocessor:
         except Exception as e:
             self.log_writer.info("Imputing missing values failed")
 
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
 
     def get_columns_with_zero_std_deviation(self, data):
         """
@@ -219,8 +219,8 @@ class Preprocessor:
         except Exception as e:
             self.log_writer.info("Column search for Standard Deviation of Zero Failed.")
 
-            message = WaferException(e, sys)
+            
 
-            self.log_writer.error(message.error_message)
+            
 
-            raise message.error_message
+            
