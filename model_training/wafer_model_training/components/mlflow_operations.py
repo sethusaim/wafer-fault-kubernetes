@@ -160,7 +160,9 @@ class MLFlowOperation:
 
             self.log_writer.info(f"{model_param_name} logged in mlflow")
 
-            self.log_writer.info("Exited log_model_param method of MLFlowOperation class")
+            self.log_writer.info(
+                "Exited log_model_param method of MLFlowOperation class"
+            )
 
         except Exception as e:
             raise WaferException(e, sys) from e
