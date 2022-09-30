@@ -52,15 +52,7 @@ class MLFlowOperation:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def set_mlflow_tracking_uri(self):
         """
@@ -87,15 +79,7 @@ class MLFlowOperation:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def log_sklearn_model(self, model, model_name):
         """
@@ -127,15 +111,7 @@ class MLFlowOperation:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def log_model_metric(self, model_name, metric):
         """
@@ -162,15 +138,7 @@ class MLFlowOperation:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def log_model_param(self, model, model_name, param):
         """
@@ -195,15 +163,7 @@ class MLFlowOperation:
             self.log_writer.info("exit")
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def log_all_for_model(self, model, model_score, idx):
         """
@@ -249,12 +209,4 @@ class MLFlowOperation:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
