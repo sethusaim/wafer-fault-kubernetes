@@ -35,7 +35,7 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered run_preprocess method of Run class")
 
         try:
             data = self.data_getter_pred.get_data()
@@ -65,18 +65,10 @@ class Run:
 
             self.log_writer.info("Completed preprocessing for prediction data")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited run_preprocess method of Run class")
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
 
 if __name__ == "__main__":
