@@ -59,15 +59,7 @@ class MLFlowOperation:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_experiment(self, exp_name):
         """
@@ -94,15 +86,7 @@ class MLFlowOperation:
             return exp
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_runs_from_mlflow(self, exp_id):
         """
@@ -133,15 +117,7 @@ class MLFlowOperation:
             return runs
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_mlflow_models(self):
         """
@@ -170,15 +146,7 @@ class MLFlowOperation:
             return reg_model_names
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def search_mlflow_models(self, order):
         """
@@ -207,15 +175,7 @@ class MLFlowOperation:
             return results
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def transition_mlflow_model(
         self, model_version, stage, model_name, from_bucket, to_bucket
@@ -281,15 +241,7 @@ class MLFlowOperation:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def transition_best_models(self, model, top_models):
         """
@@ -339,15 +291,7 @@ class MLFlowOperation:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_best_models(self, runs, num_clusters):
         """
@@ -438,12 +382,4 @@ class MLFlowOperation:
             return top_mn_lst
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a

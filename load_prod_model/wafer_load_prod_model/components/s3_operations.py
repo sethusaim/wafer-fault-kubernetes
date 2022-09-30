@@ -66,15 +66,7 @@ class S3Operation:
             else:
                 self.log_writer.info(f"Error occured in creating {folder_name} folder",)
 
-<<<<<<< HEAD
-                
-
-                
-
-                
-=======
                 raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def copy_data(self, from_fname, from_bucket, to_fname, to_bucket):
         """
@@ -103,15 +95,7 @@ class S3Operation:
             self.log_writer.info("Exited copy_data method of S3Operation class")
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def upload_file(self, from_fname, to_fname, bucket, delete=True):
         """
@@ -152,15 +136,7 @@ class S3Operation:
             self.log_writer.info("Exited upload_file method of S3Operation class")
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_bucket(self, bucket):
         """
@@ -185,15 +161,7 @@ class S3Operation:
             return bucket
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_file_object(self, fname, bucket, pattern=False):
         """
@@ -230,15 +198,7 @@ class S3Operation:
             return file_objs
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
 
     def get_files_from_folder(self, folder_name, bucket, pattern=False):
         """
@@ -269,49 +229,4 @@ class S3Operation:
             return list_of_files
 
         except Exception as e:
-<<<<<<< HEAD
-            
-
-            
-
-            
-
-    def upload_folder(self, folder, bucket):
-        """
-        Method Name :   upload_folder
-        Description :   This method uploades the folder to s3 bucket
-        
-        Output      :   Folder is uploaded to s3 bucket
-        On Failure  :   Write an exception log and then raise an exception
-        
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        self.log_writer.info("Entered upload_folder method of S3Operation class")
-
-        try:
-            lst = listdir(folder)
-
-            self.log_writer.info("Got a list of files from folder")
-
-            for f in lst:
-                local_f = join(folder, f)
-
-                dest_f = folder + "/" + f
-
-                self.upload_file(local_f, dest_f, bucket, delete=False)
-
-            self.log_writer.info("Uploaded folder to s3 bucket")
-
-            self.log_writer.info("Exited upload_folder method of S3Operation class")
-
-        except Exception as e:
-            
-
-            
-
-            
-=======
             raise WaferException(e, sys) from e
-
->>>>>>> 9a49ca66aedf49b9aa306b47001004e3aaa9192a
