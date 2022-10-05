@@ -2,7 +2,6 @@ dir:
   trained_model: trained
   stag_model: staging
   prod_model: production
-  log: load_prod_model_logs
 
 model_save_format: .sav
 
@@ -13,12 +12,7 @@ feature_pattern: wafer_train_features-
 
 s3_bucket:
   model: wafer-model-3e502a3
-  logs: wafer-logs-4e1f3bd
   feature_store: wafer-feature-store-02126f6
-
-log:
-  upload: upload_load_prod_model.log
-  load_prod_model: load_prod_model.log
 
 log_params:
   filemode: a

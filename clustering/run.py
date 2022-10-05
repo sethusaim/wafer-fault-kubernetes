@@ -62,10 +62,10 @@ class Run:
                 cluster_features = cluster_data.drop(["Labels", "Cluster"], axis=1)
 
                 cluster_label = cluster_data["Labels"]
-                                
-                self.utils.upload_cluster_data(i,cluster_features,key="features")
-                
-                self.utils.upload_cluster_data(i,cluster_label,key="targets")
+
+                self.utils.upload_cluster_data(i, cluster_features, key="features")
+
+                self.utils.upload_cluster_data(i, cluster_label, key="targets")
 
             self.log_writer.info("Clustering of training data is completed")
 

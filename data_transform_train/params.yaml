@@ -4,8 +4,7 @@ s3_bucket:
 
 dir:
   train_good_data: good/train
-  log: wafer_data_transform_train/wafer_data_transform_train_logs/
-  
+
 col:
   output: Output
   good_bad: Good/Bad

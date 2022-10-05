@@ -43,7 +43,7 @@ class Preprocessor:
         sVersion     :   1.2
         Revisions   :   Modified code based on the params.yaml file
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered remove_columns method of Preprocessor class")
 
         self.data = data
 
@@ -54,7 +54,7 @@ class Preprocessor:
 
             self.log_writer.info("Column removal Successful")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited remove_columns method of Preprocessor class")
 
             return self.useful_data
 
@@ -72,7 +72,9 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info(
+            "Entered separate_label_feature method of Preprocessor class"
+        )
 
         try:
             self.X = data.drop(labels=self.label_col_name, axis=1)
@@ -81,7 +83,9 @@ class Preprocessor:
 
             self.log_writer.info(f"Label Separation Successful")
 
-            self.log_writer.info("exit")
+            self.log_writer.info(
+                "Exited separate_label_feature method of Preprocessor class"
+            )
 
             return self.X, self.Y
 
@@ -101,7 +105,7 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered is_null_present method of S3Operation class")
 
         self.null_present = False
 
@@ -121,7 +125,7 @@ class Preprocessor:
                 "Finding missing values is a success.Data written to the null values file",
             )
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited is_null_present method of S3Operation class")
 
             return self.null_present
 
@@ -141,7 +145,9 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info(
+            "Entered impute_missing_values method of S3Operation class"
+        )
 
         self.data = data
 
@@ -154,7 +160,9 @@ class Preprocessor:
 
             self.log_writer.info("Imputing missing values Successful")
 
-            self.log_writer.info("exit")
+            self.log_writer.info(
+                "Exited impute_missing_values method of S3Operation class"
+            )
 
             return self.new_data
 
@@ -174,7 +182,9 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info(
+            "Entered get_columns_with_zero_std_deviation method of S3Operation class"
+        )
 
         self.columns = data.columns
 
@@ -189,7 +199,9 @@ class Preprocessor:
                 "Column search for Standard Deviation of Zero Successful."
             )
 
-            self.log_writer.info("exit")
+            self.log_writer.info(
+                "Exited get_columns_with_zero_std_deviation method of S3Operation class"
+            )
 
             return self.col_to_drop
 
@@ -209,7 +221,7 @@ class Preprocessor:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered encode_target_col method of S3Operation class")
 
         try:
             y_col = self.le.fit_transform(data)
@@ -220,7 +232,7 @@ class Preprocessor:
 
             self.log_writer.info("Created a dataframe for encoded targets")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited encode_target_col method of S3Operation class")
 
             return y_df
 

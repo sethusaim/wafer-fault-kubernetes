@@ -1,8 +1,7 @@
 import logging
 import sys
 from io import StringIO
-from os import listdir, remove
-from os.path import join
+from os import remove
 
 from boto3 import resource
 from pandas import read_csv
@@ -41,7 +40,7 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered upload_file method of S3Operation class")
 
         try:
             self.log_writer.info(f"Uploading {from_fname} to s3 bucket {bucket}")
@@ -66,7 +65,7 @@ class S3Operation:
                     f"Option delete is set {delete}, not deleting the file"
                 )
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited upload_file method of S3Operation class")
 
         except Exception as e:
             raise WaferException(e, sys) from e
@@ -84,7 +83,7 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered upload_df_as_csv method of S3Operation class")
 
         try:
             func = lambda fname: self.files[fname] if fidx is False else fname
@@ -105,7 +104,7 @@ class S3Operation:
                 f"Uploaded dataframe as csv to {bucket} bucket with name as {bucket_fname}",
             )
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited upload_df_as_csv method of S3Operation class")
 
         except Exception as e:
             raise WaferException(e, sys) from e
@@ -121,14 +120,14 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered get_bucket method of S3Operation class")
 
         try:
             bucket = self.s3_resource.Bucket(self.bucket[bucket])
 
             self.log_writer.info(f"Got {bucket} bucket")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited get_bucket method of S3Operation class")
 
             return bucket
 
@@ -146,7 +145,7 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered get_file_object method of S3Operation class")
 
         try:
             bucket = self.get_bucket(bucket)
@@ -161,16 +160,14 @@ class S3Operation:
 
             self.log_writer.info(f"Got {fname} file object from {bucket} bucket")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited get_file_object method of S3Operation class")
 
             return file_objs
 
         except Exception as e:
             raise WaferException(e, sys) from e
 
-    def read_object(
-        self, object, decode=True, make_readable=False,
-    ):
+    def read_object(self, object, decode=True, make_readable=False):
         """
         Method Name :   read_object
         Description :   This method reads the object with kwargs
@@ -181,7 +178,7 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered read_object method of S3Operation class")
 
         try:
             func = (
@@ -198,7 +195,7 @@ class S3Operation:
                 f"read the s3 object with make_readable as {make_readable}"
             )
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited read_object method of S3Operation class")
 
             return conv_func()
 
@@ -216,7 +213,7 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered get_df_from_object method of S3Operation class")
 
         try:
             content = self.read_object(object, make_readable=True)
@@ -225,7 +222,7 @@ class S3Operation:
 
             self.log_writer.info(f"Got dataframe from {object} object")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited")
 
             return df
 
@@ -243,7 +240,7 @@ class S3Operation:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered read_csv method of S3Operation class")
 
         try:
             func = lambda fname: self.files[fname] if fidx is False else fname
@@ -256,10 +253,9 @@ class S3Operation:
 
             self.log_writer.info(f"Read {fname} csv file from {bucket} bucket")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited read_csv method of S3Operation class")
 
             return df
 
         except Exception as e:
             raise WaferException(e, sys) from e
-

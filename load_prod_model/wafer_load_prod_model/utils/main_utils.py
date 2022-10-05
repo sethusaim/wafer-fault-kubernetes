@@ -1,6 +1,5 @@
 import logging
 import sys
-from shutil import rmtree
 
 from wafer_load_prod_model.components.s3_operations import S3Operation
 from wafer_load_prod_model.exception import WaferException

@@ -40,7 +40,9 @@ class MainUtils:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info(
+            "Entered upload_data_to_feature_store method of S3Operation class"
+        )
 
         try:
             fname = self.get_file_with_timestamp(key)
@@ -49,7 +51,9 @@ class MainUtils:
 
             self.log_writer.info(f"Uploaded {key} to feature store bucket")
 
-            self.log_writer.info("exit")
+            self.log_writer.info(
+                "Exited upload_data_to_feature_store method of S3Operation class"
+            )
 
         except Exception as e:
             raise WaferException(e, sys) from e
@@ -66,7 +70,9 @@ class MainUtils:
         Revisions   :   moved setup to cloud
         """
 
-        self.log_writer.info("start")
+        self.log_writer.info(
+            "Entered upload_null_values_file method of S3Operation class"
+        )
 
         try:
             null_df = DataFrame()
@@ -83,14 +89,18 @@ class MainUtils:
 
             self.log_writer.info("Uploaded null values csv file to s3 bucket")
 
-            self.log_writer.info("exit")
+            self.log_writer.info(
+                "Exited upload_null_values_file method of S3Operation class"
+            )
 
         except Exception as e:
             raise WaferException(e, sys) from e
 
     def get_file_with_timestamp(self, file):
 
-        self.log_writer.info("start")
+        self.log_writer.info(
+            "Entered get_file_with_timestamp method of S3Operation class"
+        )
 
         try:
             current_date = f"{datetime.now().strftime('%Y-%m-%d')}"
@@ -101,7 +111,9 @@ class MainUtils:
                 "Got input file from s3 bucket based on the time stamp"
             )
 
-            self.log_writer.info("exit")
+            self.log_writer.info(
+                "Exited get_file_with_timestamp method of S3Operation class"
+            )
 
             return ip_fname
 

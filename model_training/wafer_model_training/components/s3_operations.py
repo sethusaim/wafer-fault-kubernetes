@@ -411,5 +411,3 @@ class S3Operation:
 
         except Exception as e:
             raise WaferException(e, sys) from e
-
-

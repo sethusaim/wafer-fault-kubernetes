@@ -4,7 +4,7 @@ import sys
 from wafer_preprocess_train.components.data_loader_train import DataGetterTrain
 from wafer_preprocess_train.components.preprocessing import Preprocessor
 from wafer_preprocess_train.exception import WaferException
-from wafer_preprocess_train.utils.main_utils import MainUtils
+from wafer_preprocess_train.utils.main_utils import Main_Utils, MainUtils
 
 
 class Run:
@@ -35,7 +35,7 @@ class Run:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        self.log_writer.info("start")
+        self.log_writer.info("Entered run_preprocess method of Run class")
 
         try:
             data = self.data_getter_train.get_data()
@@ -59,9 +59,11 @@ class Run:
 
             self.utils.upload_data_to_feature_store(Y, "wafer_targets")
 
+            self.log_writer.log("Completed preprocessing on training data")
+
             self.log_writer.info("Completed preprocessing on training data")
 
-            self.log_writer.info("exit")
+            self.log_writer.info("Exited run_preprocess method of Run class")
 
         except Exception as e:
             raise WaferException(e, sys) from e
@@ -74,4 +76,4 @@ if __name__ == "__main__":
         run.run_preprocess()
 
     except Exception as e:
-        raise e
+        raise WaferException(e, sys) from e

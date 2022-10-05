@@ -3,7 +3,7 @@ import os
 
 from from_root import from_root
 
-logs_path = os.path.join(from_root(), "clustering", "wafer_clustering", "clustering_logs")
+logs_path = os.path.join(from_root(), "clustering", "wafer_clustering", "logs")
 
 os.makedirs(logs_path, exist_ok=True)
 
