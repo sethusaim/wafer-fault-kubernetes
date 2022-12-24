@@ -1,5 +1,0 @@
-certifi==2022.9.14
-flask-cors==3.0.10
-pip-chill==1.0.1
-pyyaml==6.0
-wincertstore==0.2

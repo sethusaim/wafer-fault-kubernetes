@@ -9,7 +9,7 @@ __pycache__/
 demotest.py
 
 demo.py
-
+data
 .terraform
 
 terraform.tfstate
