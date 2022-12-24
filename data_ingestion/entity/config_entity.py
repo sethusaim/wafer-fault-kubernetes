@@ -21,9 +21,7 @@ class DataIngestionConfig:
             data_ingestion.DATA_INGESTION_DIR_NAME,
         )
 
-        self.data_ingestion_bucket_name: str = (
-            data_ingestion.DATA_INGESTION_BUCKET_NAME
-        )
+        self.data_ingestion_bucket_name: str = data_ingestion.DATA_INGESTION_BUCKET_NAME
 
         self.data_ingestion_bucket_folder_name: str = (
             data_ingestion.DATA_INGESTION_BUCKET_FOLDER_NAME
