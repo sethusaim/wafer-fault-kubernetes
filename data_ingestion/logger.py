@@ -5,11 +5,11 @@ from constant.data_ingestion import TIMESTAMP
 
 LOG_FILE: str = f"{TIMESTAMP}.log"
 
-logs_path = os.path.join(os.getcwd(), "logs", TIMESTAMP)
+logs_path: str = os.path.join(os.getcwd(), "logs", TIMESTAMP)
 
 os.makedirs(logs_path, exist_ok=True)
 
-LOG_FILE_PATH = os.path.join(logs_path, LOG_FILE)
+LOG_FILE_PATH: str = os.path.join(logs_path, LOG_FILE)
 
 logging.basicConfig(
     filename=LOG_FILE_PATH,

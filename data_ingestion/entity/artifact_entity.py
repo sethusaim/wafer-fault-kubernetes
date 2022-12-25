@@ -3,4 +3,6 @@ from dataclasses import dataclass
 
 @dataclass
 class DataIngestionArtifact:
-    feature_store_folder_path: str
+    raw_data_path: str
+
+    # s3_artifacts_path: str
