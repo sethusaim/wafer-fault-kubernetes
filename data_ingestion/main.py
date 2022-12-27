@@ -38,8 +38,15 @@ class DataIngestion:
 
 
 if __name__ == "__main__":
-    tpc: TrainingPipelineConfig = TrainingPipelineConfig()
+    try:
+        tpc: TrainingPipelineConfig = TrainingPipelineConfig()
 
-    dt = DataIngestion(training_pipeline_config=tpc)
+        dt = DataIngestion(training_pipeline_config=tpc)
 
-    dia = dt.initiate_data_ingestion()
+        dia = dt.initiate_data_ingestion()
+        
+    except Exception as e:
+        raise e 
+    
+    finally:
+        pass
