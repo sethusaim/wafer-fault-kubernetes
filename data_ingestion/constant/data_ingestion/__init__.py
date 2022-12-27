@@ -18,5 +18,3 @@ Data Ingestion related constant start with DATA_INGESTION VAR NAME
 DATA_INGESTION_DIR_NAME: str = "data_ingestion"
 
 DATA_INGESTION_INGESTED_DIR: str = "raw_data"
-
-

@@ -10,32 +10,44 @@ from constant.data_ingestion import DATABASE_NAME
 from exception import TruckException
 from logger import logging
 
+
 class TruckData:
     def __init__(self):
-        """ """
         try:
             self.mongo_client = MongoDBClient(database_name=DATABASE_NAME)
 
         except Exception as e:
             raise TruckException(e, sys)
 
-    def export_collections_from_mongodb(self, data_dir: str):        
+    def export_collections_from_mongodb(self, data_dir: str):
+        logging.info(
+            "Entered export_collections_from_mongodb method of TruckData class"
+        )
+
         try:
             os.makedirs(data_dir, exist_ok=True)
 
             collections: List[str] = self.mongo_client.database.list_collection_names()
 
+            logging.info("Got a list of collection names from mongodb")
+
             for col in collections:
                 db_col: Collection = self.mongo_client.database.get_collection(col)
+
+                logging.info(f"Got a {db_col} collection from mongodb")
 
                 df: pd.DataFrame = pd.DataFrame(list(db_col.find()))
 
                 if "_id" in df.columns.to_list():
                     df: pd.DataFrame = df.drop(columns=["_id"], axis=1)
 
+                logging.info(f"Created dataframe from {db_col} collection")
+
                 fname: str = f"{data_dir}/{col}.csv"
 
                 df.to_csv(fname, index=None, header=False)
+
+                logging.info(f"Converted dataframe to {fname} csv file")
 
         except Exception as e:
             raise TruckException(e, sys)
