@@ -5,7 +5,7 @@ variable "aws_region" {
 
 variable "artifacts_bucket_name" {
   type    = string
-  default = "truck-feature-store"
+  default = "wafer-feature-store"
 }
 
 variable "aws_account_id" {

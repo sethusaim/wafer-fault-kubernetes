@@ -6,7 +6,6 @@ terraform {
   }
 }
 
-module "truck_artifacts" {
-  source = "./truck_artifacts"
+module "wafer_artifacts" {
+  source = "./wafer_artifacts"
 }
-
