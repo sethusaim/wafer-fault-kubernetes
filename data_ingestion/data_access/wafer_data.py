@@ -6,22 +6,22 @@ import pandas as pd
 from pymongo.collection import Collection
 
 from configuration.mongo_db_connection import MongoDBClient
-from constant.data_ingestion import DATABASE_NAME
-from exception import TruckException
+from constant import DATABASE_NAME
+from exception import WaferException
 from logger import logging
 
 
-class TruckData:
+class WaferData:
     def __init__(self):
         try:
             self.mongo_client = MongoDBClient(database_name=DATABASE_NAME)
 
         except Exception as e:
-            raise TruckException(e, sys)
+            raise WaferException(e, sys)
 
     def export_collections_from_mongodb(self, data_dir: str):
         logging.info(
-            "Entered export_collections_from_mongodb method of TruckData class"
+            "Entered export_collections_from_mongodb method of WaferData class"
         )
 
         try:
@@ -50,4 +50,4 @@ class TruckData:
                 logging.info(f"Converted dataframe to {fname} csv file")
 
         except Exception as e:
-            raise TruckException(e, sys)
+            raise WaferException(e, sys)
