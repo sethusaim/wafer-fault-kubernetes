@@ -1,7 +1,7 @@
 import os
 import sys
 
-from exception import TruckException
+from exception import WaferException
 
 
 class S3Sync:
@@ -16,4 +16,4 @@ class S3Sync:
             os.system(command)
 
         except Exception as e:
-            raise TruckException(e, sys)
+            raise WaferException(e, sys)

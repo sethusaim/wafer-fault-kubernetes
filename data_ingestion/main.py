@@ -1,9 +1,9 @@
 import sys
 
-from data_access.truck_data import TruckData
+from data_access.wafer_data import WaferData
 from entity.artifact_entity import DataIngestionArtifact
 from entity.config_entity import DataIngestionConfig, TrainingPipelineConfig
-from exception import TruckException
+from exception import WaferException
 from logger import logging
 
 
@@ -13,7 +13,7 @@ class DataIngestion:
             training_pipeline_config=training_pipeline_config
         )
 
-        self.data = TruckData()
+        self.data = WaferData()
 
     def initiate_data_ingestion(self) -> DataIngestionArtifact:
         logging.info("Entered initiate_data_ingestion method of DataIngestion class")
@@ -34,7 +34,7 @@ class DataIngestion:
             return data_ingestion_artifact
 
         except Exception as e:
-            raise TruckException(e, sys)
+            raise WaferException(e, sys)
 
 
 if __name__ == "__main__":
@@ -44,9 +44,9 @@ if __name__ == "__main__":
         dt = DataIngestion(training_pipeline_config=tpc)
 
         dia = dt.initiate_data_ingestion()
-        
+
     except Exception as e:
-        raise e 
-    
+        raise e
+
     finally:
         pass

@@ -1,7 +1,7 @@
 import logging
 import os
 
-from constant.data_ingestion import TIMESTAMP
+from constant import TIMESTAMP
 
 LOG_FILE: str = f"{TIMESTAMP}.log"
 

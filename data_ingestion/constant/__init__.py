@@ -10,7 +10,7 @@ DATABASE_NAME = "wafer_data"
 
 MONGODB_URL_KEY: str = "MONGO_DB_URL"
 
-ARTIFACTS_BUCKET_NAME: str = "26232truck-feature-store"
+ARTIFACTS_BUCKET_NAME: str = "26232Wafer-feature-store"
 
 """
 Data Ingestion related constant start with DATA_INGESTION VAR NAME

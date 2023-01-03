@@ -5,7 +5,7 @@ import certifi
 import pymongo
 
 from constant.data_ingestion import DATABASE_NAME, MONGODB_URL_KEY
-from exception import TruckException
+from exception import WaferException
 
 ca = certifi.where()
 
@@ -39,4 +39,4 @@ class MongoDBClient:
             self.database_name = database_name
 
         except Exception as e:
-            raise TruckException(e, sys)
+            raise WaferException(e, sys)
