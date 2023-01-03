@@ -4,7 +4,8 @@ import sys
 import certifi
 import pymongo
 
-from constant.data_ingestion import DATABASE_NAME, MONGODB_URL_KEY
+from constant import DATABASE_NAME, MONGODB_URL_KEY
+
 from exception import WaferException
 
 ca = certifi.where()
